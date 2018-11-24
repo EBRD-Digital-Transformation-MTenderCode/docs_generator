@@ -1,0 +1,154 @@
+package com.procurement.docs_generator.infrastructure.adapter
+
+import com.procurement.docs_generator.application.service.template.TemplateService
+import com.procurement.docs_generator.domain.date.JsonDateDeserializer
+import com.procurement.docs_generator.domain.logger.Logger
+import com.procurement.docs_generator.domain.model.document.Document
+import com.procurement.docs_generator.domain.model.language.Language
+import com.procurement.docs_generator.domain.view.View
+import com.procurement.docs_generator.domain.view.web.AddedTemplateWebView
+import com.procurement.docs_generator.domain.view.web.WebErrorView
+import com.procurement.docs_generator.exception.app.ApplicationException
+import com.procurement.docs_generator.exception.app.InvalidValueOfParamException
+import com.procurement.docs_generator.exception.template.TemplateInvalidFormatException
+import com.procurement.docs_generator.infrastructure.dispatcher.CodesOfErrors
+import com.procurement.docs_generator.infrastructure.logger.Slf4jLogger
+import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.ExceptionHandler
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
+import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.multipart.MultipartFile
+import java.time.LocalDate
+
+@RestController
+class TemplateController(
+    private val templateService: TemplateService
+) {
+    companion object {
+        private val log: Logger = Slf4jLogger()
+    }
+
+    @PostMapping(value = ["/templates/{id}/{kind}/{lang}/{date}"], consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
+    fun newTemplate(@PathVariable(value = "id") id: String?,
+                    @PathVariable(value = "kind") kind: String?,
+                    @PathVariable(value = "lang") lang: String?,
+                    @PathVariable(value = "date") date: String?,
+                    @RequestParam(value = "file") file: MultipartFile?): View {
+
+        templateService.add(
+            id = getId(id),
+            kind = getKind(kind),
+            lang = getLang(lang),
+            date = getDate(date),
+            file = getFile(file)
+        )
+
+        return AddedTemplateWebView()
+    }
+
+    @PutMapping(value = ["/templates/{id}/{kind}/{lang}/{date}"], consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
+    fun updateTemplate(@PathVariable(value = "id") id: String?,
+                       @PathVariable(value = "kind") kind: String?,
+                       @PathVariable(value = "lang") lang: String?,
+                       @PathVariable(value = "date") date: String?,
+                       @RequestParam(value = "file") file: MultipartFile?): View {
+
+        templateService.update(
+            id = getId(id),
+            kind = getKind(kind),
+            lang = getLang(lang),
+            date = getDate(date),
+            file = getFile(file)
+        )
+
+        return AddedTemplateWebView()
+    }
+
+    private fun getId(id: String?): Document.Id {
+        return if (id == null || id.isBlank())
+            throw InvalidValueOfParamException(nameAndTypeParam = "path variable: 'id'", valueParam = "missing")
+        else
+            Document.Id.valueOfCodeOrNull(id.toUpperCase())
+                ?: throw InvalidValueOfParamException(nameAndTypeParam = "path variable: 'id'", valueParam = id)
+    }
+
+    private fun getKind(kind: String?): Document.Kind {
+        return if (kind == null || kind.isBlank())
+            throw InvalidValueOfParamException(nameAndTypeParam = "path variable: 'kind'", valueParam = "missing")
+        else
+            Document.Kind.valueOfCodeOrNull(kind.toUpperCase())
+                ?: throw InvalidValueOfParamException(nameAndTypeParam = "path variable: 'kind'", valueParam = kind)
+    }
+
+    private fun getLang(lang: String?): Language {
+        return if (lang == null || lang.isEmpty())
+            throw InvalidValueOfParamException(nameAndTypeParam = "path variable: 'lang'", valueParam = "missing")
+        else
+            Language(lang)
+    }
+
+    private fun getDate(date: String?): LocalDate {
+        return if (date == null || date.isBlank())
+            throw InvalidValueOfParamException(nameAndTypeParam = "path variable: 'date", valueParam = "missing")
+        else try {
+            JsonDateDeserializer.deserialize(date)
+        } catch (exception: Exception) {
+            throw InvalidValueOfParamException(nameAndTypeParam = "path variable: 'date'", valueParam = date)
+        }
+    }
+
+    private fun getFile(file: MultipartFile?): MultipartFile {
+        return file ?: throw InvalidValueOfParamException(nameAndTypeParam = "request param: 'file'",
+                                                          valueParam = "missing")
+    }
+
+    @ExceptionHandler(value = [ApplicationException::class])
+    private fun applicationException(exception: ApplicationException): ResponseEntity<View> {
+        val message: String = exception.message!!
+
+        val view: WebErrorView = when (exception) {
+            is TemplateInvalidFormatException -> {
+                WebErrorView(
+                    errors = listOf(
+                        WebErrorView.Error(code = exception.codeError.code, description = message)
+                    )
+                )
+            }
+            else -> {
+                log.error(message)
+                WebErrorView(
+                    errors = listOf(
+                        WebErrorView.Error(
+                            code = exception.codeError.code,
+                            description = message
+                        )
+                    )
+                )
+            }
+        }
+
+        return ResponseEntity.status(exception.codeError.httpStatus).body(view)
+    }
+
+    @ExceptionHandler(value = [Exception::class])
+    private fun otherException(exception: Exception): ResponseEntity<View> {
+        log.error(exception.message!!)
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .body(
+                WebErrorView(
+                    errors = listOf(
+                        WebErrorView.Error(
+                            code = CodesOfErrors.SERVER_ERROR.code,
+                            description = "Unknown server error."
+                        )
+                    )
+                )
+            )
+    }
+}

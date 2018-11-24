@@ -1,0 +1,11 @@
+server:
+  port: @project.service.port@
+
+spring:
+  application:
+    name: document-generator
+
+  cloud:
+    config:
+      failFast: true
+      name: document-generator

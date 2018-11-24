@@ -1,0 +1,14 @@
+{
+  "version": "0.0.1",
+  "id": "7058523e-8be1-4de5-83ab-75715cd85ea1",
+  "command": "generateACDoc",
+  "data": {
+    "cpid": "ocds-t1s2t3-MD-1542981234151",
+    "ocid": "ocds-t1s2t3-MD-1542981234151-AC-1542036270645",
+    "documents": [
+      {
+        "id": "838faf0e-f753-44c4-8267-8a49c27acc29"
+      }
+    ]
+  }
+}
