@@ -50,7 +50,7 @@ data class GenerateACDocCommand(
 
     @field:JsonProperty("data") @param:JsonProperty("data") val data: GenerateACDocCommand.Data
 ) {
-    @JsonPropertyOrder("country", "language", "cpid", "ocid", "operationId", "startDate")
+    @JsonPropertyOrder("country", "language", "cpid", "ocid")
     class Data(
         @JsonDeserialize(using = CountryDeserializer::class)
         @JsonSerialize(using = CountrySerializer::class)
@@ -66,14 +66,6 @@ data class GenerateACDocCommand(
 
         @JsonDeserialize(using = OCIDDeserializer::class)
         @JsonSerialize(using = OCIDSerializer::class)
-        @field:JsonProperty("ocid") @param:JsonProperty("ocid") val ocid: OCID,
-
-        @JsonDeserialize(using = OperationIdDeserializer::class)
-        @JsonSerialize(using = OperationIdSerializer::class)
-        @field:JsonProperty("operationId") @param:JsonProperty("operationId") val operationId: OperationId,
-
-        @JsonDeserialize(using = JsonDateTimeDeserializer::class)
-        @JsonSerialize(using = JsonDateTimeSerializer::class)
-        @field:JsonProperty("startDate") @param:JsonProperty("startDate") val operationDate: LocalDateTime
+        @field:JsonProperty("ocid") @param:JsonProperty("ocid") val ocid: OCID
     )
 }
