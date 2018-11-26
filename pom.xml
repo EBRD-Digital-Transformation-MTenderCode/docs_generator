@@ -317,14 +317,6 @@
                     <include>git.properties</include>
                 </includes>
             </resource>
-            <resource>
-                <directory>src/main/resources/fonts</directory>
-                <targetPath>fonts</targetPath>
-                <filtering>false</filtering>
-                <includes>
-                    <include>**</include>
-                </includes>
-            </resource>
         </resources>
 
         <plugins>
@@ -494,7 +486,7 @@
                             <name>${docker-registry}/${project.artifactId}${docker-image-profile}:${project.version}.${git.commit.id.abbrev}
                             </name>
                             <build>
-                                <dockerFileDir>${project.basedir}/src/main</dockerFileDir>
+                                <dockerFileDir>${project.basedir}</dockerFileDir>
                                 <nocache/>
                                 <assembly>
                                     <descriptorRef>artifact</descriptorRef>
