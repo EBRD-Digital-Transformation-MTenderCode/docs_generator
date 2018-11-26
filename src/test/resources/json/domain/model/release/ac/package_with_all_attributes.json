@@ -1,77 +1,22 @@
 {
   "releases": [
     {
-      "ocid": "",
-      "id": "",
       "date": "",
-      "tag": [
-        ""
-      ],
-      "initiationType": "",
       "tender": {
-        "id": "",
         "classification": {
-          "scheme": "",
           "description": "",
           "id": ""
         },
-        "procurementMethod": "",
         "procurementMethodDetails": "",
         "mainProcurementCategory": "",
         "lots": [
           {
-            "id": "",
-            "title": "",
-            "description": "",
-            "placeOfPerformance": {
-              "address": {
-                "streetAddress": "",
-                "postalCode": "",
-                "addressDetails": {
-                  "country": {
-                    "scheme": "",
-                    "id": "",
-                    "description": "",
-                    "uri": ""
-                  },
-                  "region": {
-                    "scheme": "",
-                    "id": "",
-                    "description": "",
-                    "uri": ""
-                  },
-                  "locality": {
-                    "scheme": "",
-                    "id": "",
-                    "description": "",
-                    "uri": ""
-                  }
-                }
-              },
-              "description": ""
-            }
+            "id": ""
           }
         ]
       },
       "planning": {
-        "implementation": {
-          "transactions": [
-            {
-              "id": "",
-              "type": "advance",
-              "value": {
-                "amount": 20000,
-                "currency": "MDL"
-              },
-              "executionPeriod": {
-                "durationInDays": 0
-              },
-              "relatedContractMilestone": "approval-3"
-            }
-          ]
-        },
         "budget": {
-          "description": "",
           "budgetAllocation": [
             {
               "budgetBreakdownID": "",
@@ -79,15 +24,7 @@
                 "startDate": "",
                 "endDate": ""
               },
-              "amount": 0,
               "relatedItem": ""
-            }
-          ],
-          "budgetSource": [
-            {
-              "budgetBreakdownID": "",
-              "amount": 0,
-              "currency": ""
             }
           ]
         }
@@ -95,100 +32,23 @@
       "contracts": [
         {
           "id": "",
-          "date": "",
-          "awardId": "",
-          "status": "",
-          "statusDetails": "",
-          "title": "",
           "description": "",
           "period": {
-            "startDate": "",
             "endDate": ""
           },
-          "documents": [
-            {
-              "documentType": "",
-              "datePublished": "",
-              "url": "",
-              "id": "",
-              "title": "",
-              "description": "",
-              "relatedLots": [
-                ""
-              ]
-            }
-          ],
-          "milestones": [
-            {
-              "id": "approval-re1atedparties.id",
-              "relatedItems": [
-                ""
-              ],
-              "status": "",
-              "additionalInformation": "",
-              "dueDate": "",
-              "title": "Signature by the Buyer",
-              "type": "approval",
-              "description": "",
-              "relatedParties": [
-                {
-                  "id": "",
-                  "name": ""
-                }
-              ]
-            }
-          ],
-          "confirmationRequests": [
-            {
-              "id": "cs-tenderer-confirmation-on-document.id",
-              "type": "digitalSignature",
-              "title": "",
-              "description": "",
-              "relatesTo": "document",
-              "relatedItem": "document.id",
-              "source": "tenderer",
-              "requestGroups": [
-                {
-                  "id": "cs-tenderer-confirmation-on-document.id-tenderer.identifier.id",
-                  "requests": [
-                    {
-                      "id": "cs-tenderer-confirmation-on-document.id-tenderer.identifier.id-relatedPerson.id",
-                      "title": "parties[role:supplier].persones[role:authority].name",
-                      "description": "",
-                      "relatedPerson": {
-                        "id": "",
-                        "name": ""
-                      }
-                    }
-                  ]
-                }
-              ]
-            }
-          ],
           "agreedMetrics": [
             {
               "id": "cc-general",
-              "title": "General Responsibilities",
-              "description": "Contract conditions governing the general responsibilities related to both",
               "observations": [
                 {
                   "id": "cc-general-1-1",
-                  "notes": "Maximum days to inform on invoking Force Majeure",
-                  "measure": 5,
-                  "unit": {
-                    "name": "day",
-                    "id": "359",
-                    "scheme": "MD-CUMC"
-                  }
+                  "measure": 5
                 }
               ]
             }
           ],
           "value": {
-            "amount": 0,
-            "currency": "",
-            "amountNet": 0,
-            "valueAddedTaxIncluded": true
+            "amount": 0
           }
         }
       ],
@@ -196,87 +56,23 @@
         {
           "id": "",
           "date": "",
-          "description": "",
           "relatedLots": [
             ""
           ],
-          "relatedBid": "",
-          "suppliers": [
-            {
-              "id": "",
-              "name": ""
-            }
-          ],
-          "documents": [
-            {
-              "documentType": "",
-              "datePublished": "",
-              "url": "",
-              "id": "",
-              "title": "",
-              "description": "",
-              "relatedLots": [
-                ""
-              ]
-            }
-          ],
-          "value": {
-            "amount": 0,
-            "currency": "",
-            "amountNet": 0,
-            "valueAddedTaxIncluded": true
-          },
           "items": [
             {
               "id": "",
               "classification": {
-                "scheme": "CPV",
                 "description": "",
                 "id": ""
               },
-              "additionalClassifications": [
-                {
-                  "scheme": "",
-                  "description": "",
-                  "id": ""
-                }
-              ],
               "quantity": 0,
               "unit": {
                 "value": {
                   "amount": 0,
-                  "amountNet": 0,
-                  "valueAddedTaxIncluded": true,
-                  "currency": ""
+                  "amountNet": 0
                 },
-                "id": "",
                 "name": ""
-              },
-              "description": "",
-              "relatedLot": "",
-              "deliveryAddress": {
-                "streetAddress": "",
-                "postalCode": "",
-                "addressDetails": {
-                  "country": {
-                    "scheme": "",
-                    "id": "",
-                    "description": "",
-                    "uri": ""
-                  },
-                  "region": {
-                    "scheme": "",
-                    "id": "",
-                    "description": "",
-                    "uri": ""
-                  },
-                  "locality": {
-                    "scheme": "",
-                    "id": "",
-                    "description": "",
-                    "uri": ""
-                  }
-                }
               }
             }
           ]
@@ -284,180 +80,38 @@
       ],
       "parties": [
         {
-          "id": "",
-          "name": "",
           "identifier": {
             "id": "string",
-            "scheme": "string",
-            "legalName": "string",
-            "uri": "string"
+            "legalName": "string"
           },
           "address": {
             "streetAddress": "",
-            "postalCode": "",
             "addressDetails": {
               "country": {
-                "scheme": "",
-                "id": "",
-                "description": "",
-                "uri": ""
+                "description": ""
               },
               "region": {
-                "scheme": "",
-                "id": "",
-                "description": "",
-                "uri": ""
+                "description": ""
               },
               "locality": {
-                "scheme": "",
-                "id": "",
-                "description": "",
-                "uri": ""
+                "description": ""
               }
             }
           },
           "contactPoint": {
-            "name": "string",
-            "email": "string",
-            "telephone": "string",
-            "faxNumber": "string",
-            "url": "string"
+            "telephone": "string"
           },
-          "additionalIdentifiers": [
-            {
-              "scheme": "MD-SRJE",
-              "id": "",
-              "legalName": "",
-              "uri": ""
-            }
-          ],
           "roles": [
             ""
-          ],
-          "persones": [
-            {
-              "title": "",
-              "name": "",
-              "identifier": {
-                "scheme": "",
-                "id": "",
-                "uri": ""
-              },
-              "businessFunctions": [
-                {
-                  "id": "",
-                  "type": "authority",
-                  "jobTitle": "Chief Executive Officer",
-                  "period": {
-                    "startDate": ""
-                  },
-                  "documents": [
-                    {
-                      "id": "",
-                      "datePublished": "",
-                      "url": "",
-                      "documentType": "regulatoryDocument",
-                      "title": "",
-                      "description": ""
-                    }
-                  ]
-                }
-              ]
-            }
-          ],
-          "details": {
-            "typeOfBuyer": "",
-            "mainGeneralActivity": "",
-            "mainSectoralActivity": "",
-            "typeOfSupplier": "",
-            "mainEconomicActivities": [
-              ""
-            ],
-            "scale": "sme",
-            "permits": [
-              {
-                "scheme": "SRLE",
-                "id": "",
-                "url": "",
-                "permit": {
-                  "issuedBy": {
-                    "id": "",
-                    "name": ""
-                  },
-                  "issuedThought": {
-                    "id": "",
-                    "name": ""
-                  },
-                  "validityPeriod": {
-                    "startDate": "",
-                    "endDate": ""
-                  }
-                }
-              }
-            ],
-            "bankAccounts": [
-              {
-                "description": "",
-                "bankName": "",
-                "address": {
-                  "streetAddress": "",
-                  "postalCode": "",
-                  "addressDetails": {
-                    "country": {
-                      "scheme": "",
-                      "id": "",
-                      "description": "",
-                      "uri": ""
-                    },
-                    "region": {
-                      "scheme": "",
-                      "id": "",
-                      "description": "",
-                      "uri": ""
-                    },
-                    "locality": {
-                      "scheme": "",
-                      "id": "",
-                      "description": "",
-                      "uri": ""
-                    }
-                  }
-                },
-                "identifier": {
-                  "scheme": "MD-BANKS",
-                  "id": "300711"
-                },
-                "accountIdentification": {
-                  "scheme": "MD-IBAN",
-                  "id": "2600000625637"
-                },
-                "additionalAccountIdentifiers": [
-                  {
-                    "scheme": "MD-SETTLEMENT",
-                    "id": ""
-                  }
-                ]
-              }
-            ],
-            "legalForm": {
-              "scheme": "",
-              "id": "",
-              "description": "",
-              "uri": ""
-            }
-          }
+          ]
         }
       ],
       "relatedProcesses": [
         {
-          "id": "",
           "identifier": "",
-          "title": "",
           "relationship": [
             ""
-          ],
-          "scheme": "",
-          "uri": ""
+          ]
         }
       ]
     }
