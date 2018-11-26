@@ -8,8 +8,8 @@ import com.procurement.docs_generator.domain.command.CommandError
 import com.procurement.docs_generator.domain.command.ac.ContractFinalizationCommand
 import com.procurement.docs_generator.domain.command.ac.GenerateACDocCommand
 import com.procurement.docs_generator.domain.logger.Logger
-import com.procurement.docs_generator.domain.logger.debug
 import com.procurement.docs_generator.domain.logger.error
+import com.procurement.docs_generator.domain.logger.info
 import com.procurement.docs_generator.domain.model.command.id.CommandId
 import com.procurement.docs_generator.domain.model.command.name.CommandName.GENERATE_AC_DOC
 import com.procurement.docs_generator.domain.service.JsonDeserializeService
@@ -59,7 +59,7 @@ class CommandDispatcher(
     }
 
     private fun commandDispatcher(command: Command, body: String): Any {
-        log.debug { "Retrieve command: $body" }
+        log.info { "Retrieve command: $body" }
 
         return when (command.name) {
             GENERATE_AC_DOC -> {

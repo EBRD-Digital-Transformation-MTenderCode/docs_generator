@@ -5,6 +5,8 @@ import com.procurement.docs_generator.adapter.UploadDocumentAdapter
 import com.procurement.docs_generator.application.service.template.TemplateService
 import com.procurement.docs_generator.domain.command.ac.ContractFinalizationCommand
 import com.procurement.docs_generator.domain.command.ac.GenerateACDocCommand
+import com.procurement.docs_generator.domain.logger.Logger
+import com.procurement.docs_generator.domain.logger.info
 import com.procurement.docs_generator.domain.model.cpid.CPID
 import com.procurement.docs_generator.domain.model.date.JsonDateTimeDeserializer
 import com.procurement.docs_generator.domain.model.document.AwardContract
@@ -18,6 +20,7 @@ import com.procurement.docs_generator.domain.model.release.EVReleasesPackage
 import com.procurement.docs_generator.domain.model.release.MSReleasesPackage
 import com.procurement.docs_generator.domain.model.template.Template
 import com.procurement.docs_generator.domain.repository.DocumentDescriptorRepository
+import com.procurement.docs_generator.infrastructure.logger.Slf4jLogger
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -31,6 +34,8 @@ class DocumentServiceImpl(
     private val uploadDocumentAdapter: UploadDocumentAdapter
 ) : DocumentService {
     companion object {
+        private val log: Logger = Slf4jLogger()
+
         private val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
     }
 
@@ -56,7 +61,7 @@ class DocumentServiceImpl(
     }
 
     override fun processing(command: GenerateACDocCommand): ContractFinalizationCommand.Data {
-
+        log.info { "Processing command with id: '${command.id}'." }
         val view = documentDescriptorRepository.load(command.id)
             ?.let {
                 toDataOfContractFinalizationCommand(ocid = command.data.ocid,
@@ -73,8 +78,14 @@ class DocumentServiceImpl(
 
         val uploadDescriptor = getDocumentGenerator(template)
             .generate(template = template, context = document.context)
+            .also {
+                log.info { "The Document by id: '${document.id}', kind: '${document.kind}', lang: '${document.lang}', date: '${document.date}' was generated based on the template active from the date: '${template.startDate}'." }
+            }
             .use { pdfDocument ->
                 uploadDocumentAdapter.upload(pdfDocument)
+                    .also { descriptor ->
+                        log.info { "Document by id: '${document.id}', kind: '${document.kind}', lang: '${document.lang}', date: '${document.date}' was uploaded (file name: '${pdfDocument.fileName}', size: '${pdfDocument.size}', hash: '${pdfDocument.hash}', descriptor: '$descriptor')." }
+                    }
             }
 
         val descriptor = DocumentDescriptor(
@@ -85,11 +96,17 @@ class DocumentServiceImpl(
             descriptor = uploadDescriptor
         )
 
-        return documentDescriptorRepository.save(descriptor).let {
-            toDataOfContractFinalizationCommand(ocid = command.data.ocid,
-                                                cpid = command.data.cpid,
-                                                documentDescriptor = it)
-        }
+        return documentDescriptorRepository.save(descriptor)
+            .also {
+                log.info { "Descriptor of the document by id: '${document.id}', kind: '${document.kind}', lang: '${document.lang}', date: '${document.date}' was saved in database (descriptor: '$descriptor')." }
+            }
+            .let {
+                toDataOfContractFinalizationCommand(ocid = command.data.ocid,
+                                                    cpid = command.data.cpid,
+                                                    documentDescriptor = it)
+            }.also {
+                log.info { "Command with id: '${command.id}' was processed." }
+            }
     }
 
     private fun getDocumentGenerator(template: Template): DocumentGenerator {
@@ -476,7 +493,6 @@ class DocumentServiceImpl(
                                      itemId: String,
                                      release: ACReleasesPackage.Release): ServicesContext.AC.Award.Item.AgreedMetrics {
         val ccSubject = "cc-subject-$awardId-$itemId"
-        println(ccSubject)
         for (metric in release.contracts[0].agreedMetrics) {
 
             if (metric.id == ccSubject) {
