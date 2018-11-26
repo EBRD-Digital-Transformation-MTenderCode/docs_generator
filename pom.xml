@@ -315,7 +315,14 @@
                     <include>bootstrap.yml</include>
                     <include>banner.txt</include>
                     <include>git.properties</include>
-                    <include>fonts/**</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources/fonts</directory>
+                <targetPath>fonts</targetPath>
+                <filtering>false</filtering>
+                <includes>
+                    <include>**</include>
                 </includes>
             </resource>
         </resources>

@@ -73,10 +73,9 @@ class DocumentServiceImpl(
 
         val uploadDescriptor = getDocumentGenerator(template)
             .generate(template = template, context = document.context)
-//            .use { pdfDocument ->
-//                uploadDocumentAdapter.upload(pdfDocument)
-//            }
-            .let { "FFFFF" }
+            .use { pdfDocument ->
+                uploadDocumentAdapter.upload(pdfDocument)
+            }
 
         val descriptor = DocumentDescriptor(
             commandId = command.id,
