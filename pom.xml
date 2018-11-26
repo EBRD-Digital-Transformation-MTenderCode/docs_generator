@@ -184,7 +184,7 @@
         </dependency>
         <dependency>
             <groupId>org.xhtmlrenderer</groupId>
-            <artifactId>flying-saucer-pdf</artifactId>
+            <artifactId>flying-saucer-pdf-openpdf</artifactId>
             <version>${flying-saucer.version}</version>
         </dependency>
 
@@ -315,6 +315,7 @@
                     <include>bootstrap.yml</include>
                     <include>banner.txt</include>
                     <include>git.properties</include>
+                    <include>fonts/**</include>
                 </includes>
             </resource>
         </resources>
