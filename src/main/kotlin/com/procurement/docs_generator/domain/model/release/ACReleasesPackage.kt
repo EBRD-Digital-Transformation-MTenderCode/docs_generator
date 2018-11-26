@@ -596,8 +596,8 @@ class ACReleasesPackage(
 
             @JsonPropertyOrder("scheme", "id", "legalName", "uri")
             data class AdditionalIdentifier(
-                @PS @field:JsonProperty("scheme") @param:JsonProperty("scheme") val scheme: String
-//                @field:JsonProperty("id") @param:JsonProperty("id") val id: String,
+                @PS @field:JsonProperty("scheme") @param:JsonProperty("scheme") val scheme: String,
+                @field:JsonProperty("id") @param:JsonProperty("id") val id: String
 //                @field:JsonProperty("legalName") @param:JsonProperty("legalName") val legalName: String,
 //
 //                @field:JsonInclude(JsonInclude.Include.NON_NULL)
@@ -627,7 +627,7 @@ class ACReleasesPackage(
 //                    @field:JsonProperty("period") @param:JsonProperty("period") val period: Period,
                     @PS @field:JsonProperty("documents") @param:JsonProperty("documents") val documents: List<Document>
                 ) {
-//
+                    //
 //                    @JsonPropertyOrder("startDate")
 //                    data class Period(
 //                        @field:JsonProperty("startDate") @param:JsonProperty("startDate") val startDate: String

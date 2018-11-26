@@ -208,9 +208,9 @@ class DocumentServiceImpl(
                                 legalName = identifier.legalName
                             )
                         },
-                        additionalidentifieres = getSchemeAdditionalIdentifiers(scheme = "MD-FISCAL", party = party)
+                        additionalidentifieres = getIdAdditionalIdentifiers(scheme = "MD-FISCAL", party = party)
                             .map {
-                                ServicesContext.AC.Buyer.AdditionalIdentifier(it)
+                                ServicesContext.AC.Buyer.AdditionalIdentifier(id = it)
                             },
                         contactPoint = ServicesContext.AC.Buyer.ContactPoint(
                             telephone = party.contactPoint.telephone
@@ -270,9 +270,9 @@ class DocumentServiceImpl(
                                 legalName = identifier.legalName
                             )
                         },
-                        additionalidentifieres = getSchemeAdditionalIdentifiers(scheme = "MD-FISCAL", party = party)
+                        additionalidentifieres = getIdAdditionalIdentifiers(scheme = "MD-FISCAL", party = party)
                             .map {
-                                ServicesContext.AC.Supplier.AdditionalIdentifier(it)
+                                ServicesContext.AC.Supplier.AdditionalIdentifier(id = it)
                             },
                         contactPoint = ServicesContext.AC.Supplier.ContactPoint(
                             telephone = party.contactPoint.telephone
@@ -514,14 +514,13 @@ class DocumentServiceImpl(
         } ?: throw IllegalStateException("Parties by role: '$role' not found.")
     }
 
-    private fun getSchemeAdditionalIdentifiers(scheme: String,
-                                               party: ACReleasesPackage.Release.Party): List<String> {
+    private fun getIdAdditionalIdentifiers(scheme: String,
+                                           party: ACReleasesPackage.Release.Party): List<String> {
         return if (party.additionalIdentifiers != null)
             party.additionalIdentifiers.asSequence()
                 .filter { it.scheme == scheme }
                 .map { identifier ->
-                    identifier.scheme
-
+                    identifier.id
                 }
                 .toList()
         else emptyList()

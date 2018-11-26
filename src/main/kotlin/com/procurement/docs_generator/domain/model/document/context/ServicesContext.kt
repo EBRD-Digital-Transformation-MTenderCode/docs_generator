@@ -113,9 +113,9 @@ data class ServicesContext(
                 @field:JsonProperty("legalName") @param:JsonProperty("legalName") val legalName: String // AC.parties[role=="buyer"].identifier.legalName
             )
 
-            @JsonPropertyOrder("scheme")
+            @JsonPropertyOrder("id")
             data class AdditionalIdentifier(
-                @field:JsonProperty("scheme") @param:JsonProperty("scheme") val scheme: String // AC.parties.[role=="buyer"].details.bankAccounts.additionalAccountIdentifiers[scheme=="MD-FISCAL"].id
+                @field:JsonProperty("id") @param:JsonProperty("id") val id: String // AC.parties.additionalIdentifiers[scheme=="MD-FISCAL"].id
             )
 
             @JsonPropertyOrder("telephone")
@@ -197,9 +197,10 @@ data class ServicesContext(
                 @field:JsonProperty("legalName") @param:JsonProperty("legalName") val legalName: String // AC.parties[role=="supplier"].identifier.legalName
             )
 
-            @JsonPropertyOrder("scheme")
+            @JsonPropertyOrder("id")
             data class AdditionalIdentifier(
-                @field:JsonProperty("scheme") @param:JsonProperty("scheme") val scheme: String // AC.parties.[role=="supplier"].details.bankAccounts.additionalAccountIdentifiers[scheme=="MD-FISCAL"].id
+                @field:JsonProperty("id") @param:JsonProperty("id") val id: String // AC.parties.[role=="supplier"].additionalidentifieres[scheme:MD-FISCAL].id
+
             )
 
             @JsonPropertyOrder("telephone")
