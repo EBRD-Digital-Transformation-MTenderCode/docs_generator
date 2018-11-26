@@ -9,7 +9,8 @@ CREATE TABLE IF NOT EXISTS documents.templates(
     document_kind text,
     lang text,
     start_date date,
-    mode text,
+    format text,
+    engine text,
     body blob,
     PRIMARY KEY ((document_id, document_kind), lang, start_date)
 );

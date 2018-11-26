@@ -5,6 +5,9 @@ import com.procurement.docs_generator.domain.date.JsonDateDeserializer
 import com.procurement.docs_generator.domain.logger.Logger
 import com.procurement.docs_generator.domain.model.document.Document
 import com.procurement.docs_generator.domain.model.language.Language
+import com.procurement.docs_generator.domain.model.template.Template
+import com.procurement.docs_generator.domain.model.template.engine.TemplateEngineDeserializer
+import com.procurement.docs_generator.domain.model.template.format.TemplateFormatDeserializer
 import com.procurement.docs_generator.domain.view.View
 import com.procurement.docs_generator.domain.view.web.AddedTemplateWebView
 import com.procurement.docs_generator.domain.view.web.WebErrorView
@@ -33,37 +36,48 @@ class TemplateController(
         private val log: Logger = Slf4jLogger()
     }
 
-    @PostMapping(value = ["/templates/{id}/{kind}/{lang}/{date}"], consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
-    fun newTemplate(@PathVariable(value = "id") id: String?,
-                    @PathVariable(value = "kind") kind: String?,
-                    @PathVariable(value = "lang") lang: String?,
-                    @PathVariable(value = "date") date: String?,
-                    @RequestParam(value = "file") file: MultipartFile?): View {
+    @PostMapping(value = ["/templates/{id}/{kind}/{lang}/{date}"],
+                 consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
+    fun newTemplate(@PathVariable(name = "id") id: String?,
+                    @PathVariable(name = "kind") kind: String?,
+                    @PathVariable(name = "lang") lang: String?,
+                    @PathVariable(name = "date") date: String?,
+                    @RequestParam(name = "format", required = false) format: String?,
+                    @RequestParam(name = "engine", required = false) engine: String?,
+                    @RequestParam(name = "file") file: MultipartFile?): View {
 
         templateService.add(
             id = getId(id),
             kind = getKind(kind),
             lang = getLang(lang),
             date = getDate(date),
-            file = getFile(file)
+            file = getFile(file),
+            format = getFormat(format ?: Template.Format.HTML.code),
+            engine = getEngine(engine ?: Template.Engine.Thymeleaf.code)
         )
 
         return AddedTemplateWebView()
     }
 
-    @PutMapping(value = ["/templates/{id}/{kind}/{lang}/{date}"], consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
-    fun updateTemplate(@PathVariable(value = "id") id: String?,
-                       @PathVariable(value = "kind") kind: String?,
-                       @PathVariable(value = "lang") lang: String?,
-                       @PathVariable(value = "date") date: String?,
-                       @RequestParam(value = "file") file: MultipartFile?): View {
+    @PutMapping(value = ["/templates/{id}/{kind}/{lang}/{date}"],
+                consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
+    fun updateTemplate(@PathVariable(name = "id") id: String?,
+                       @PathVariable(name = "kind") kind: String?,
+                       @PathVariable(name = "lang") lang: String?,
+                       @PathVariable(name = "date") date: String?,
+                       @RequestParam(name = "format", required = false) format: String? = Template.Format.HTML.code,
+                       @RequestParam(name = "engine",
+                                     required = false) engine: String? = Template.Engine.Thymeleaf.code,
+                       @RequestParam(name = "file") file: MultipartFile?): View {
 
         templateService.update(
             id = getId(id),
             kind = getKind(kind),
             lang = getLang(lang),
             date = getDate(date),
-            file = getFile(file)
+            file = getFile(file),
+            format = getFormat(format ?: Template.Format.HTML.code),
+            engine = getEngine(engine ?: Template.Engine.Thymeleaf.code)
         )
 
         return AddedTemplateWebView()
@@ -105,6 +119,26 @@ class TemplateController(
     private fun getFile(file: MultipartFile?): MultipartFile {
         return file ?: throw InvalidValueOfParamException(nameAndTypeParam = "request param: 'file'",
                                                           valueParam = "missing")
+    }
+
+    private fun getFormat(format: String?): Template.Format {
+        return if (format == null || format.isBlank())
+            throw InvalidValueOfParamException(nameAndTypeParam = "request param: 'format", valueParam = "missing")
+        else try {
+            TemplateFormatDeserializer.deserialize(format)
+        } catch (exception: Exception) {
+            throw InvalidValueOfParamException(nameAndTypeParam = "request param: 'format'", valueParam = format)
+        }
+    }
+
+    private fun getEngine(engine: String?): Template.Engine {
+        return if (engine == null || engine.isBlank())
+            throw InvalidValueOfParamException(nameAndTypeParam = "request param: 'engine", valueParam = "missing")
+        else try {
+            TemplateEngineDeserializer.deserialize(engine)
+        } catch (exception: Exception) {
+            throw InvalidValueOfParamException(nameAndTypeParam = "request param: 'engine'", valueParam = engine)
+        }
     }
 
     @ExceptionHandler(value = [ApplicationException::class])

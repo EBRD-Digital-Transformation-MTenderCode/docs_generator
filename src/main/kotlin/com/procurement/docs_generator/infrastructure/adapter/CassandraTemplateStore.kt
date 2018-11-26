@@ -9,12 +9,13 @@ import com.procurement.docs_generator.domain.logger.debug
 import com.procurement.docs_generator.domain.model.document.Document
 import com.procurement.docs_generator.domain.model.document.id.DocumentIdSerializer
 import com.procurement.docs_generator.domain.model.document.kind.DocumentKindSerializer
-import com.procurement.docs_generator.domain.model.document.mode.Mode
-import com.procurement.docs_generator.domain.model.document.mode.TemplateModeDeserializer
-import com.procurement.docs_generator.domain.model.document.mode.TemplateModeSerializer
 import com.procurement.docs_generator.domain.model.language.Language
 import com.procurement.docs_generator.domain.model.language.LanguageSerializer
 import com.procurement.docs_generator.domain.model.template.Template
+import com.procurement.docs_generator.domain.model.template.engine.TemplateEngineDeserializer
+import com.procurement.docs_generator.domain.model.template.engine.TemplateEngineSerializer
+import com.procurement.docs_generator.domain.model.template.format.TemplateFormatDeserializer
+import com.procurement.docs_generator.domain.model.template.format.TemplateFormatSerializer
 import com.procurement.docs_generator.exception.database.ReadOperationException
 import com.procurement.docs_generator.exception.template.TemplateAlreadyException
 import com.procurement.docs_generator.exception.template.TemplateNotFoundException
@@ -39,7 +40,8 @@ class CassandraTemplateStore(
         private const val columnDocumentKind = "document_kind"
         private const val columnLang = "lang"
         private const val columnStartDate = "start_date"
-        private const val columnMode = "mode"
+        private const val columnFormat = "format"
+        private const val columnEngine = "engine"
         private const val columnBody = "body"
 
         private const val loadTemplateDatesCQL =
@@ -52,7 +54,8 @@ class CassandraTemplateStore(
 
         private const val loadTemplateCQL =
             """SELECT $columnStartDate,
-                      $columnMode,
+                      $columnFormat,
+                      $columnEngine,
                       $columnBody
                  FROM $KEY_SPACE.$tableName
                 WHERE $columnDocumentId=?
@@ -67,15 +70,17 @@ class CassandraTemplateStore(
                            $columnDocumentKind,
                            $columnLang,
                            $columnStartDate,
-                           $columnMode,
+                           $columnFormat,
+                           $columnEngine,
                            $columnBody
                )
-               VALUES (?,?,?,?,?,?) IF NOT EXISTS;"""
+               VALUES (?,?,?,?,?,?,?) IF NOT EXISTS;"""
 
         private const val updateCQL =
             """UPDATE $KEY_SPACE.$tableName
                   SET $columnBody=?,
-                      $columnMode=?
+                      $columnFormat=?,
+                      $columnEngine=?
                 WHERE $columnDocumentId=?
                   AND $columnDocumentKind=?
                   AND $columnLang=?
@@ -129,15 +134,17 @@ class CassandraTemplateStore(
         return if (resultSet.wasApplied()) {
             resultSet.one().let { row ->
                 val startDate: LocalDate = row.getDate(columnStartDate).toLocalDate()
-                val mode = TemplateModeDeserializer.deserialize(row.getString(columnMode))
+                val format = TemplateFormatDeserializer.deserialize(row.getString(columnFormat))
+                val engine = TemplateEngineDeserializer.deserialize(row.getString(columnEngine))
                 val columnBody: ByteBuffer = row.getBytes(columnBody)
 
                 Template(
                     startDate = startDate,
-                    mode = mode,
+                    format = format,
+                    engine = engine,
                     body = columnBody
                 ).also {
-                    log.debug { "Template by id: '${id.code}', kind: '${kind.code}', lang: '${lang.value}', date: '$date' is loaded." }
+                    log.debug { "Template by id: '${id.code}', kind: '${kind.code}', lang: '${lang.value}', date: '$date', format: '${format.description}', engine: '${engine.description} is loaded." }
                 }
             }
         } else
@@ -148,16 +155,18 @@ class CassandraTemplateStore(
                      kind: Document.Kind,
                      lang: Language,
                      date: LocalDate,
-                     mode: Mode,
+                     format: Template.Format,
+                     engine: Template.Engine,
                      body: ByteBuffer) {
-        log.debug { "Attempt write template to database (id: '${id.code}', kind: '${kind.code}', lang: '$lang', date: '$date')." }
+        log.debug { "Attempt write template to database (id: '${id.code}', kind: '${kind.code}', lang: '$lang', date: '$date', format: '${format.description}', engine: '${engine.description})." }
 
         val query = preparedInsertCQL.bind().also {
             it.setString(columnDocumentId, DocumentIdSerializer.serialize(id))
             it.setString(columnDocumentKind, DocumentKindSerializer.serialize(kind))
             it.setString(columnLang, LanguageSerializer.serialize(lang))
             it.setDate(columnStartDate, date.toCassandraLocalDate())
-            it.setString(columnMode, TemplateModeSerializer.serialize(mode))
+            it.setString(columnFormat, TemplateFormatSerializer.serialize(format))
+            it.setString(columnEngine, TemplateEngineSerializer.serialize(engine))
             it.setBytes(columnBody, body)
         }
 
@@ -165,23 +174,25 @@ class CassandraTemplateStore(
         if (!resultSet.wasApplied())
             throw TemplateAlreadyException(id, kind, lang, date)
 
-        log.debug { "Template was added (id: '${id.code}', kind: '${kind.code}', lang: '$lang', date: '$date')." }
+        log.debug { "Template was added (id: '${id.code}', kind: '${kind.code}', lang: '$lang', date: '$date', format: '${format.description}', engine: '${engine.description}')." }
     }
 
     override fun update(id: Document.Id,
                         kind: Document.Kind,
                         lang: Language,
                         date: LocalDate,
-                        mode: Mode,
+                        format: Template.Format,
+                        engine: Template.Engine,
                         body: ByteBuffer) {
-        log.debug { "Attempt write template to database (id: '${id.code}', kind: '${kind.code}', lang: '$lang', date: '$date')." }
+        log.debug { "Attempt write template to database (id: '${id.code}', kind: '${kind.code}', lang: '$lang', date: '$date', format: '${format.description}', engine: '${engine.description})." }
 
         val query = preparedUpdateCQL.bind().also {
             it.setString(columnDocumentId, DocumentIdSerializer.serialize(id))
             it.setString(columnDocumentKind, DocumentKindSerializer.serialize(kind))
             it.setString(columnLang, LanguageSerializer.serialize(lang))
             it.setDate(columnStartDate, date.toCassandraLocalDate())
-            it.setString(columnMode, TemplateModeSerializer.serialize(mode))
+            it.setString(columnFormat, TemplateFormatSerializer.serialize(format))
+            it.setString(columnEngine, TemplateEngineSerializer.serialize(engine))
             it.setBytes(columnBody, body)
         }
 
@@ -189,7 +200,7 @@ class CassandraTemplateStore(
         if (!resultSet.wasApplied())
             throw TemplateUpdateException(id, kind, lang, date)
 
-        log.debug { "Template was updated (id: '${id.code}', kind: '${kind.code}', lang: '$lang', date: '$date')." }
+        log.debug { "Template was updated (id: '${id.code}', kind: '${kind.code}', lang: '$lang', date: '$date', format: '${format.description}', engine: '${engine.description})." }
     }
 
     protected fun load(statement: BoundStatement): ResultSet = try {

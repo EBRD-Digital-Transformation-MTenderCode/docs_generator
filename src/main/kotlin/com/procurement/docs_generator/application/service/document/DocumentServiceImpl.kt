@@ -2,6 +2,7 @@ package com.procurement.docs_generator.application.service.document
 
 import com.procurement.docs_generator.adapter.PublicPointAdapter
 import com.procurement.docs_generator.adapter.UploadDocumentAdapter
+import com.procurement.docs_generator.application.service.template.TemplateService
 import com.procurement.docs_generator.domain.command.ac.ContractFinalizationCommand
 import com.procurement.docs_generator.domain.command.ac.GenerateACDocCommand
 import com.procurement.docs_generator.domain.model.cpid.CPID
@@ -15,19 +16,41 @@ import com.procurement.docs_generator.domain.model.ocid.OCIDDeserializer
 import com.procurement.docs_generator.domain.model.release.ACReleasesPackage
 import com.procurement.docs_generator.domain.model.release.EVReleasesPackage
 import com.procurement.docs_generator.domain.model.release.MSReleasesPackage
+import com.procurement.docs_generator.domain.model.template.Template
 import com.procurement.docs_generator.domain.repository.DocumentDescriptorRepository
 import org.springframework.stereotype.Service
-import org.thymeleaf.context.Context
-import org.thymeleaf.context.IContext
 import java.time.LocalDate
 
 @Service
 class DocumentServiceImpl(
     private val publicPointAdapter: PublicPointAdapter,
-    private val documentGenerator: DocumentGenerator,
+    documentGenerators: List<DocumentGenerator>,
+    private val templateService: TemplateService,
     private val documentDescriptorRepository: DocumentDescriptorRepository,
     private val uploadDocumentAdapter: UploadDocumentAdapter
 ) : DocumentService {
+
+    private val generators: Map<Template.Format, Map<Template.Engine, DocumentGenerator>>
+
+    init {
+        val result = mutableMapOf<Template.Format, MutableMap<Template.Engine, DocumentGenerator>>()
+        for (gen in documentGenerators) {
+            val byFormat = result[gen.format]
+            if (byFormat == null) {
+                result[gen.format] = mutableMapOf<Template.Engine, DocumentGenerator>().apply {
+                    this[gen.engine] = gen
+                }
+            } else {
+                if (byFormat.containsKey(gen.engine)) {
+                    throw IllegalStateException("Duplicate document generator for '${gen.format.description}' & '${gen.engine.description}' (class: '${gen.javaClass.canonicalName}').")
+                }
+                byFormat[gen.engine] = gen
+            }
+        }
+
+        generators = result
+        println(result)
+    }
 
     override fun processing(command: GenerateACDocCommand): ContractFinalizationCommand.Data {
 
@@ -40,8 +63,13 @@ class DocumentServiceImpl(
         if (view != null) return view
 
         val document = getDocument(command)
+        val template = templateService.getAvailableTemplate(id = document.id,
+                                                            kind = document.kind,
+                                                            lang = document.lang,
+                                                            date = document.date)
 
-        val uploadDescriptor = documentGenerator.generate(document)
+        val uploadDescriptor = getDocumentGenerator(template)
+            .generate(template = template, context = document.context)
             .use { pdfDocument ->
                 uploadDocumentAdapter.upload(pdfDocument)
             }
@@ -59,6 +87,13 @@ class DocumentServiceImpl(
                                                 cpid = command.data.cpid,
                                                 documentDescriptor = it)
         }
+    }
+
+    private fun getDocumentGenerator(template: Template): DocumentGenerator {
+        val byFormat = generators[template.format]
+            ?: throw IllegalStateException("Document generator for '${template.format.description}' not found.")
+        return byFormat[template.engine]
+            ?: throw IllegalStateException("Document generator for '${template.engine.description}' not found.")
     }
 
     private fun getDocument(command: GenerateACDocCommand): Document {
@@ -115,14 +150,14 @@ class DocumentServiceImpl(
         throw IllegalStateException("Relationship with value 'x_evaluation' is not found.")
     }
 
-    private fun getACGoodsContext(publishDate: LocalDate, release: ACReleasesPackage.Release): IContext {
+    private fun getACGoodsContext(publishDate: LocalDate, release: ACReleasesPackage.Release): Map<String, Any> {
         TODO()
     }
 
     private fun getACServicesContext(publishDate: LocalDate,
                                      acRelease: ACReleasesPackage.Release,
                                      evRelease: EVReleasesPackage.Release,
-                                     msRelease: MSReleasesPackage.Release): IContext {
+                                     msRelease: MSReleasesPackage.Release): Map<String, Any> {
         val partyBuyer = getParty(role = "buyer", parties = acRelease.parties)
         val partySupplier = getParty(role = "supplier", parties = acRelease.parties)
 
@@ -357,12 +392,12 @@ class DocumentServiceImpl(
             )
         )
 
-        return Context().apply {
-            this.setVariable("context", ctx)
+        return mutableMapOf<String, Any>().apply {
+            this["context"] = ctx
         }
     }
 
-    private fun getACWorksContext(publishDate: LocalDate, release: ACReleasesPackage.Release): IContext {
+    private fun getACWorksContext(publishDate: LocalDate, release: ACReleasesPackage.Release): Map<String, Any> {
         TODO()
     }
 

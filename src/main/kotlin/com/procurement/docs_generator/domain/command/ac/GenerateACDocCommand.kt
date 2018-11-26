@@ -17,21 +17,15 @@ import com.procurement.docs_generator.domain.model.country.CountrySerializer
 import com.procurement.docs_generator.domain.model.cpid.CPID
 import com.procurement.docs_generator.domain.model.cpid.CPIDDeserializer
 import com.procurement.docs_generator.domain.model.cpid.CPIDSerializer
-import com.procurement.docs_generator.domain.model.date.JsonDateTimeDeserializer
-import com.procurement.docs_generator.domain.model.date.JsonDateTimeSerializer
 import com.procurement.docs_generator.domain.model.language.Language
 import com.procurement.docs_generator.domain.model.language.LanguageDeserializer
 import com.procurement.docs_generator.domain.model.language.LanguageSerializer
 import com.procurement.docs_generator.domain.model.ocid.OCID
 import com.procurement.docs_generator.domain.model.ocid.OCIDDeserializer
 import com.procurement.docs_generator.domain.model.ocid.OCIDSerializer
-import com.procurement.docs_generator.domain.model.operationId.OperationId
-import com.procurement.docs_generator.domain.model.operationId.OperationIdDeserializer
-import com.procurement.docs_generator.domain.model.operationId.OperationIdSerializer
 import com.procurement.docs_generator.domain.model.version.ApiVersion
 import com.procurement.docs_generator.domain.model.version.ApiVersionDeserializer
 import com.procurement.docs_generator.domain.model.version.ApiVersionSerializer
-import java.time.LocalDateTime
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonPropertyOrder("version", "id", "command", "data")

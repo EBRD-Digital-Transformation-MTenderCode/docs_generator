@@ -1,5 +1,6 @@
 package com.procurement.docs_generator.infrastructure.common
 
+import java.io.ByteArrayInputStream
 import java.io.InputStream
 import java.nio.ByteBuffer
 import java.nio.charset.Charset
@@ -24,5 +25,16 @@ fun ByteBuffer.toString(charset: Charset): String {
     return String(bytes, charset)
 }
 
+fun ByteBuffer.toInputStream(): InputStream {
+    val bytes: ByteArray
+    if (this.hasArray()) {
+        bytes = this.array()
+    } else {
+        bytes = ByteArray(this.remaining())
+        this.get(bytes)
+    }
+
+    return ByteArrayInputStream(bytes)
+}
 
 

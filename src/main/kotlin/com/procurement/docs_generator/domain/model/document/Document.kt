@@ -2,7 +2,6 @@ package com.procurement.docs_generator.domain.model.document
 
 import com.procurement.docs_generator.domain.model.ValueObject
 import com.procurement.docs_generator.domain.model.language.Language
-import org.thymeleaf.context.IContext
 import java.time.LocalDate
 
 abstract class Document(
@@ -10,7 +9,7 @@ abstract class Document(
     val kind: Kind,
     val date: LocalDate,
     val lang: Language,
-    val context: IContext
+    val context: Map<String, Any>
 ) {
     enum class Id(val code: String, val description: String) : ValueObject {
         AWARD_CONTRACT("AWARD-CONTRACT", "award contract");

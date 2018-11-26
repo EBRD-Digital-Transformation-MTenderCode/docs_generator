@@ -51,6 +51,7 @@
         <flying-saucer.version>9.1.16</flying-saucer.version>
         <kafka-clients.version>2.1.0</kafka-clients.version>
         <openpdf.version>1.2.5</openpdf.version>
+        <xdocreport.version>2.0.1</xdocreport.version>
 
         <!--Test-->
         <junit-jupiter.version>5.3.1</junit-jupiter.version>
@@ -185,6 +186,30 @@
             <groupId>org.xhtmlrenderer</groupId>
             <artifactId>flying-saucer-pdf</artifactId>
             <version>${flying-saucer.version}</version>
+        </dependency>
+
+        <!--Template Engine-->
+        <dependency>
+            <groupId>fr.opensagres.xdocreport</groupId>
+            <artifactId>fr.opensagres.xdocreport.template.velocity</artifactId>
+            <version>${xdocreport.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>fr.opensagres.xdocreport</groupId>
+            <artifactId>fr.opensagres.xdocreport.template.freemarker</artifactId>
+            <version>${xdocreport.version}</version>
+        </dependency>
+
+        <!--DOCX-->
+        <dependency>
+            <groupId>fr.opensagres.xdocreport</groupId>
+            <artifactId>fr.opensagres.xdocreport.document.docx</artifactId>
+            <version>${xdocreport.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>fr.opensagres.xdocreport</groupId>
+            <artifactId>fr.opensagres.xdocreport.converter.docx.xwpf</artifactId>
+            <version>${xdocreport.version}</version>
         </dependency>
 
         <!--Logging-->
@@ -458,7 +483,7 @@
                     <images>
                         <image>
                             <registry>${docker-registry}</registry>
-                            <name>${docker-registry}/${project.artifactId}${docker-image-profile}:${project.version}-${git.commit.id.abbrev}
+                            <name>${docker-registry}/${project.artifactId}${docker-image-profile}:${project.version}.${git.commit.id.abbrev}
                             </name>
                             <build>
                                 <dockerFileDir>${project.basedir}/src/main</dockerFileDir>
