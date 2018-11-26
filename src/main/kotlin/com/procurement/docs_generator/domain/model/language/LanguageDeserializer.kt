@@ -10,7 +10,7 @@ class LanguageDeserializer : ValueObjectDeserializer<Language>() {
     companion object {
 
         fun deserialize(text: String): Language {
-            return Language(text)
+            return Language(text.toUpperCase())
         }
     }
 

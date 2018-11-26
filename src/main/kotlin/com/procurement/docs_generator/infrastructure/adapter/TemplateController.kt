@@ -4,7 +4,10 @@ import com.procurement.docs_generator.application.service.template.TemplateServi
 import com.procurement.docs_generator.domain.date.JsonDateDeserializer
 import com.procurement.docs_generator.domain.logger.Logger
 import com.procurement.docs_generator.domain.model.document.Document
+import com.procurement.docs_generator.domain.model.document.id.DocumentIdDeserializer
+import com.procurement.docs_generator.domain.model.document.kind.DocumentKindDeserializer
 import com.procurement.docs_generator.domain.model.language.Language
+import com.procurement.docs_generator.domain.model.language.LanguageDeserializer
 import com.procurement.docs_generator.domain.model.template.Template
 import com.procurement.docs_generator.domain.model.template.engine.TemplateEngineDeserializer
 import com.procurement.docs_generator.domain.model.template.format.TemplateFormatDeserializer
@@ -87,33 +90,44 @@ class TemplateController(
         return if (id == null || id.isBlank())
             throw InvalidValueOfParamException(nameAndTypeParam = "path variable: 'id'", valueParam = "missing")
         else
-            Document.Id.valueOfCodeOrNull(id.toUpperCase())
-                ?: throw InvalidValueOfParamException(nameAndTypeParam = "path variable: 'id'", valueParam = id)
+            try {
+                DocumentIdDeserializer.deserialize(id)
+            } catch (exception: Exception) {
+                throw InvalidValueOfParamException(nameAndTypeParam = "path variable: 'id'", valueParam = id)
+            }
     }
 
     private fun getKind(kind: String?): Document.Kind {
         return if (kind == null || kind.isBlank())
             throw InvalidValueOfParamException(nameAndTypeParam = "path variable: 'kind'", valueParam = "missing")
         else
-            Document.Kind.valueOfCodeOrNull(kind.toUpperCase())
-                ?: throw InvalidValueOfParamException(nameAndTypeParam = "path variable: 'kind'", valueParam = kind)
+            try {
+                DocumentKindDeserializer.deserialize(kind)
+            } catch (exception: Exception) {
+                throw InvalidValueOfParamException(nameAndTypeParam = "path variable: 'kind'", valueParam = kind)
+            }
     }
 
     private fun getLang(lang: String?): Language {
         return if (lang == null || lang.isEmpty())
             throw InvalidValueOfParamException(nameAndTypeParam = "path variable: 'lang'", valueParam = "missing")
         else
-            Language(lang)
+            try {
+                LanguageDeserializer.deserialize(lang)
+            } catch (exception: Exception) {
+                throw InvalidValueOfParamException(nameAndTypeParam = "path variable: 'lang'", valueParam = lang)
+            }
     }
 
     private fun getDate(date: String?): LocalDate {
         return if (date == null || date.isBlank())
             throw InvalidValueOfParamException(nameAndTypeParam = "path variable: 'date", valueParam = "missing")
-        else try {
-            JsonDateDeserializer.deserialize(date)
-        } catch (exception: Exception) {
-            throw InvalidValueOfParamException(nameAndTypeParam = "path variable: 'date'", valueParam = date)
-        }
+        else
+            try {
+                JsonDateDeserializer.deserialize(date)
+            } catch (exception: Exception) {
+                throw InvalidValueOfParamException(nameAndTypeParam = "path variable: 'date'", valueParam = date)
+            }
     }
 
     private fun getFile(file: MultipartFile?): MultipartFile {
@@ -124,21 +138,23 @@ class TemplateController(
     private fun getFormat(format: String?): Template.Format {
         return if (format == null || format.isBlank())
             throw InvalidValueOfParamException(nameAndTypeParam = "request param: 'format", valueParam = "missing")
-        else try {
-            TemplateFormatDeserializer.deserialize(format)
-        } catch (exception: Exception) {
-            throw InvalidValueOfParamException(nameAndTypeParam = "request param: 'format'", valueParam = format)
-        }
+        else
+            try {
+                TemplateFormatDeserializer.deserialize(format)
+            } catch (exception: Exception) {
+                throw InvalidValueOfParamException(nameAndTypeParam = "request param: 'format'", valueParam = format)
+            }
     }
 
     private fun getEngine(engine: String?): Template.Engine {
         return if (engine == null || engine.isBlank())
             throw InvalidValueOfParamException(nameAndTypeParam = "request param: 'engine", valueParam = "missing")
-        else try {
-            TemplateEngineDeserializer.deserialize(engine)
-        } catch (exception: Exception) {
-            throw InvalidValueOfParamException(nameAndTypeParam = "request param: 'engine'", valueParam = engine)
-        }
+        else
+            try {
+                TemplateEngineDeserializer.deserialize(engine)
+            } catch (exception: Exception) {
+                throw InvalidValueOfParamException(nameAndTypeParam = "request param: 'engine'", valueParam = engine)
+            }
     }
 
     @ExceptionHandler(value = [ApplicationException::class])

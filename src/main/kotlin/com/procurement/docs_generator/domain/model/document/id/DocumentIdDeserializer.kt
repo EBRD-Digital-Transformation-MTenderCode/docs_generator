@@ -9,7 +9,7 @@ import java.io.IOException
 
 class DocumentIdDeserializer : ValueObjectDeserializer<Document.Id>() {
     companion object {
-        fun deserialize(text: String) = Document.Id.valueOfCode(text)
+        fun deserialize(text: String) = Document.Id.valueOfCode(text.toUpperCase())
     }
 
     @Throws(IOException::class, JsonProcessingException::class)
