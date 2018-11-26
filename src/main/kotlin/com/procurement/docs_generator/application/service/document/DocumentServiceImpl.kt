@@ -49,7 +49,6 @@ class DocumentServiceImpl(
         }
 
         generators = result
-        println(result)
     }
 
     override fun processing(command: GenerateACDocCommand): ContractFinalizationCommand.Data {
