@@ -1,0 +1,62 @@
+spring:
+  cloud:
+    inetutils:
+      preferredNetworks:
+        - 192.168
+
+cassandra:
+  contact-points: localhost
+  keyspace-name: ocds
+  port: 9042
+  username:
+  password:
+
+kafka:
+  bootstrap-servers: localhost:9092
+  consumer:
+    group-id: document-generator-consumer-group
+    enable-auto-commit: false
+  producer:
+    retries: 5
+
+dev-endpoints:
+    public-point: http://10.0.20.125:9111
+    storage: http://10.0.20.125:9131
+
+management:
+  actuator-security:
+    username: actuator
+    password-hash: "{bcrypt}$2a$10$MSaYg2SejDhqgxY6DcomQeYwQRxrFXJHgdH.UOkDqBDNzHNIUSQr."
+
+  endpoint:
+    loggers:
+      enabled: true
+
+  endpoints:
+    jmx:
+      domain: com.procurement.auction
+      exposure:
+        exclude: "*"
+    web:
+      exposure:
+        include: "prometheus, metrics, loggers, info"
+  metrics:
+    distribution:
+      percentiles-histogram:
+        http:
+          server:
+            requests: true
+      sla:
+        http:
+          server:
+            requests: 1ms,5ms
+  #    export:
+  #      jvm:
+  #        enabled: true
+  #    enable:
+  #      jvm: true
+  server:
+    port: 8080
+  info:
+    git:
+      mode: full

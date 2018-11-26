@@ -1,0 +1,119 @@
+{
+  "releases": [
+    {
+      "date": "",
+      "tender": {
+        "classification": {
+          "description": "",
+          "id": ""
+        },
+        "procurementMethodDetails": "",
+        "mainProcurementCategory": "",
+        "lots": [
+          {
+            "id": ""
+          }
+        ]
+      },
+      "planning": {
+        "budget": {
+          "budgetAllocation": [
+            {
+              "budgetBreakdownID": "",
+              "period": {
+                "startDate": "",
+                "endDate": ""
+              },
+              "relatedItem": ""
+            }
+          ]
+        }
+      },
+      "contracts": [
+        {
+          "id": "",
+          "description": "",
+          "period": {
+            "endDate": ""
+          },
+          "agreedMetrics": [
+            {
+              "id": "cc-general",
+              "observations": [
+                {
+                  "id": "cc-general-1-1",
+                  "measure": 5
+                }
+              ]
+            }
+          ],
+          "value": {
+            "amount": 0
+          }
+        }
+      ],
+      "awards": [
+        {
+          "id": "",
+          "date": "",
+          "relatedLots": [
+            ""
+          ],
+          "items": [
+            {
+              "id": "",
+              "classification": {
+                "description": "",
+                "id": ""
+              },
+              "quantity": 0,
+              "unit": {
+                "value": {
+                  "amount": 0,
+                  "amountNet": 0
+                },
+                "name": ""
+              }
+            }
+          ]
+        }
+      ],
+      "parties": [
+        {
+          "identifier": {
+            "id": "string",
+            "legalName": "string"
+          },
+          "address": {
+            "streetAddress": "",
+            "addressDetails": {
+              "country": {
+                "description": ""
+              },
+              "region": {
+                "description": ""
+              },
+              "locality": {
+                "description": ""
+              }
+            }
+          },
+          "contactPoint": {
+            "telephone": "string"
+          },
+          "roles": [
+            ""
+          ]
+        }
+      ],
+      "relatedProcesses": [
+        {
+          "identifier": "",
+          "relationship": [
+            ""
+          ]
+        }
+      ]
+    }
+  ]
+}
