@@ -20,6 +20,7 @@ import com.procurement.docs_generator.domain.model.template.Template
 import com.procurement.docs_generator.domain.repository.DocumentDescriptorRepository
 import org.springframework.stereotype.Service
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @Service
 class DocumentServiceImpl(
@@ -29,6 +30,9 @@ class DocumentServiceImpl(
     private val documentDescriptorRepository: DocumentDescriptorRepository,
     private val uploadDocumentAdapter: UploadDocumentAdapter
 ) : DocumentService {
+    companion object {
+        private val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
+    }
 
     private val generators: Map<Template.Format, Map<Template.Engine, DocumentGenerator>>
 
@@ -69,9 +73,10 @@ class DocumentServiceImpl(
 
         val uploadDescriptor = getDocumentGenerator(template)
             .generate(template = template, context = document.context)
-            .use { pdfDocument ->
-                uploadDocumentAdapter.upload(pdfDocument)
-            }
+//            .use { pdfDocument ->
+//                uploadDocumentAdapter.upload(pdfDocument)
+//            }
+            .let { "FFFFF" }
 
         val descriptor = DocumentDescriptor(
             commandId = command.id,
@@ -153,6 +158,10 @@ class DocumentServiceImpl(
         TODO()
     }
 
+    private fun convertDate(date: String): String {
+        return JsonDateTimeDeserializer.deserialize(date).toLocalDate().format(dateFormatter)
+    }
+
     private fun getACServicesContext(publishDate: LocalDate,
                                      acRelease: ACReleasesPackage.Release,
                                      evRelease: EVReleasesPackage.Release,
@@ -162,7 +171,7 @@ class DocumentServiceImpl(
 
         val ctx = ServicesContext(
             ac = ServicesContext.AC(
-                date = acRelease.date,
+                date = convertDate(acRelease.date),
                 contract = acRelease.contracts[0].let { contract ->
                     ServicesContext.AC.Contract(
                         id = contract.id,
@@ -353,8 +362,8 @@ class DocumentServiceImpl(
                                             ServicesContext.AC.Award.Item.Planning.BudgetAllocation(
                                                 period = budgetAllocation.period.let { period ->
                                                     ServicesContext.AC.Award.Item.Planning.BudgetAllocation.Period(
-                                                        startDate = period.startDate,
-                                                        endDate = period.endDate
+                                                        startDate = convertDate(period.startDate),
+                                                        endDate = convertDate(period.endDate)
                                                     )
                                                 },
                                                 budgetBreakdownID = budgetAllocation.budgetBreakdownID
@@ -374,7 +383,7 @@ class DocumentServiceImpl(
                 } ?: throw IllegalStateException("Award not found.")
             ),
             ev = ServicesContext.EV(
-                publishDate = publishDate.toString(),
+                publishDate = publishDate.format(dateFormatter),
                 tender = evRelease.tender.let { tender ->
                     ServicesContext.EV.Tender(
                         id = tender.id
