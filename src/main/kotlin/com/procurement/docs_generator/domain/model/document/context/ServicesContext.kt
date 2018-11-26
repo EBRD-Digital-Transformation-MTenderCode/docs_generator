@@ -267,7 +267,7 @@ data class ServicesContext(
 
             @JsonPropertyOrder("id")
             data class RelatedLot(
-                @field:JsonProperty("id") @param:JsonProperty("id") val id: String //AC.awards.[relatedLots[0]==AC.tender.lots[0].id].id
+                @field:JsonProperty("id") @param:JsonProperty("id") val id: String //AC.awards.relatedLots[0]
             )
 
             @JsonPropertyOrder("classification", "description", "unit", "planning", "quantity", "agreedMetrics")

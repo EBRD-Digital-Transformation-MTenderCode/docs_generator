@@ -325,7 +325,7 @@ class DocumentServiceImpl(
                 }?.let { award ->
                     ServicesContext.AC.Award(
                         date = award.date,
-                        relatedLot = ServicesContext.AC.Award.RelatedLot(id = award.id),
+                        relatedLot = ServicesContext.AC.Award.RelatedLot(id = award.relatedLots[0]),
                         items = award.items.map { item ->
                             ServicesContext.AC.Award.Item(
                                 classification = item.classification.let { classification ->
