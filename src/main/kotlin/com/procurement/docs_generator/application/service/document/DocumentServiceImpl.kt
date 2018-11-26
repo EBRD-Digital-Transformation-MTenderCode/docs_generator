@@ -176,7 +176,7 @@ class DocumentServiceImpl(
                         id = contract.id,
                         description = contract.description,
                         value = contract.value.amount.toDouble(),
-                        endDate = contract.period.endDate,
+                        endDate = convertDate(contract.period.endDate),
                         agreedMetrics = getContractAgreedMetrics(acRelease)
                     )
                 },
@@ -331,7 +331,7 @@ class DocumentServiceImpl(
                     award.relatedLots[0] == acRelease.tender.lots[0].id
                 }?.let { award ->
                     ServicesContext.AC.Award(
-                        date = award.date,
+                        date = convertDate(award.date),
                         relatedLot = ServicesContext.AC.Award.RelatedLot(id = award.relatedLots[0]),
                         items = award.items.map { item ->
                             ServicesContext.AC.Award.Item(

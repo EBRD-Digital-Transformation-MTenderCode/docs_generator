@@ -26,7 +26,7 @@ data class ServicesContext(
             @field:JsonProperty("id") @param:JsonProperty("id") val id: String, // AC.contracts[0].id
             @field:JsonProperty("description") @param:JsonProperty("description") val description: String, // AC.contracts[0].description,
             @field:JsonProperty("value") @param:JsonProperty("value") val value: Double, // AC.contracts[0].value.amount
-            @field:JsonProperty("endDate") @param:JsonProperty("endDate") val endDate: String, // AC.contract.period.endDate
+            @field:JsonProperty("endDate") @param:JsonProperty("endDate") val endDate: String, // AC.contract.period.endDate (DD.MM.YYYY)
             @field:JsonProperty("agreedMetrics") @param:JsonProperty("agreedMetrics") val agreedMetrics: AgreedMetrics
         ) {
 
@@ -261,7 +261,7 @@ data class ServicesContext(
 
         @JsonPropertyOrder("date", "relatedLot", "items")
         data class Award(
-            @field:JsonProperty("date") @param:JsonProperty("date") val date: String, //AC.awards[relatedLots[0]==AC.tender.lots[0].id].date
+            @field:JsonProperty("date") @param:JsonProperty("date") val date: String, //AC.awards[relatedLots[0]==AC.tender.lots[0].id].date (DD.MM.YYYY)
             @field:JsonProperty("relatedLot") @param:JsonProperty("relatedLot") val relatedLot: RelatedLot,
             @field:JsonProperty("items") @param:JsonProperty("items") val items: List<Item>
         ) {
