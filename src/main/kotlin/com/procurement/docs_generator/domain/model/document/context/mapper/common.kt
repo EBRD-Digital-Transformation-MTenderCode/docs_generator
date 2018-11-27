@@ -23,14 +23,47 @@ fun List<ACReleasesPackage.Release.Party>.partyByRole(role: String): ACReleasesP
     throw IllegalStateException("Party by role: '$role' not found.")
 }
 
-fun <T> ACReleasesPackage.Release.Party.mapAdditionalIdentifiersByScheme(scheme: String,
-                                                                         transformer: (ACReleasesPackage.Release.Party.AdditionalIdentifier) -> T): List<T> {
+fun <T> ACReleasesPackage.Release.Party.mapAdditionalIdentifiersByScheme(
+    scheme: String,
+    transformer: (ACReleasesPackage.Release.Party.AdditionalIdentifier) -> T): List<T> {
     return if (this.additionalIdentifiers == null)
         emptyList()
     else {
         val predicate = scheme.toUpperCase()
         this.additionalIdentifiers.asSequence()
             .filter { it.scheme.toUpperCase() == predicate }
+            .map { identifier ->
+                transformer(identifier)
+            }
+            .toList()
+    }
+}
+
+fun <T> Collection<ACReleasesPackage.Release.Party.Person.BusinessFunction>.mapBusinessFunctionByType(
+    type: String,
+    transformer: (ACReleasesPackage.Release.Party.Person.BusinessFunction) -> T): List<T> {
+    return if (this.isEmpty())
+        emptyList()
+    else {
+        val predicate = type.toUpperCase()
+        this.asSequence()
+            .filter { it.type.toUpperCase() == predicate }
+            .map { identifier ->
+                transformer(identifier)
+            }
+            .toList()
+    }
+}
+
+fun <T> Collection<ACReleasesPackage.Release.Party.Person.BusinessFunction.Document>.mapDocumentsByDocumentType(
+    documentType: String,
+    transformer: (ACReleasesPackage.Release.Party.Person.BusinessFunction.Document) -> T): List<T> {
+    return if (this.isEmpty())
+        emptyList()
+    else {
+        val predicate = documentType.toUpperCase()
+        this.asSequence()
+            .filter { it.documentType.toUpperCase() == predicate }
             .map { identifier ->
                 transformer(identifier)
             }

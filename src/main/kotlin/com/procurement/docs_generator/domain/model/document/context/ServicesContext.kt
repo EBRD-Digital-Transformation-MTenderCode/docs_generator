@@ -127,11 +127,11 @@ data class ServicesContext(
             data class Person(
                 @field:JsonProperty("title") @param:JsonProperty("title") val title: String, // AC.parties[role=="buyer"].persones[*].title
                 @field:JsonProperty("name") @param:JsonProperty("name") val name: String, // AC.parties[role=="buyer"].persones[*[.name
-                @field:JsonProperty("businessFunctions") @param:JsonProperty("businessFunctions") val businessFunctions: BusinessFunctions
+                @field:JsonProperty("businessFunctions") @param:JsonProperty("businessFunctions") val businessFunctions:List <BusinessFunction>
             ) {
 
                 @JsonPropertyOrder("jobTitle")
-                data class BusinessFunctions(
+                data class BusinessFunction(
                     @field:JsonProperty("jobTitle") @param:JsonProperty("jobTitle") val jobTitle: String // AC.parties[role=="buyer"].persones[*].businessFunctions[type=="authority"].jobTitle
                 )
             }
@@ -212,17 +212,17 @@ data class ServicesContext(
             data class Person(
                 @field:JsonProperty("title") @param:JsonProperty("title") val title: String, // AC.parties[role=="supplier"].persones[*].title
                 @field:JsonProperty("name") @param:JsonProperty("name") val name: String, // AC.parties[role=="supplier"].persones[*].name
-                @field:JsonProperty("businessFunctions") @param:JsonProperty("businessFunctions") val businessFunctions: BusinessFunctions
+                @field:JsonProperty("businessFunctions") @param:JsonProperty("businessFunctions") val businessFunctions: List<BusinessFunction>
             ) {
 
                 @JsonPropertyOrder("jobTitle", "documents")
-                data class BusinessFunctions(
+                data class BusinessFunction(
                     @field:JsonProperty("jobTitle") @param:JsonProperty("jobTitle") val jobTitle: String, // AC.parties[role=="supplier"].persones.businessFunctions[type=="authority"].jobTitle
-                    @field:JsonProperty("documents") @param:JsonProperty("documents") val documents: Documents
+                    @field:JsonProperty("documents") @param:JsonProperty("documents") val documents: List<Document>
                 ) {
 
                     @JsonPropertyOrder("title")
-                    data class Documents(
+                    data class Document(
                         @field:JsonProperty("title") @param:JsonProperty("title") val title: String // AC.parties[role=="supplier"].persones[*].businessFunctions[type=="authority"].documents[documentType=="regulatoryDocument"]
                     )
                 }

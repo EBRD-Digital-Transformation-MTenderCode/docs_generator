@@ -65,11 +65,11 @@ object ServicesContextMapper {
                             ServicesContext.AC.Buyer.Person(
                                 title = person.title,
                                 name = person.name,
-                                businessFunctions = ServicesContext.AC.Buyer.Person.BusinessFunctions(
-                                    jobTitle = person.businessFunctions.first {
-                                        it.type == "authority"
-                                    }.jobTitle
-                                )
+                                businessFunctions = person.businessFunctions.mapBusinessFunctionByType(type = "authority") {
+                                    ServicesContext.AC.Buyer.Person.BusinessFunction(
+                                        jobTitle = it.jobTitle
+                                    )
+                                }
                             )
                         } ?: emptyList(),
                         details = party.details?.let { details ->
@@ -126,23 +126,16 @@ object ServicesContextMapper {
                             ServicesContext.AC.Supplier.Person(
                                 title = person.title,
                                 name = person.name,
-                                businessFunctions = person.businessFunctions.firstOrNull {
-                                    it.type == "authority"
-                                }?.let { businessFunction ->
-                                    ServicesContext.AC.Supplier.Person.BusinessFunctions(
+                                businessFunctions = person.businessFunctions.mapBusinessFunctionByType(type = "authority") { businessFunction ->
+                                    ServicesContext.AC.Supplier.Person.BusinessFunction(
                                         jobTitle = businessFunction.jobTitle,
-                                        documents = businessFunction.documents.firstOrNull {
-                                            it.documentType == "regulatoryDocument"
-                                        }?.let { document ->
-                                            ServicesContext.AC.Supplier.Person.BusinessFunctions.Documents(
+                                        documents = businessFunction.documents.mapDocumentsByDocumentType(documentType = "regulatoryDocument") { document ->
+                                            ServicesContext.AC.Supplier.Person.BusinessFunction.Document(
                                                 title = document.title ?: "N/A"
                                             )
                                         }
-                                            ?: throw IllegalStateException("Document in BusinessFunctions by documentType=='regulatoryDocument' not found.")
                                     )
                                 }
-                                    ?: throw IllegalStateException("BusinessFunctions by type: 'authority' not found.")
-
                             )
                         } ?: emptyList(),
                         details = party.details?.let { details ->

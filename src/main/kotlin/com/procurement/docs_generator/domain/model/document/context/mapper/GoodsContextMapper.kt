@@ -65,11 +65,11 @@ object GoodsContextMapper {
                             GoodsContext.AC.Buyer.Person(
                                 title = person.title,
                                 name = person.name,
-                                businessFunctions = GoodsContext.AC.Buyer.Person.BusinessFunctions(
-                                    jobTitle = person.businessFunctions.first {
-                                        it.type == "authority"
-                                    }.jobTitle
-                                )
+                                businessFunctions = person.businessFunctions.mapBusinessFunctionByType(type = "authority") {
+                                    GoodsContext.AC.Buyer.Person.BusinessFunction(
+                                        jobTitle = it.jobTitle
+                                    )
+                                }
                             )
                         } ?: emptyList(),
                         details = party.details?.let { details ->
@@ -126,23 +126,16 @@ object GoodsContextMapper {
                             GoodsContext.AC.Supplier.Person(
                                 title = person.title,
                                 name = person.name,
-                                businessFunctions = person.businessFunctions.firstOrNull {
-                                    it.type == "authority"
-                                }?.let { businessFunction ->
-                                    GoodsContext.AC.Supplier.Person.BusinessFunctions(
+                                businessFunctions = person.businessFunctions.mapBusinessFunctionByType(type = "authority") { businessFunction ->
+                                    GoodsContext.AC.Supplier.Person.BusinessFunction(
                                         jobTitle = businessFunction.jobTitle,
-                                        documents = businessFunction.documents.firstOrNull {
-                                            it.documentType == "regulatoryDocument"
-                                        }?.let { document ->
-                                            GoodsContext.AC.Supplier.Person.BusinessFunctions.Documents(
-                                                title = document.title ?: "N/A"
+                                        documents = businessFunction.documents.mapDocumentsByDocumentType(documentType = "regulatoryDocument") {
+                                            GoodsContext.AC.Supplier.Person.BusinessFunction.Document(
+                                                title = it.title!!
                                             )
                                         }
-                                            ?: throw IllegalStateException("Document in BusinessFunctions by documentType=='regulatoryDocument' not found.")
                                     )
                                 }
-                                    ?: throw IllegalStateException("BusinessFunctions by type: 'authority' not found.")
-
                             )
                         } ?: emptyList(),
                         details = party.details?.let { details ->
