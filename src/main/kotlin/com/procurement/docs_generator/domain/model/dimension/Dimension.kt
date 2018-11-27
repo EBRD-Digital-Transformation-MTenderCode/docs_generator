@@ -4,10 +4,17 @@ private const val kbytes: Long = 1024
 private const val mbytes: Long = 1024 * 1024
 private const val gbytes: Long = 1024 * 1024 * 1024
 
-fun Int.toKb() = this * kbytes
-fun Int.toMb() = this * mbytes
-fun Int.toGb() = this * gbytes
+val Int.Kb: Long
+    get() = this * kbytes
+val Long.Kb: Long
+    get() = this * kbytes
 
-fun Long.toKb() = this * kbytes
-fun Long.toMb() = this * mbytes
-fun Long.toGb() = this * gbytes
+val Int.Mb: Long
+    get() = this * mbytes
+val Long.Mb: Long
+    get() = this * mbytes
+
+val Int.Gb: Long
+    get() = this * gbytes
+val Long.Gb: Long
+    get() = this * gbytes

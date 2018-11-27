@@ -5,7 +5,7 @@ import com.procurement.docs_generator.application.service.template.TemplateServi
 import com.procurement.docs_generator.domain.logger.Logger
 import com.procurement.docs_generator.domain.logger.debug
 import com.procurement.docs_generator.domain.logger.info
-import com.procurement.docs_generator.domain.model.dimension.toMb
+import com.procurement.docs_generator.domain.model.dimension.Mb
 import com.procurement.docs_generator.domain.model.document.Document
 import com.procurement.docs_generator.domain.model.language.Language
 import com.procurement.docs_generator.domain.model.template.Template
@@ -25,7 +25,7 @@ class TemplateServiceImpl(
     companion object {
         private val log: Logger = Slf4jLogger()
 
-        private val MaxFileSize = 50.toMb()
+        private val MaxFileSize = 50.Mb
     }
 
     override fun add(id: Document.Id,
