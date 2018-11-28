@@ -65,3 +65,18 @@ fun <T> Collection<ACReleasesPackage.Release.Party.Person.BusinessFunction.Docum
             .toList()
     }
 }
+
+fun <T> Collection<ACReleasesPackage.Release.Party.Details.Permit>?.firstPermitByScheme(
+    scheme: String,
+    transformer: (ACReleasesPackage.Release.Party.Details.Permit) -> T): T {
+    return if (this == null || this.isEmpty())
+        throw IllegalArgumentException("List of permits is empty.")
+    else {
+        val predicate = scheme.toUpperCase()
+        this.first {
+            it.scheme.toUpperCase() == predicate
+        }.let {
+            transformer(it)
+        }
+    }
+}

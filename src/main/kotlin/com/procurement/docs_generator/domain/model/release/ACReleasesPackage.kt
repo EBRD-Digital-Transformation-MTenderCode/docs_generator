@@ -700,8 +700,8 @@ class ACReleasesPackage(
 //                @field:JsonInclude(JsonInclude.Include.NON_NULL)
 //                @field:JsonProperty("scale") @param:JsonProperty("scale") val scale: String?,
 
-//                @field:JsonInclude(JsonInclude.Include.NON_EMPTY)
-//                @field:JsonProperty("permits") @param:JsonProperty("permits") val permits: List<Permit>?,
+                @field:JsonInclude(JsonInclude.Include.NON_EMPTY)
+                @field:JsonProperty("permits") @param:JsonProperty("permits") val permits: List<Permit>?,
                 @PS @field:JsonProperty("bankAccounts") @param:JsonProperty("bankAccounts") val bankAccounts: List<BankAccount>,
 
                 @field:JsonInclude(JsonInclude.Include.NON_NULL)
@@ -737,21 +737,21 @@ class ACReleasesPackage(
 //                    }
 //                }
 //
-//                @JsonPropertyOrder("scheme", "id", "url", "permit")
-//                data class Permit(
-//                    @field:JsonProperty("scheme") @param:JsonProperty("scheme") val scheme: String,
-//                    @field:JsonProperty("id") @param:JsonProperty("id") val id: String,
+                @JsonPropertyOrder("scheme", "id", "url", "permit")
+                data class Permit(
+                    @field:JsonProperty("scheme") @param:JsonProperty("scheme") val scheme: String,
+                    @field:JsonProperty("id") @param:JsonProperty("id") val id: String,
 //                    @field:JsonProperty("url") @param:JsonProperty("url") val url: String,
-//                    @field:JsonProperty("permit") @param:JsonProperty("permit") val permit: Permit
-//                ) {
-//
-//                    @JsonPropertyOrder("issuedBy", "issuedThought", "validityPeriod")
-//                    data class Permit(
+                    @field:JsonProperty("permit") @param:JsonProperty("permit") val permit: Permit
+                ) {
+
+                    @JsonPropertyOrder("issuedBy", "issuedThought", "validityPeriod")
+                    data class Permit(
 //                        @field:JsonProperty("issuedBy") @param:JsonProperty("issuedBy") val issuedBy: IssuedBy,
 //                        @field:JsonProperty("issuedThought") @param:JsonProperty("issuedThought") val issuedThought: IssuedThought,
-//                        @field:JsonProperty("validityPeriod") @param:JsonProperty("validityPeriod") val validityPeriod: ValidityPeriod
-//                    ) {
-//
+                        @field:JsonProperty("validityPeriod") @param:JsonProperty("validityPeriod") val validityPeriod: ValidityPeriod
+                    ) {
+                        //
 //                        @JsonPropertyOrder("id", "name")
 //                        data class IssuedBy(
 //                            @field:JsonProperty("id") @param:JsonProperty("id") val id: String,
@@ -764,13 +764,15 @@ class ACReleasesPackage(
 //                            @field:JsonProperty("name") @param:JsonProperty("name") val name: String
 //                        )
 //
-//                        @JsonPropertyOrder("startDate", "endDate")
-//                        data class ValidityPeriod(
-//                            @field:JsonProperty("startDate") @param:JsonProperty("startDate") val startDate: String,
+                        @JsonPropertyOrder("startDate", "endDate")
+                        data class ValidityPeriod(
+                            @JsonDeserialize(using = JsonDateTimeDeserializer::class)
+                            @JsonSerialize(using = JsonDateTimeSerializer::class)
+                            @field:JsonProperty("startDate") @param:JsonProperty("startDate") val startDate: LocalDateTime
 //                            @field:JsonProperty("endDate") @param:JsonProperty("endDate") val endDate: String
-//                        )
-//                    }
-//                }
+                        )
+                    }
+                }
 
                 @JsonPropertyOrder("description",
                                    "bankName",

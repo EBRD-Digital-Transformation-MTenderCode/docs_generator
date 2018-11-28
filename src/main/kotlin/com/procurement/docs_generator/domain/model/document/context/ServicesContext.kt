@@ -148,10 +148,12 @@ data class ServicesContext(
                 )
             }
 
-            @JsonPropertyOrder("bankAccount", "legalForm")
+            @JsonPropertyOrder("bankAccount", "legalForm", "permit")
             data class Details(
                 @field:JsonProperty("bankAccount") @param:JsonProperty("bankAccount") val bankAccount: BankAccounts,
-                @field:JsonProperty("legalForm") @param:JsonProperty("legalForm") val legalForm: LegalForm
+                @field:JsonProperty("legalForm") @param:JsonProperty("legalForm") val legalForm: LegalForm,
+                @field:JsonProperty("permit") @param:JsonProperty("permit") val permit: Permit
+
             ) {
 
                 @JsonPropertyOrder("accountIdentification", "identifier", "name", "address")
@@ -175,6 +177,15 @@ data class ServicesContext(
                 @JsonPropertyOrder("description")
                 data class LegalForm(
                     @field:JsonProperty("description") @param:JsonProperty("description") val description: String // AC.parties[role=="buyer"].legalForm.description
+                )
+
+                @JsonPropertyOrder("id", "startDate")
+                data class Permit(
+                    @field:JsonProperty("id") @param:JsonProperty("id") val id: String, // AC.parties.[role=="buyer"].details.permits[scheme="MD-SRLE"][0].id
+
+                    @JsonSerialize(using = JsonDateSerializer::class)
+                    @JsonDeserialize(using = JsonDateDeserializer::class)
+                    @field:JsonProperty("startDate") @param:JsonProperty("startDate") val startDate: LocalDate // AC.parties.[role=="buyer"].details.permits[scheme="MD-SRLE"].permit.validityPeriod.startDate
                 )
             }
         }
@@ -240,10 +251,11 @@ data class ServicesContext(
                 }
             }
 
-            @JsonPropertyOrder("bankAccount", "legalForm")
+            @JsonPropertyOrder("bankAccount", "legalForm", "permit")
             data class Details(
                 @field:JsonProperty("bankAccount") @param:JsonProperty("bankAccount") val bankAccount: BankAccounts,
-                @field:JsonProperty("legalForm") @param:JsonProperty("legalForm") val legalForm: LegalForm
+                @field:JsonProperty("legalForm") @param:JsonProperty("legalForm") val legalForm: LegalForm,
+                @field:JsonProperty("permit") @param:JsonProperty("permit") val permit: Permit
             ) {
 
                 @JsonPropertyOrder("accountIdentification", "identifier", "name", "address")
@@ -267,6 +279,15 @@ data class ServicesContext(
                 @JsonPropertyOrder("description")
                 data class LegalForm(
                     @field:JsonProperty("description") @param:JsonProperty("description") val description: String // AC.parties[role=="supplier"].legalForm.description
+                )
+
+                @JsonPropertyOrder("id", "startDate")
+                data class Permit(
+                    @field:JsonProperty("id") @param:JsonProperty("id") val id: String, // AC.parties.[role=="supplier"].details.permits[scheme="MD-SRLE"][0].id
+
+                    @JsonSerialize(using = JsonDateSerializer::class)
+                    @JsonDeserialize(using = JsonDateDeserializer::class)
+                    @field:JsonProperty("startDate") @param:JsonProperty("startDate") val startDate: LocalDate // AC.parties.[role=="supplier"].details.permits[scheme="MD-SRLE"].permit.validityPeriod.startDate
                 )
             }
         }
