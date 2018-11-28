@@ -1,0 +1,66 @@
+= *Appendix*
+
+=== URI
+/template/{document-id}/{document-kind}/{language}/{date}
+
+=== Document ids
+
+|===
+|Value|Description
+
+|`+AWARD-CONTRACT+`
+|The document of an award contract.
+
+|===
+
+=== Document kinds
+
+|===
+|Value|Description
+
+|`+SERVICES+`
+|The data of response.
+
+|`+GOODS+`
+|The data of response.
+
+|`+WORKS+`
+|The data of response.
+
+|===
+
+=== Language
+
+Language in ISO-639-1 format:
+
+|===
+|Value|Description
+
+|`+EN+`
+|English
+
+|`+RO+`
+|Romanian, Moldavian, Moldovan
+
+|`+RU+`
+|Russian
+
+|===
+
+=== Date
+
+Fotmat date: yyyy-MM-dd
+
+|===
+|Value|Description
+
+|`+yyyy+`
+|The Year.
+
+|`+MM+`
+|The month.
+
+|`+dd+`
+|The day.
+
+|===

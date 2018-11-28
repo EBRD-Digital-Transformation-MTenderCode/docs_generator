@@ -12,7 +12,8 @@ import org.springframework.context.annotation.Import
         ActuatorSecurity::class,
         KafkaConfiguration::class,
         CassandraConfiguration::class,
-        ThymeleafConfiguration::class
+        ThymeleafConfiguration::class,
+        WebConfiguration:: class
     ]
 )
 @EnableAutoConfiguration(

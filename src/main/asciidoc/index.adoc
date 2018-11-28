@@ -1,0 +1,9 @@
+= Document Generator Service.
+v1.1.1
+:toc:
+
+include::add_template.adoc[]
+
+include::update_template.adoc[]
+
+include::appendix.adoc[]

@@ -1,0 +1,89 @@
+= *Add template*
+
+== Request
+
+- HTTP
+include::../../../target/generated-snippets/template/add/success/http-request.adoc[]
+
+- CURL
+include::../../../target/generated-snippets/template/add/success/curl-request.adoc[]
+
+== Response structure
+include::../../../target/generated-snippets/template/add/success/http-response.adoc[]
+
+== Response fields
+include::../../../target/generated-snippets/template/add/success/response-fields.adoc[]
+
+== Errors
+
+=== Invalid document id
+
+====
+*Request*
+
+- HTML
+include::../../../target/generated-snippets/template/add/errors/invalid-id/http-request.adoc[]
+
+- CURL
+include::../../../target/generated-snippets/template/add/errors/invalid-id/curl-request.adoc[]
+
+*Response*
+include::../../../target/generated-snippets/template/add/errors/invalid-id/http-response.adoc[]
+
+*Response fields*
+include::../../../target/generated-snippets/template/add/errors/invalid-id/response-fields.adoc[]
+====
+
+=== Invalid document kind
+
+====
+*Request*
+
+- HTML
+include::../../../target/generated-snippets/template/add/errors/invalid-kind/http-request.adoc[]
+
+- CURL
+include::../../../target/generated-snippets/template/add/errors/invalid-kind/curl-request.adoc[]
+
+*Response*
+include::../../../target/generated-snippets/template/add/errors/invalid-kind/http-response.adoc[]
+
+*Response fields*
+include::../../../target/generated-snippets/template/add/errors/invalid-kind/response-fields.adoc[]
+====
+
+=== Invalid format date
+
+====
+*Request*
+
+- HTML
+include::../../../target/generated-snippets/template/add/errors/invalid-date/http-request.adoc[]
+
+- CURL
+include::../../../target/generated-snippets/template/add/errors/invalid-date/curl-request.adoc[]
+
+*Response*
+include::../../../target/generated-snippets/template/add/errors/invalid-date/http-response.adoc[]
+
+*Response fields*
+include::../../../target/generated-snippets/template/add/errors/invalid-date/response-fields.adoc[]
+====
+
+=== Template is already
+
+====
+*Request*
+
+- HTML
+include::../../../target/generated-snippets/template/add/errors/template-already/http-request.adoc[]
+
+- CURL
+include::../../../target/generated-snippets/template/add/errors/template-already/curl-request.adoc[]
+
+*Response*
+include::../../../target/generated-snippets/template/add/errors/template-already/http-response.adoc[]
+
+*Response fields*
+include::../../../target/generated-snippets/template/add/errors/template-already/response-fields.adoc[]
+====
