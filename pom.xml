@@ -243,6 +243,13 @@
             <version>${logstash.logback.encoder.version}</version>
         </dependency>
 
+        <!--Documentations-->
+        <dependency>
+            <groupId>org.springframework.restdocs</groupId>
+            <artifactId>spring-restdocs-mockmvc</artifactId>
+            <scope>test</scope>
+        </dependency>
+
         <!--Test-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
