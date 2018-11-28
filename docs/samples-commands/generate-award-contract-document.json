@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "id": "7058523e-8be1-4de5-83ab-75715cd85ea1",
+  "command": "generateACDoc",
+  "data": {
+    "country": "MD",
+    "language": "MD",
+    "cpid": "ocds-t1s2t3-MD-1543225596818",
+    "ocid": "ocds-t1s2t3-MD-1543225596818-AC-1542103253567"
+  }
+}

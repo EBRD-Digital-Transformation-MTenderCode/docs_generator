@@ -1,0 +1,119 @@
+{
+  "releases": [
+    {
+      "date": "2018-11-26T00:00:00Z",
+      "tender": {
+        "classification": {
+          "description": "",
+          "id": ""
+        },
+        "procurementMethodDetails": "",
+        "mainProcurementCategory": "",
+        "lots": [
+          {
+            "id": ""
+          }
+        ]
+      },
+      "planning": {
+        "budget": {
+          "budgetAllocation": [
+            {
+              "budgetBreakdownID": "",
+              "period": {
+                "startDate": "2018-11-26T00:00:00Z",
+                "endDate": "2018-11-26T00:00:00Z"
+              },
+              "relatedItem": ""
+            }
+          ]
+        }
+      },
+      "contracts": [
+        {
+          "id": "",
+          "description": "",
+          "period": {
+            "endDate": "2018-11-26T00:00:00Z"
+          },
+          "agreedMetrics": [
+            {
+              "id": "cc-general",
+              "observations": [
+                {
+                  "id": "cc-general-1-1",
+                  "measure": 5
+                }
+              ]
+            }
+          ],
+          "value": {
+            "amount": 0
+          }
+        }
+      ],
+      "awards": [
+        {
+          "id": "",
+          "date": "2018-11-26T00:00:00Z",
+          "relatedLots": [
+            ""
+          ],
+          "items": [
+            {
+              "id": "",
+              "classification": {
+                "description": "",
+                "id": ""
+              },
+              "quantity": 0,
+              "unit": {
+                "value": {
+                  "amount": 0,
+                  "amountNet": 0
+                },
+                "name": ""
+              }
+            }
+          ]
+        }
+      ],
+      "parties": [
+        {
+          "identifier": {
+            "id": "string",
+            "legalName": "string"
+          },
+          "address": {
+            "streetAddress": "",
+            "addressDetails": {
+              "country": {
+                "description": ""
+              },
+              "region": {
+                "description": ""
+              },
+              "locality": {
+                "description": ""
+              }
+            }
+          },
+          "contactPoint": {
+            "telephone": "string"
+          },
+          "roles": [
+            ""
+          ]
+        }
+      ],
+      "relatedProcesses": [
+        {
+          "identifier": "",
+          "relationship": [
+            ""
+          ]
+        }
+      ]
+    }
+  ]
+}
