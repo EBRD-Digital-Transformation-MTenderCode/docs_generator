@@ -17,13 +17,13 @@ object ServicesContextMapper {
 
         val ctx = ServicesContext(
             ac = ServicesContext.AC(
-                date = formattingDate(acRelease.date),
+                date = acRelease.date.toLocalDate(),
                 contract = acRelease.contracts[0].let { contract ->
                     ServicesContext.AC.Contract(
                         id = contract.id,
                         description = contract.description,
                         value = contract.value.amount.toDouble(),
-                        endDate = formattingDate(contract.period.endDate),
+                        endDate = contract.period.endDate.toLocalDate(),
                         agreedMetrics = getContractAgreedMetrics(acRelease)
                     )
                 },
@@ -55,7 +55,7 @@ object ServicesContextMapper {
                                 legalName = identifier.legalName
                             )
                         },
-                        additionalidentifieres = party.mapAdditionalIdentifiersByScheme(scheme = "MD-FISCAL") {
+                        additionalIdentifiers = party.mapAdditionalIdentifiersByScheme(scheme = "MD-FISCAL") {
                             ServicesContext.AC.Buyer.AdditionalIdentifier(id = it.id)
                         },
                         contactPoint = ServicesContext.AC.Buyer.ContactPoint(
@@ -116,7 +116,7 @@ object ServicesContextMapper {
                                 legalName = identifier.legalName
                             )
                         },
-                        additionalidentifieres = party.mapAdditionalIdentifiersByScheme(scheme = "MD-FISCAL") {
+                        additionalIdentifiers = party.mapAdditionalIdentifiersByScheme(scheme = "MD-FISCAL") {
                             ServicesContext.AC.Supplier.AdditionalIdentifier(id = it.id)
                         },
                         contactPoint = ServicesContext.AC.Supplier.ContactPoint(
@@ -169,7 +169,7 @@ object ServicesContextMapper {
                     award.relatedLots[0] == acRelease.tender.lots[0].id
                 }?.let { award ->
                     ServicesContext.AC.Award(
-                        date = formattingDate(award.date),
+                        date = award.date.toLocalDate(),
                         relatedLot = ServicesContext.AC.Award.RelatedLot(id = award.relatedLots[0]),
                         items = award.items.map { item ->
                             ServicesContext.AC.Award.Item(
@@ -199,8 +199,8 @@ object ServicesContextMapper {
                                             ServicesContext.AC.Award.Item.Planning.BudgetAllocation(
                                                 period = budgetAllocation.period.let { period ->
                                                     ServicesContext.AC.Award.Item.Planning.BudgetAllocation.Period(
-                                                        startDate = formattingDate(period.startDate),
-                                                        endDate = formattingDate(period.endDate)
+                                                        startDate = period.startDate.toLocalDate(),
+                                                        endDate = period.endDate.toLocalDate()
                                                     )
                                                 },
                                                 budgetBreakdownID = budgetAllocation.budgetBreakdownID
@@ -220,7 +220,7 @@ object ServicesContextMapper {
                 } ?: throw IllegalStateException("Award not found.")
             ),
             ev = ServicesContext.EV(
-                publishDate = formattingDate(publishDate),
+                publishDate = publishDate,
                 tender = evRelease.tender.let { tender ->
                     ServicesContext.EV.Tender(
                         id = tender.id

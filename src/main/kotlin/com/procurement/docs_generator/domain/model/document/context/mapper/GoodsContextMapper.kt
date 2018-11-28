@@ -17,13 +17,13 @@ object GoodsContextMapper {
 
         val ctx = GoodsContext(
             ac = GoodsContext.AC(
-                date = formattingDate(acRelease.date),
+                date = acRelease.date.toLocalDate(),
                 contract = acRelease.contracts[0].let { contract ->
                     GoodsContext.AC.Contract(
                         id = contract.id,
                         description = contract.description,
                         value = contract.value.amount.toDouble(),
-                        endDate = formattingDate(contract.period.endDate),
+                        endDate = contract.period.endDate.toLocalDate(),
                         agreedMetrics = getContractAgreedMetrics(acRelease)
                     )
                 },
@@ -55,7 +55,7 @@ object GoodsContextMapper {
                                 legalName = identifier.legalName
                             )
                         },
-                        additionalidentifieres = party.mapAdditionalIdentifiersByScheme(scheme = "MD-FISCAL") {
+                        additionalIdentifiers = party.mapAdditionalIdentifiersByScheme(scheme = "MD-FISCAL") {
                             GoodsContext.AC.Buyer.AdditionalIdentifier(id = it.id)
                         },
                         contactPoint = GoodsContext.AC.Buyer.ContactPoint(
@@ -116,7 +116,7 @@ object GoodsContextMapper {
                                 legalName = identifier.legalName
                             )
                         },
-                        additionalidentifieres = party.mapAdditionalIdentifiersByScheme(scheme = "MD-FISCAL") {
+                        additionalIdentifiers = party.mapAdditionalIdentifiersByScheme(scheme = "MD-FISCAL") {
                             GoodsContext.AC.Supplier.AdditionalIdentifier(id = it.id)
                         },
                         contactPoint = GoodsContext.AC.Supplier.ContactPoint(
@@ -169,7 +169,7 @@ object GoodsContextMapper {
                     award.relatedLots[0] == acRelease.tender.lots[0].id
                 }?.let { award ->
                     GoodsContext.AC.Award(
-                        date = formattingDate(award.date),
+                        date = award.date.toLocalDate(),
                         relatedLot = GoodsContext.AC.Award.RelatedLot(id = award.relatedLots[0]),
                         items = award.items.map { item ->
                             GoodsContext.AC.Award.Item(
@@ -199,8 +199,8 @@ object GoodsContextMapper {
                                             GoodsContext.AC.Award.Item.Planning.BudgetAllocation(
                                                 period = budgetAllocation.period.let { period ->
                                                     GoodsContext.AC.Award.Item.Planning.BudgetAllocation.Period(
-                                                        startDate = formattingDate(period.startDate),
-                                                        endDate = formattingDate(period.endDate)
+                                                        startDate = period.startDate.toLocalDate(),
+                                                        endDate = period.endDate.toLocalDate()
                                                     )
                                                 },
                                                 budgetBreakdownID = budgetAllocation.budgetBreakdownID
@@ -220,7 +220,7 @@ object GoodsContextMapper {
                 } ?: throw IllegalStateException("Award not found.")
             ),
             ev = GoodsContext.EV(
-                publishDate = formattingDate(publishDate),
+                publishDate = publishDate,
                 tender = evRelease.tender.let { tender ->
                     GoodsContext.EV.Tender(
                         id = tender.id

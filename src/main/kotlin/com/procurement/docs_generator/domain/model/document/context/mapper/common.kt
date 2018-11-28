@@ -1,11 +1,6 @@
 package com.procurement.docs_generator.domain.model.document.context.mapper
 
-import com.procurement.docs_generator.domain.model.date.JsonDateTimeDeserializer
 import com.procurement.docs_generator.domain.model.release.ACReleasesPackage
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-
-private val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
 
 fun List<ACReleasesPackage.Release.Party>.partyByRole(role: String): ACReleasesPackage.Release.Party {
     if (this.isEmpty())
@@ -69,12 +64,4 @@ fun <T> Collection<ACReleasesPackage.Release.Party.Person.BusinessFunction.Docum
             }
             .toList()
     }
-}
-
-fun formattingDate(date: String): String {
-    return JsonDateTimeDeserializer.deserialize(date).toLocalDate().format(dateFormatter)
-}
-
-fun formattingDate(date: LocalDate): String {
-    return date.format(dateFormatter)
 }

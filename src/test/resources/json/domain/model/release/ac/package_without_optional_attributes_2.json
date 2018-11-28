@@ -1,7 +1,7 @@
 {
   "releases": [
     {
-      "date": "",
+      "date": "2018-11-26T00:00:00Z",
       "tender": {
         "classification": {
           "description": "",
@@ -21,8 +21,8 @@
             {
               "budgetBreakdownID": "",
               "period": {
-                "startDate": "",
-                "endDate": ""
+                "startDate": "2018-11-26T00:00:00Z",
+                "endDate": "2018-11-26T00:00:00Z"
               },
               "relatedItem": ""
             }
@@ -34,7 +34,7 @@
           "id": "",
           "description": "",
           "period": {
-            "endDate": ""
+            "endDate": "2018-11-26T00:00:00Z"
           },
           "agreedMetrics": [
             {
@@ -55,7 +55,7 @@
       "awards": [
         {
           "id": "",
-          "date": "",
+          "date": "2018-11-26T00:00:00Z",
           "relatedLots": [
             ""
           ],

@@ -3,6 +3,11 @@ package com.procurement.docs_generator.domain.model.document.context
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonPropertyOrder
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize
+import com.fasterxml.jackson.databind.annotation.JsonSerialize
+import com.procurement.docs_generator.domain.date.JsonDateDeserializer
+import com.procurement.docs_generator.domain.date.JsonDateSerializer
+import java.time.LocalDate
 
 @JsonPropertyOrder("ac", "ev", "ms")
 data class ServicesContext(
@@ -13,7 +18,10 @@ data class ServicesContext(
 
     @JsonPropertyOrder("date", "contract", "tender", "buyer", "supplier", "award")
     data class AC(
-        @field:JsonProperty("date") @param:JsonProperty("date") val date: String, // AC.date, format - (DD.MM.YYYY)
+        @JsonSerialize(using = JsonDateSerializer::class)
+        @JsonDeserialize(using = JsonDateDeserializer::class)
+        @field:JsonProperty("date") @param:JsonProperty("date") val date: LocalDate, // AC.date, format - (DD.MM.YYYY)
+
         @field:JsonProperty("contract") @param:JsonProperty("contract") val contract: Contract,
         @field:JsonProperty("tender") @param:JsonProperty("tender") val tender: Tender,
         @field:JsonProperty("buyer") @param:JsonProperty("buyer") val buyer: Buyer,
@@ -26,7 +34,11 @@ data class ServicesContext(
             @field:JsonProperty("id") @param:JsonProperty("id") val id: String, // AC.contracts[0].id
             @field:JsonProperty("description") @param:JsonProperty("description") val description: String, // AC.contracts[0].description,
             @field:JsonProperty("value") @param:JsonProperty("value") val value: Double, // AC.contracts[0].value.amount
-            @field:JsonProperty("endDate") @param:JsonProperty("endDate") val endDate: String, // AC.contract.period.endDate (DD.MM.YYYY)
+
+            @JsonSerialize(using = JsonDateSerializer::class)
+            @JsonDeserialize(using = JsonDateDeserializer::class)
+            @field:JsonProperty("endDate") @param:JsonProperty("endDate") val endDate: LocalDate, // AC.contract.period.endDate (DD.MM.YYYY)
+
             @field:JsonProperty("agreedMetrics") @param:JsonProperty("agreedMetrics") val agreedMetrics: AgreedMetrics
         ) {
 
@@ -83,7 +95,7 @@ data class ServicesContext(
 
         @JsonPropertyOrder("address",
                            "identifier",
-                           "additionalidentifieres",
+                           "additionalIdentifiers",
                            "contactPoint",
                            "persones",
                            "details"
@@ -91,7 +103,7 @@ data class ServicesContext(
         data class Buyer(
             @field:JsonProperty("address") @param:JsonProperty("address") val address: Address,
             @field:JsonProperty("identifier") @param:JsonProperty("identifier") val identifier: Identifier,
-            @field:JsonProperty("additionalidentifieres") @param:JsonProperty("additionalidentifieres") val additionalidentifieres: List<AdditionalIdentifier>,
+            @field:JsonProperty("additionalIdentifiers") @param:JsonProperty("additionalIdentifiers") val additionalIdentifiers: List<AdditionalIdentifier>,
             @field:JsonProperty("contactPoint") @param:JsonProperty("contactPoint") val contactPoint: ContactPoint,
             @field:JsonProperty("persones") @param:JsonProperty("persones") val persones: List<Person>,
             @field:JsonProperty("details") @param:JsonProperty("details") val details: Details
@@ -127,7 +139,7 @@ data class ServicesContext(
             data class Person(
                 @field:JsonProperty("title") @param:JsonProperty("title") val title: String, // AC.parties[role=="buyer"].persones[*].title
                 @field:JsonProperty("name") @param:JsonProperty("name") val name: String, // AC.parties[role=="buyer"].persones[*[.name
-                @field:JsonProperty("businessFunctions") @param:JsonProperty("businessFunctions") val businessFunctions:List <BusinessFunction>
+                @field:JsonProperty("businessFunctions") @param:JsonProperty("businessFunctions") val businessFunctions: List<BusinessFunction>
             ) {
 
                 @JsonPropertyOrder("jobTitle")
@@ -169,14 +181,14 @@ data class ServicesContext(
 
         @JsonPropertyOrder("address",
                            "identifier",
-                           "additionalidentifieres",
+                           "additionalIdentifiers",
                            "contactPoint",
                            "persones",
                            "details")
         data class Supplier(
             @field:JsonProperty("address") @param:JsonProperty("address") val address: Address,
             @field:JsonProperty("identifier") @param:JsonProperty("identifier") val identifier: Identifier,
-            @field:JsonProperty("additionalidentifieres") @param:JsonProperty("additionalidentifieres") val additionalidentifieres: List<AdditionalIdentifier>,
+            @field:JsonProperty("additionalIdentifiers") @param:JsonProperty("additionalIdentifiers") val additionalIdentifiers: List<AdditionalIdentifier>,
             @field:JsonProperty("contactPoint") @param:JsonProperty("contactPoint") val contactPoint: ContactPoint,
             @field:JsonProperty("persones") @param:JsonProperty("persones") val persones: List<Person>,
             @field:JsonProperty("details") @param:JsonProperty("details") val details: Details
@@ -261,7 +273,10 @@ data class ServicesContext(
 
         @JsonPropertyOrder("date", "relatedLot", "items")
         data class Award(
-            @field:JsonProperty("date") @param:JsonProperty("date") val date: String, //AC.awards[relatedLots[0]==AC.tender.lots[0].id].date (DD.MM.YYYY)
+            @JsonSerialize(using = JsonDateSerializer::class)
+            @JsonDeserialize(using = JsonDateDeserializer::class)
+            @field:JsonProperty("date") @param:JsonProperty("date") val date: LocalDate, //AC.awards[relatedLots[0]==AC.tender.lots[0].id].date (DD.MM.YYYY)
+
             @field:JsonProperty("relatedLot") @param:JsonProperty("relatedLot") val relatedLot: RelatedLot,
             @field:JsonProperty("items") @param:JsonProperty("items") val items: List<Item>
         ) {
@@ -314,8 +329,13 @@ data class ServicesContext(
 
                         @JsonPropertyOrder("startDate", "endDate")
                         data class Period(
-                            @field:JsonProperty("startDate") @param:JsonProperty("startDate") val startDate: String, // AC.planning.budget.budgetAllocation[relatedItem==item.id].period.startDate, format - (DD.MM.YYYY)
-                            @field:JsonProperty("endDate") @param:JsonProperty("endDate") val endDate: String // AC.planning.budget.budgetAllocation[relatedItem==item.id].period.endDate, format - (DD.MM.YYYY)
+                            @JsonSerialize(using = JsonDateSerializer::class)
+                            @JsonDeserialize(using = JsonDateDeserializer::class)
+                            @field:JsonProperty("startDate") @param:JsonProperty("startDate") val startDate: LocalDate, // AC.planning.budget.budgetAllocation[relatedItem==item.id].period.startDate, format - (DD.MM.YYYY)
+
+                            @JsonSerialize(using = JsonDateSerializer::class)
+                            @JsonDeserialize(using = JsonDateDeserializer::class)
+                            @field:JsonProperty("endDate") @param:JsonProperty("endDate") val endDate: LocalDate // AC.planning.budget.budgetAllocation[relatedItem==item.id].period.endDate, format - (DD.MM.YYYY)
                         )
                     }
                 }
@@ -338,7 +358,10 @@ data class ServicesContext(
 
     @JsonPropertyOrder("publishDate", "tender")
     data class EV(
-        @field:JsonProperty("publishDate") @param:JsonProperty("publishDate") val publishDate: String, // EV.publishDate, format - (DD.MM.YYYY)
+        @JsonSerialize(using = JsonDateSerializer::class)
+        @JsonDeserialize(using = JsonDateDeserializer::class)
+        @field:JsonProperty("publishDate") @param:JsonProperty("publishDate") val publishDate: LocalDate, // EV.publishDate, format - (DD.MM.YYYY)
+
         @field:JsonProperty("tender") @param:JsonProperty("tender") val tender: Tender
     ) {
 

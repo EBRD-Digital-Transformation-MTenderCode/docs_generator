@@ -3,7 +3,12 @@ package com.procurement.docs_generator.domain.model.release
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonPropertyOrder
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize
+import com.fasterxml.jackson.databind.annotation.JsonSerialize
+import com.procurement.docs_generator.domain.model.date.JsonDateTimeDeserializer
+import com.procurement.docs_generator.domain.model.date.JsonDateTimeSerializer
 import java.math.BigDecimal
+import java.time.LocalDateTime
 
 annotation class PS
 
@@ -25,7 +30,10 @@ class ACReleasesPackage(
     data class Release(
 //        @field:JsonProperty("ocid") @param:JsonProperty("ocid") val ocid: String,
 //        @field:JsonProperty("id") @param:JsonProperty("id") val id: String,
-        @PS @field:JsonProperty("date") @param:JsonProperty("date") val date: String,
+        @JsonDeserialize(using = JsonDateTimeDeserializer::class)
+        @JsonSerialize(using = JsonDateTimeSerializer::class)
+        @PS @field:JsonProperty("date") @param:JsonProperty("date") val date: LocalDateTime,
+
 //        @field:JsonProperty("tag") @param:JsonProperty("tag") val tag: List<String>,
 //        @field:JsonProperty("initiationType") @param:JsonProperty("initiationType") val initiationType: String,
         @PS @field:JsonProperty("tender") @param:JsonProperty("tender") val tender: Tender,
@@ -172,8 +180,13 @@ class ACReleasesPackage(
 
                     @JsonPropertyOrder("startDate", "endDate")
                     data class Period(
-                        @PS @field:JsonProperty("startDate") @param:JsonProperty("startDate") val startDate: String,
-                        @PS @field:JsonProperty("endDate") @param:JsonProperty("endDate") val endDate: String
+                        @JsonDeserialize(using = JsonDateTimeDeserializer::class)
+                        @JsonSerialize(using = JsonDateTimeSerializer::class)
+                        @PS @field:JsonProperty("startDate") @param:JsonProperty("startDate") val startDate: LocalDateTime,
+
+                        @JsonDeserialize(using = JsonDateTimeDeserializer::class)
+                        @JsonSerialize(using = JsonDateTimeSerializer::class)
+                        @PS @field:JsonProperty("endDate") @param:JsonProperty("endDate") val endDate: LocalDateTime
                     )
                 }
 //
@@ -222,7 +235,10 @@ class ACReleasesPackage(
             @JsonPropertyOrder("startDate", "endDate")
             data class Period(
 //                @field:JsonProperty("startDate") @param:JsonProperty("startDate") val startDate: String,
-                @PS @field:JsonProperty("endDate") @param:JsonProperty("endDate") val endDate: String
+
+                @JsonDeserialize(using = JsonDateTimeDeserializer::class)
+                @JsonSerialize(using = JsonDateTimeSerializer::class)
+                @PS @field:JsonProperty("endDate") @param:JsonProperty("endDate") val endDate: LocalDateTime
             )
 
             @JsonPropertyOrder("id", "title", "description", "observations")
@@ -359,7 +375,10 @@ class ACReleasesPackage(
                            "items")
         data class Award(
             @PS @field:JsonProperty("id") @param:JsonProperty("id") val id: String,
-            @PS @field:JsonProperty("date") @param:JsonProperty("date") val date: String,
+
+            @JsonDeserialize(using = JsonDateTimeDeserializer::class)
+            @JsonSerialize(using = JsonDateTimeSerializer::class)
+            @PS @field:JsonProperty("date") @param:JsonProperty("date") val date: LocalDateTime,
 
 //            @field:JsonInclude(JsonInclude.Include.NON_NULL)
 //            @field:JsonProperty("description") @param:JsonProperty("description") val description: String?,
