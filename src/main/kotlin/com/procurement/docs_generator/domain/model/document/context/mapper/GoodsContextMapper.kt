@@ -61,7 +61,7 @@ object GoodsContextMapper {
                         contactPoint = GoodsContext.AC.Buyer.ContactPoint(
                             telephone = party.contactPoint.telephone
                         ),
-                        persones = party.persones?.map { person ->
+                        persones = party.persones.map { person ->
                             GoodsContext.AC.Buyer.Person(
                                 title = person.title,
                                 name = person.name,
@@ -71,8 +71,8 @@ object GoodsContextMapper {
                                     )
                                 }
                             )
-                        } ?: emptyList(),
-                        details = party.details?.let { detail ->
+                        },
+                        details = party.details.let { detail ->
                             GoodsContext.AC.Buyer.Details(
                                 bankAccount = detail.bankAccounts[0].let { bankAccount ->
                                     GoodsContext.AC.Buyer.Details.BankAccounts(
@@ -91,18 +91,16 @@ object GoodsContextMapper {
                                     )
                                 },
                                 legalForm = GoodsContext.AC.Buyer.Details.LegalForm(
-                                    detail.legalForm?.description
-                                        ?: throw IllegalStateException("Party -> buyer -> details no contains 'legalForm'.")
+                                    detail.legalForm.description
                                 ),
-                                permit = detail.permits.firstPermitByScheme(scheme = "MD-SRLE") { permit ->
+                                permit = detail.permits.firstOrNullPermitByScheme(scheme = "MD-SRLE") { permit ->
                                     GoodsContext.AC.Buyer.Details.Permit(
                                         id = permit.id,
-                                        startDate = permit.permit.validityPeriod.startDate.toLocalDate()
+                                        startDate = permit.permitDetails.validityPeriod.startDate.toLocalDate()
                                     )
                                 }
                             )
-                        } ?: throw IllegalStateException("Party of the buyer no contains 'details'.")
-
+                        }
                     )
                 },
                 supplier = partySupplier.let { party ->
@@ -128,7 +126,7 @@ object GoodsContextMapper {
                         contactPoint = GoodsContext.AC.Supplier.ContactPoint(
                             telephone = party.contactPoint.telephone
                         ),
-                        persones = party.persones?.map { person ->
+                        persones = party.persones.map { person ->
                             GoodsContext.AC.Supplier.Person(
                                 title = person.title,
                                 name = person.name,
@@ -137,14 +135,14 @@ object GoodsContextMapper {
                                         jobTitle = businessFunction.jobTitle,
                                         documents = businessFunction.documents.mapDocumentsByDocumentType(documentType = "regulatoryDocument") {
                                             GoodsContext.AC.Supplier.Person.BusinessFunction.Document(
-                                                title = it.title!!
+                                                title = it.title
                                             )
                                         }
                                     )
                                 }
                             )
-                        } ?: emptyList(),
-                        details = party.details?.let { detail ->
+                        },
+                        details = party.details.let { detail ->
                             GoodsContext.AC.Supplier.Details(
                                 bankAccount = detail.bankAccounts[0].let { bankAccount ->
                                     GoodsContext.AC.Supplier.Details.BankAccounts(
@@ -163,18 +161,16 @@ object GoodsContextMapper {
                                     )
                                 },
                                 legalForm = GoodsContext.AC.Supplier.Details.LegalForm(
-                                    description = detail.legalForm?.description
-                                        ?: throw IllegalStateException("Party -> supplier -> details no contains 'legalForm'.")
+                                    description = detail.legalForm.description
                                 ),
-                                permit = detail.permits.firstPermitByScheme(scheme = "MD-SRLE") { permit ->
+                                permit = detail.permits.firstOrNullPermitByScheme(scheme = "MD-SRLE") { permit ->
                                     GoodsContext.AC.Supplier.Details.Permit(
                                         id = permit.id,
-                                        startDate = permit.permit.validityPeriod.startDate.toLocalDate()
+                                        startDate = permit.permitDetails.validityPeriod.startDate.toLocalDate()
                                     )
                                 }
                             )
-                        } ?: throw IllegalStateException("Party of the supplier no contains 'details'.")
-
+                        }
                     )
                 },
                 award = acRelease.awards.firstOrNull { award ->
@@ -219,7 +215,6 @@ object GoodsContextMapper {
                                             )
                                         }
                                             ?: throw IllegalStateException("BudgetAllocation by relatedItem: '${item.id}' not found.")
-
                                     )
                                 },
                                 quantity = item.quantity.toDouble(),

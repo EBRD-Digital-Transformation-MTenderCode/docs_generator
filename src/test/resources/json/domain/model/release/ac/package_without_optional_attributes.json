@@ -73,7 +73,8 @@
                   "amountNet": 0
                 },
                 "name": ""
-              }
+              },
+              "description": ""
             }
           ]
         }
@@ -103,7 +104,55 @@
           },
           "roles": [
             ""
-          ]
+          ],
+          "persones": [
+            {
+              "title": "",
+              "name": "",
+              "businessFunctions": [
+                {
+                  "type": "authority",
+                  "jobTitle": "Chief Executive Officer",
+                  "documents": [
+                    {
+                      "documentType": "regulatoryDocument",
+                      "title": ""
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "details": {
+            "bankAccounts": [
+              {
+                "bankName": "",
+                "address": {
+                  "streetAddress": "",
+                  "addressDetails": {
+                    "country": {
+                      "description": ""
+                    },
+                    "region": {
+                      "description": ""
+                    },
+                    "locality": {
+                      "description": ""
+                    }
+                  }
+                },
+                "identifier": {
+                  "id": "300711"
+                },
+                "accountIdentification": {
+                  "id": "2600000625637"
+                }
+              }
+            ],
+            "legalForm": {
+              "description": ""
+            }
+          }
         }
       ],
       "relatedProcesses": [
