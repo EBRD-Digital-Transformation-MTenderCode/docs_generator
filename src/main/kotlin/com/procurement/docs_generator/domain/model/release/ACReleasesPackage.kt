@@ -176,7 +176,7 @@ class ACReleasesPackage(
 
             //TODO for Buyer and Supplier is required
 //            @field:JsonInclude(JsonInclude.Include.NON_NULL)
-            @field:JsonProperty("details") @param:JsonProperty("details") val details: Details
+            @field:JsonProperty("details") @param:JsonProperty("details") val details: Details?
         ) {
 
             @JsonPropertyOrder("id", "legalName")

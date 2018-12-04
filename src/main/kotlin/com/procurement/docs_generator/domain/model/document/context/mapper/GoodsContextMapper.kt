@@ -73,7 +73,8 @@ object GoodsContextMapper {
                                 }
                             )
                         },
-                        details = party.details.let { detail ->
+                        //details required for buyer
+                        details = party.details!!.let { detail ->
                             GoodsContext.AC.Buyer.Details(
                                 bankAccount = detail.bankAccounts[0].let { bankAccount ->
                                     GoodsContext.AC.Buyer.Details.BankAccounts(
@@ -144,7 +145,8 @@ object GoodsContextMapper {
                                 }
                             )
                         },
-                        details = party.details.let { detail ->
+                        //details required for supplier
+                        details = party.details!! .let { detail ->
                             GoodsContext.AC.Supplier.Details(
                                 bankAccount = detail.bankAccounts[0].let { bankAccount ->
                                     GoodsContext.AC.Supplier.Details.BankAccounts(
