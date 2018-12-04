@@ -172,7 +172,7 @@ class ACReleasesPackage(
             @field:JsonProperty("roles") @param:JsonProperty("roles") val roles: List<String>,
 
             @field:JsonInclude(JsonInclude.Include.NON_EMPTY)
-            @field:JsonProperty("persones") @param:JsonProperty("persones") val persones: List<Person>,
+            @field:JsonProperty("persones") @param:JsonProperty("persones") val persones: List<Person>?,
 
             //TODO for Buyer and Supplier is required
 //            @field:JsonInclude(JsonInclude.Include.NON_NULL)

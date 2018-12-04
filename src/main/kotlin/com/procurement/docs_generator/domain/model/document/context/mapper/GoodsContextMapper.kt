@@ -61,7 +61,8 @@ object GoodsContextMapper {
                         contactPoint = GoodsContext.AC.Buyer.ContactPoint(
                             telephone = party.contactPoint.telephone
                         ),
-                        persones = party.persones.map { person ->
+                        //persones required for buyer
+                        persones = party.persones!!.map { person ->
                             GoodsContext.AC.Buyer.Person(
                                 title = person.title,
                                 name = person.name,
@@ -126,7 +127,8 @@ object GoodsContextMapper {
                         contactPoint = GoodsContext.AC.Supplier.ContactPoint(
                             telephone = party.contactPoint.telephone
                         ),
-                        persones = party.persones.map { person ->
+                        //persones required for supplier
+                        persones = party.persones!!.map { person ->
                             GoodsContext.AC.Supplier.Person(
                                 title = person.title,
                                 name = person.name,
