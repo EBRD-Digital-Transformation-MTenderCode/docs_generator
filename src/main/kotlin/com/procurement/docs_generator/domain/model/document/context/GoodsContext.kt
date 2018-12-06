@@ -127,7 +127,7 @@ data class GoodsContext(
 
             @JsonPropertyOrder("id")
             data class AdditionalIdentifier(
-                @field:JsonProperty("id") @param:JsonProperty("id") val id: String // AC.parties.additionalIdentifiers[scheme=="MD-FISCAL"].id
+                @field:JsonProperty("id") @param:JsonProperty("id") val id: String?// AC.parties.additionalIdentifiers[scheme=="MD-FISCAL"].id
             )
 
             @JsonPropertyOrder("telephone")
@@ -222,7 +222,7 @@ data class GoodsContext(
 
             @JsonPropertyOrder("id")
             data class AdditionalIdentifier(
-                @field:JsonProperty("id") @param:JsonProperty("id") val id: String // AC.parties.[role=="supplier"].additionalidentifieres[scheme:MD-FISCAL].id
+                @field:JsonProperty("id") @param:JsonProperty("id") val id: String? // AC.parties.[role=="supplier"].additionalidentifieres[scheme:MD-FISCAL].id
 
             )
 
@@ -310,7 +310,7 @@ data class GoodsContext(
             @JsonPropertyOrder("classification", "description", "unit", "planning", "quantity", "agreedMetrics")
             data class Item(
                 @field:JsonProperty("classification") @param:JsonProperty("classification") val classification: Classification,
-                @field:JsonProperty("description") @param:JsonProperty("description") val description: String?,//AC.award.items[*].description
+                @field:JsonProperty("description") @param:JsonProperty("description") val description: String,//AC.award.items[*].description
                 @field:JsonProperty("unit") @param:JsonProperty("unit") val unit: Unit,
                 @field:JsonProperty("planning") @param:JsonProperty("planning") val planning: Planning,
                 @field:JsonProperty("quantity") @param:JsonProperty("quantity") val quantity: Double, //AC.award.items[*].quantity
