@@ -205,17 +205,22 @@ object ServicesContextMapper {
                                 },
                                 planning = acRelease.planning.budget.let { budget ->
                                     ServicesContext.AC.Award.Item.Planning(
-                                        budgetAllocations = budget.budgetAllocation.map { budgetAllocation ->
-                                            ServicesContext.AC.Award.Item.Planning.BudgetAllocation(
-                                                period = budgetAllocation.period.let { period ->
-                                                    ServicesContext.AC.Award.Item.Planning.BudgetAllocation.Period(
-                                                        startDate = period.startDate.toLocalDate(),
-                                                        endDate = period.endDate.toLocalDate()
-                                                    )
-                                                },
-                                                budgetBreakdownID = budgetAllocation.budgetBreakdownID
-                                            )
-                                        }
+                                        budgetAllocations = budget.budgetAllocation.asSequence()
+                                            .filter {
+                                                it.relatedItem == item.id
+                                            }
+                                            .map { budgetAllocation ->
+                                                ServicesContext.AC.Award.Item.Planning.BudgetAllocation(
+                                                    period = budgetAllocation.period.let { period ->
+                                                        ServicesContext.AC.Award.Item.Planning.BudgetAllocation.Period(
+                                                            startDate = period.startDate.toLocalDate(),
+                                                            endDate = period.endDate.toLocalDate()
+                                                        )
+                                                    },
+                                                    budgetBreakdownID = budgetAllocation.budgetBreakdownID
+                                                )
+                                            }
+                                            .toList()
                                     )
                                 },
                                 quantity = item.quantity.toDouble(),
