@@ -205,9 +205,7 @@ object ServicesContextMapper {
                                 },
                                 planning = acRelease.planning.budget.let { budget ->
                                     ServicesContext.AC.Award.Item.Planning(
-                                        budgetAllocation = budget.budgetAllocation.firstOrNull { budgetAllocation ->
-                                            budgetAllocation.relatedItem == item.id
-                                        }?.let { budgetAllocation ->
+                                        budgetAllocations = budget.budgetAllocation.map { budgetAllocation ->
                                             ServicesContext.AC.Award.Item.Planning.BudgetAllocation(
                                                 period = budgetAllocation.period.let { period ->
                                                     ServicesContext.AC.Award.Item.Planning.BudgetAllocation.Period(
@@ -218,7 +216,6 @@ object ServicesContextMapper {
                                                 budgetBreakdownID = budgetAllocation.budgetBreakdownID
                                             )
                                         }
-                                            ?: throw IllegalStateException("BudgetAllocation by relatedItem: '${item.id}' not found.")
                                     )
                                 },
                                 quantity = item.quantity.toDouble(),

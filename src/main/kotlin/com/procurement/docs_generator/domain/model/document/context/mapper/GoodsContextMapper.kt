@@ -146,7 +146,7 @@ object GoodsContextMapper {
                             )
                         },
                         //details required for supplier
-                        details = party.details!! .let { detail ->
+                        details = party.details!!.let { detail ->
                             GoodsContext.AC.Supplier.Details(
                                 bankAccount = detail.bankAccounts[0].let { bankAccount ->
                                     GoodsContext.AC.Supplier.Details.BankAccounts(
@@ -205,9 +205,7 @@ object GoodsContextMapper {
                                 },
                                 planning = acRelease.planning.budget.let { budget ->
                                     GoodsContext.AC.Award.Item.Planning(
-                                        budgetAllocation = budget.budgetAllocation.firstOrNull { budgetAllocation ->
-                                            budgetAllocation.relatedItem == item.id
-                                        }?.let { budgetAllocation ->
+                                        budgetAllocations = budget.budgetAllocation.map { budgetAllocation ->
                                             GoodsContext.AC.Award.Item.Planning.BudgetAllocation(
                                                 period = budgetAllocation.period.let { period ->
                                                     GoodsContext.AC.Award.Item.Planning.BudgetAllocation.Period(
@@ -218,7 +216,6 @@ object GoodsContextMapper {
                                                 budgetBreakdownID = budgetAllocation.budgetBreakdownID
                                             )
                                         }
-                                            ?: throw IllegalStateException("BudgetAllocation by relatedItem: '${item.id}' not found.")
                                     )
                                 },
                                 quantity = item.quantity.toDouble(),
