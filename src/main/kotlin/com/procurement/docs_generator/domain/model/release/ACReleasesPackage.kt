@@ -103,7 +103,7 @@ class ACReleasesPackage(
                 @JsonPropertyOrder("id", "measure")
                 data class Observation(
                     @field:JsonProperty("id") @param:JsonProperty("id") val id: String,
-                    @field:JsonProperty("measure") @param:JsonProperty("measure") val measure: Int
+                    @field:JsonProperty("measure") @param:JsonProperty("measure") val measure: String
                 )
             }
 
