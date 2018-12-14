@@ -138,7 +138,7 @@ data class ServicesContext(
             @JsonPropertyOrder("title", "name", "businessFunctions")
             data class Person(
                 @field:JsonProperty("title") @param:JsonProperty("title") val title: String, // AC.parties[role=="buyer"].persones[*].title
-                @field:JsonProperty("name") @param:JsonProperty("name") val name: String, // AC.parties[role=="buyer"].persones[*[.name
+                @field:JsonProperty("name") @param:JsonProperty("name") val name: String, // AC.parties[role=="buyer"].persones[*].name
                 @field:JsonProperty("businessFunctions") @param:JsonProperty("businessFunctions") val businessFunctions: List<BusinessFunction>
             ) {
 
@@ -246,7 +246,7 @@ data class ServicesContext(
 
                     @JsonPropertyOrder("title")
                     data class Document(
-                        @field:JsonProperty("title") @param:JsonProperty("title") val title: String // AC.parties[role=="supplier"].persones[*].businessFunctions[type=="authority"].documents[documentType=="regulatoryDocument"]
+                        @field:JsonProperty("title") @param:JsonProperty("title") val title: String // AC.parties[role=="supplier"].persones[*].businessFunctions[type=="authority"].documents[documentType=="regulatoryDocument"].title
                     )
                 }
             }
@@ -338,14 +338,14 @@ data class ServicesContext(
 
                 @JsonPropertyOrder("budgetAllocations")
                 data class Planning(
-                    @field:JsonProperty("budgetAllocations") @param:JsonProperty("budgetAllocation") val budgetAllocations: List<BudgetAllocation>
+                    @field:JsonProperty("budgetAllocations") @param:JsonProperty("budgetAllocation") val budgetAllocations: List<BudgetAllocation>// AC.planning.budget.budgetAllocation[relatedItem==item.id]
 
                 ) {
 
-                    @JsonPropertyOrder("period", "budgetBreakdownID")
+                    @JsonPropertyOrder("period", "budgetBreakdownId")
                     data class BudgetAllocation(
                         @field:JsonProperty("period") @param:JsonProperty("period") val period: Period,
-                        @field:JsonProperty("budgetBreakdownID") @param:JsonProperty("budgetBreakdownID") val budgetBreakdownID: String// AC.planning.budget.budgetAllocation[relatedItem==item.id].budgetBreakdownID
+                        @field:JsonProperty("budgetBreakdownId") @param:JsonProperty("budgetBreakdownId") val budgetBreakdownId: String// AC.planning.budget.budgetAllocation[relatedItem==item.id].budgetBreakdownId
                     ) {
 
                         @JsonPropertyOrder("startDate", "endDate")
