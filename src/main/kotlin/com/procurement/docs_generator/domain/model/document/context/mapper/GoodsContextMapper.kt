@@ -217,7 +217,7 @@ object GoodsContextMapper {
                                                             endDate = period.endDate.toLocalDate()
                                                         )
                                                     },
-                                                    budgetBreakdownID = budgetAllocation.budgetBreakdownID
+                                                    budgetBreakdownId = budgetAllocation.budgetBreakdownID
                                                 )
                                             }
                                             .toList()
