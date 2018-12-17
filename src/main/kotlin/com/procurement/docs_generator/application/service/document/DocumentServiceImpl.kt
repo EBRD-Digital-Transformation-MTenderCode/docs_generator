@@ -126,23 +126,26 @@ class DocumentServiceImpl(
         val evReleasesPackage = publicPointAdapter.getEVReleasePackage(cpid = cpid, ocid = evOCID)
         val publishDate: LocalDate = JsonDateTimeDeserializer.deserialize(evReleasesPackage.publishedDate).toLocalDate()
 
-        val msReleasesPackage = publicPointAdapter.getMSReleasePackage(cpid = cpid)
-
         val context = when (kind) {
-            Document.Kind.GOODS -> GoodsContextMapper.mapToContext(publishDate,
-                                                                   acReleases,
-                                                                   evReleasesPackage.releases[0],
-                                                                   msReleasesPackage.releases[0])
-
-            Document.Kind.SERVICES -> ServicesContextMapper.mapToContext(publishDate,
-                                                                         acReleases,
-                                                                         evReleasesPackage.releases[0],
-                                                                         msReleasesPackage.releases[0])
-
-            Document.Kind.WORKS -> WorksContextMapper.mapToContext(publishDate,
-                                                                   acReleases,
-                                                                   evReleasesPackage.releases[0],
-                                                                   msReleasesPackage.releases[0])
+            Document.Kind.GOODS -> {
+                val msReleasesPackage = publicPointAdapter.getMSReleasePackage(cpid = cpid)
+                GoodsContextMapper.mapToContext(publishDate,
+                                                acReleases,
+                                                evReleasesPackage.releases[0],
+                                                msReleasesPackage.releases[0])
+            }
+            Document.Kind.SERVICES -> {
+                val msReleasesPackage = publicPointAdapter.getMSReleasePackage(cpid = cpid)
+                ServicesContextMapper.mapToContext(publishDate,
+                                                   acReleases,
+                                                   evReleasesPackage.releases[0],
+                                                   msReleasesPackage.releases[0])
+            }
+            Document.Kind.WORKS -> {
+                WorksContextMapper.mapToContext(publishDate,
+                                                acReleases,
+                                                evReleasesPackage.releases[0])
+            }
         }
 
         return AwardContract(
