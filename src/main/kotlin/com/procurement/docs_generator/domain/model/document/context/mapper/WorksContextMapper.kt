@@ -215,7 +215,7 @@ object WorksContextMapper {
                     if (metric.id.startsWith("cc-buyer")) {
                         metric.observations.forEach {
                             when (it.id) {
-                                "cc-buyer-1-2" -> this["ccBuyer_1_2Measure"] = it.measure
+                                "cc-buyer-1-1" -> this["ccBuyer_1_1Measure"] = it.measure
                             }
                         }
                     }
@@ -223,12 +223,12 @@ object WorksContextMapper {
                     if (metric.id.startsWith("cc-tenderer")) {
                         metric.observations.forEach {
                             when (it.id) {
-                                "cc-tenderer-1-2" -> this["ccTenderer_1_2Measure"] = it.measure
+                                "cc-tenderer-1-1" -> this["ccTenderer_1_1Measure"] = it.measure
                                 "cc-tenderer-1-5" -> this["ccTenderer_1_5Measure"] = it.measure
-                                "cc-tenderer-2-5" -> this["ccTenderer_2_5Measure"] = it.measure
-                                "cc-tenderer-2-6" -> this["ccTenderer_2_6Measure"] = it.measure
-                                "cc-tenderer-3-4" -> this["ccTenderer_3_4Measure"] = it.measure
-                                "cc-tenderer-3-5" -> this["ccTenderer_3_5Measure"] = it.measure
+                                "cc-tenderer-2-2" -> this["ccTenderer_2_2Measure"] = it.measure
+                                "cc-tenderer-2-3" -> this["ccTenderer_2_3Measure"] = it.measure
+                                "cc-tenderer-3-2" -> this["ccTenderer_3_2Measure"] = it.measure
+                                "cc-tenderer-3-3" -> this["ccTenderer_3_3Measure"] = it.measure
                             }
                         }
                     }
@@ -237,26 +237,25 @@ object WorksContextMapper {
         )
 
         return WorksContext.AC.Contract.AgreedMetrics(
-            ccTenderer_1_2Measure = metrics.ccTenderer_1_2Measure,
+            ccTenderer_1_1Measure = metrics.ccTenderer_1_1Measure,
             ccTenderer_1_5Measure = metrics.ccTenderer_1_5Measure,
-            ccTenderer_2_5Measure = metrics.ccTenderer_2_5Measure,
-            ccTenderer_2_6Measure = metrics.ccTenderer_2_6Measure,
-            ccTenderer_3_4Measure = metrics.ccTenderer_3_4Measure,
-            ccTenderer_3_5Measure = metrics.ccTenderer_3_5Measure,
+            ccTenderer_2_2Measure = metrics.ccTenderer_2_2Measure,
+            ccTenderer_2_3Measure = metrics.ccTenderer_2_3Measure,
+            ccTenderer_3_2Measure = metrics.ccTenderer_3_2Measure,
+            ccTenderer_3_3Measure = metrics.ccTenderer_3_3Measure,
 
-            ccBuyer_1_2Measure = metrics.ccBuyer_1_2Measure
+            ccBuyer_1_1Measure = metrics.ccBuyer_1_1Measure
         )
     }
 
     private class ContractAgreedMetrics(props: Map<String, String>) {
-        val ccTenderer_1_2Measure: String by props
+        val ccTenderer_1_1Measure: String by props
         val ccTenderer_1_5Measure: String by props
-        val ccTenderer_2_5Measure: String by props
+        val ccTenderer_2_2Measure: String by props
+        val ccTenderer_2_3Measure: String by props
+        val ccTenderer_3_2Measure: String by props
+        val ccTenderer_3_3Measure: String by props
 
-        val ccTenderer_2_6Measure: String by props
-        val ccTenderer_3_4Measure: String by props
-        val ccTenderer_3_5Measure: String by props
-
-        val ccBuyer_1_2Measure: String by props
+        val ccBuyer_1_1Measure: String by props
     }
 }

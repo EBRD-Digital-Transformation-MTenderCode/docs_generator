@@ -38,22 +38,22 @@ data class WorksContext(
             @field:JsonProperty("agreedMetrics") @param:JsonProperty("agreedMetrics") val agreedMetrics: AgreedMetrics
         ) {
             @JsonPropertyOrder(
-                "ccTenderer_1_2Measure",
+                "ccTenderer_1_1Measure",
                 "ccTenderer_1_5Measure",
-                "ccTenderer_2_5Measure",
-                "ccTenderer_2_6Measure",
-                "ccTenderer_3_4Measure",
-                "ccTenderer_3_5Measure",
-                "ccBuyer_1_2Measure"
+                "ccTenderer_2_3Measure",
+                "ccTenderer_2_3Measure",
+                "ccTenderer_3_2Measure",
+                "ccTenderer_3_3Measure",
+                "ccBuyer_1_1Measure"
             )
             data class AgreedMetrics(
-                @field:JsonProperty("ccTenderer_1_2Measure") @param:JsonProperty("ccTenderer_1_2Measure") val ccTenderer_1_2Measure: String, // AC.contracts[0].agreedMetrics[id==cc-tenderer-1].observations[id==cc-tenderer-1-2].measure
+                @field:JsonProperty("ccTenderer_1_1Measure") @param:JsonProperty("ccTenderer_1_1Measure") val ccTenderer_1_1Measure: String, // AC.contracts[0].agreedMetrics[id==cc-tenderer-1].observations[id==cc-tenderer-1-1].measure
                 @field:JsonProperty("ccTenderer_1_5Measure") @param:JsonProperty("ccTenderer_1_5Measure") val ccTenderer_1_5Measure: String, // AC.contracts[0].agreedMetrics[id==cc-tenderer-1].observations[id==cc-tenderer-1-5].measure
-                @field:JsonProperty("ccTenderer_2_5Measure") @param:JsonProperty("ccTenderer_2_5Measure") val ccTenderer_2_5Measure: String, // AC.contracts[0].agreedMetrics[id==cc-tenderer-2].observations[id==cc-tenderer-2-5].measure
-                @field:JsonProperty("ccTenderer_2_6Measure") @param:JsonProperty("ccTenderer_2_6Measure") val ccTenderer_2_6Measure: String, // AC.contracts[0].agreedMetrics[id==cc-tenderer-2].observations[id==cc-tenderer-2-6].measure
-                @field:JsonProperty("ccTenderer_3_4Measure") @param:JsonProperty("ccTenderer_3_4Measure") val ccTenderer_3_4Measure: String, // AC.contracts[0].agreedMetrics[id==cc-tenderer-3].observations[id==cc-tenderer-3-4].measure
-                @field:JsonProperty("ccTenderer_3_5Measure") @param:JsonProperty("ccTenderer_3_5Measure") val ccTenderer_3_5Measure: String, // AC.contracts[0].agreedMetrics[id==cc-tenderer-3].observations[id==cc-tenderer-3-5].measure
-                @field:JsonProperty("ccBuyer_1_2Measure") @param:JsonProperty("ccBuyer_1_2Measure") val ccBuyer_1_2Measure: String // AC.contracts[0].agreedMetrics[id==cc-buyer-1].observations[id==cc-buyer-1-2].measure
+                @field:JsonProperty("ccTenderer_2_3Measure") @param:JsonProperty("ccTenderer_2_3Measure") val ccTenderer_2_3Measure: String, // AC.contracts[0].agreedMetrics[id==cc-tenderer-2].observations[id==cc-tenderer-2-3].measure
+                @field:JsonProperty("ccTenderer_2_2Measure") @param:JsonProperty("ccTenderer_2_2Measure") val ccTenderer_2_2Measure: String, // AC.contracts[0].agreedMetrics[id==cc-tenderer-2].observations[id==cc-tenderer-2-2].measure
+                @field:JsonProperty("ccTenderer_3_2Measure") @param:JsonProperty("ccTenderer_3_2Measure") val ccTenderer_3_2Measure: String, // AC.contracts[0].agreedMetrics[id==cc-tenderer-3].observations[id==cc-tenderer-3-2].measure
+                @field:JsonProperty("ccTenderer_3_3Measure") @param:JsonProperty("ccTenderer_3_3Measure") val ccTenderer_3_3Measure: String, // AC.contracts[0].agreedMetrics[id==cc-tenderer-3].observations[id==cc-tenderer-3-3].measure
+                @field:JsonProperty("ccBuyer_1_1Measure") @param:JsonProperty("ccBuyer_1_1Measure") val ccBuyer_1_1Measure: String // AC.contracts[0].agreedMetrics[id==cc-buyer-1].observations[id==cc-buyer-1-1].measure
             )
         }
 
