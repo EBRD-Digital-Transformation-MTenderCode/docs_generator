@@ -61,7 +61,8 @@ object GoodsContextMapper {
                         contactPoint = GoodsContext.AC.Buyer.ContactPoint(
                             telephone = party.contactPoint.telephone
                         ),
-                        persones = party.persones.map { person ->
+                        //persones required for buyer
+                        persones = party.persones!!.map { person ->
                             GoodsContext.AC.Buyer.Person(
                                 title = person.title,
                                 name = person.name,
@@ -72,7 +73,8 @@ object GoodsContextMapper {
                                 }
                             )
                         },
-                        details = party.details.let { detail ->
+                        //details required for buyer
+                        details = party.details!!.let { detail ->
                             GoodsContext.AC.Buyer.Details(
                                 bankAccount = detail.bankAccounts[0].let { bankAccount ->
                                     GoodsContext.AC.Buyer.Details.BankAccounts(
@@ -126,7 +128,8 @@ object GoodsContextMapper {
                         contactPoint = GoodsContext.AC.Supplier.ContactPoint(
                             telephone = party.contactPoint.telephone
                         ),
-                        persones = party.persones.map { person ->
+                        //persones required for supplier
+                        persones = party.persones!!.map { person ->
                             GoodsContext.AC.Supplier.Person(
                                 title = person.title,
                                 name = person.name,
@@ -142,7 +145,8 @@ object GoodsContextMapper {
                                 }
                             )
                         },
-                        details = party.details.let { detail ->
+                        //details required for supplier
+                        details = party.details!!.let { detail ->
                             GoodsContext.AC.Supplier.Details(
                                 bankAccount = detail.bankAccounts[0].let { bankAccount ->
                                     GoodsContext.AC.Supplier.Details.BankAccounts(
@@ -201,20 +205,22 @@ object GoodsContextMapper {
                                 },
                                 planning = acRelease.planning.budget.let { budget ->
                                     GoodsContext.AC.Award.Item.Planning(
-                                        budgetAllocation = budget.budgetAllocation.firstOrNull { budgetAllocation ->
-                                            budgetAllocation.relatedItem == item.id
-                                        }?.let { budgetAllocation ->
-                                            GoodsContext.AC.Award.Item.Planning.BudgetAllocation(
-                                                period = budgetAllocation.period.let { period ->
-                                                    GoodsContext.AC.Award.Item.Planning.BudgetAllocation.Period(
-                                                        startDate = period.startDate.toLocalDate(),
-                                                        endDate = period.endDate.toLocalDate()
-                                                    )
-                                                },
-                                                budgetBreakdownID = budgetAllocation.budgetBreakdownID
-                                            )
-                                        }
-                                            ?: throw IllegalStateException("BudgetAllocation by relatedItem: '${item.id}' not found.")
+                                        budgetAllocations = budget.budgetAllocation.asSequence()
+                                            .filter {
+                                                it.relatedItem == item.id
+                                            }
+                                            .map { budgetAllocation ->
+                                                GoodsContext.AC.Award.Item.Planning.BudgetAllocation(
+                                                    period = budgetAllocation.period.let { period ->
+                                                        GoodsContext.AC.Award.Item.Planning.BudgetAllocation.Period(
+                                                            startDate = period.startDate.toLocalDate(),
+                                                            endDate = period.endDate.toLocalDate()
+                                                        )
+                                                    },
+                                                    budgetBreakdownId = budgetAllocation.budgetBreakdownID
+                                                )
+                                            }
+                                            .toList()
                                     )
                                 },
                                 quantity = item.quantity.toDouble(),
@@ -256,9 +262,9 @@ object GoodsContextMapper {
                     if (metric.id.startsWith("cc-general")) {
                         metric.observations.forEach {
                             when (it.id) {
-                                "cc-general-1-1" -> this["ccGeneral_1_1Measure"] = it.measure.toString()
-                                "cc-general-1-2" -> this["ccGeneral_1_2Measure"] = it.measure.toString()
-                                "cc-general-1-3" -> this["ccGeneral_1_3Measure"] = it.measure.toString()
+                                "cc-general-1-1" -> this["ccGeneral_1_1Measure"] = it.measure
+                                "cc-general-1-2" -> this["ccGeneral_1_2Measure"] = it.measure
+                                "cc-general-1-3" -> this["ccGeneral_1_3Measure"] = it.measure
                             }
                         }
                     }
@@ -266,9 +272,9 @@ object GoodsContextMapper {
                     if (metric.id.startsWith("cc-buyer")) {
                         metric.observations.forEach {
                             when (it.id) {
-                                "cc-buyer-1-1" -> this["ccBuyer_1_1Measure"] = it.measure.toString()
-                                "cc-buyer-2-1" -> this["ccBuyer_2_1Measure"] = it.measure.toString()
-                                "cc-buyer-2-2" -> this["ccBuyer_2_2Measure"] = it.measure.toString()
+                                "cc-buyer-1-1" -> this["ccBuyer_1_1Measure"] = it.measure
+                                "cc-buyer-2-1" -> this["ccBuyer_2_1Measure"] = it.measure
+                                "cc-buyer-2-2" -> this["ccBuyer_2_2Measure"] = it.measure
                             }
                         }
                     }
@@ -276,15 +282,15 @@ object GoodsContextMapper {
                     if (metric.id.startsWith("cc-tenderer")) {
                         metric.observations.forEach {
                             when (it.id) {
-                                "cc-tenderer-1-1" -> this["ccTenderer_1_1Measure"] = it.measure.toString()
-                                "cc-tenderer-1-2" -> this["ccTenderer_1_2Measure"] = it.measure.toString()
-                                "cc-tenderer-2-1" -> this["ccTenderer_2_1Measure"] = it.measure.toString()
-                                "cc-tenderer-2-2" -> this["ccTenderer_2_2Measure"] = it.measure.toString()
-                                "cc-tenderer-2-3" -> this["ccTenderer_2_3Measure"] = it.measure.toString()
-                                "cc-tenderer-2-4" -> this["ccTenderer_2_4Measure"] = it.measure.toString()
-                                "cc-tenderer-3-1" -> this["ccTenderer_3_1Measure"] = it.measure.toString()
-                                "cc-tenderer-3-2" -> this["ccTenderer_3_2Measure"] = it.measure.toString()
-                                "cc-tenderer-3-3" -> this["ccTenderer_3_3Measure"] = it.measure.toString()
+                                "cc-tenderer-1-1" -> this["ccTenderer_1_1Measure"] = it.measure
+                                "cc-tenderer-1-2" -> this["ccTenderer_1_2Measure"] = it.measure
+                                "cc-tenderer-2-1" -> this["ccTenderer_2_1Measure"] = it.measure
+                                "cc-tenderer-2-2" -> this["ccTenderer_2_2Measure"] = it.measure
+                                "cc-tenderer-2-3" -> this["ccTenderer_2_3Measure"] = it.measure
+                                "cc-tenderer-2-4" -> this["ccTenderer_2_4Measure"] = it.measure
+                                "cc-tenderer-3-1" -> this["ccTenderer_3_1Measure"] = it.measure
+                                "cc-tenderer-3-2" -> this["ccTenderer_3_2Measure"] = it.measure
+                                "cc-tenderer-3-3" -> this["ccTenderer_3_3Measure"] = it.measure
                             }
                         }
                     }
@@ -324,11 +330,11 @@ object GoodsContextMapper {
                     mutableMapOf<String, String>().apply {
                         metric.observations.forEach {
                             when (it.id) {
-                                "cc-subject-1" -> this["ccSubject_1Measure"] = it.measure.toString()
-                                "cc-subject-2" -> this["ccSubject_2Measure"] = it.measure.toString()
-                                "cc-subject-3" -> this["ccSubject_3Measure"] = it.measure.toString()
-                                "cc-subject-4" -> this["ccSubject_4Measure"] = it.measure.toString()
-                                "cc-subject-5" -> this["ccSubject_5Measure"] = it.measure.toString()
+                                "cc-subject-1" -> this["ccSubject_1Measure"] = it.measure
+                                "cc-subject-2" -> this["ccSubject_2Measure"] = it.measure
+                                "cc-subject-3" -> this["ccSubject_3Measure"] = it.measure
+                                "cc-subject-4" -> this["ccSubject_4Measure"] = it.measure
+                                "cc-subject-5" -> this["ccSubject_5Measure"] = it.measure
                             }
                         }
                     }

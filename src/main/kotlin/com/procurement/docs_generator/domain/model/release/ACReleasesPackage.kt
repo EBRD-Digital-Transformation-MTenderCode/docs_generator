@@ -87,8 +87,12 @@ class ACReleasesPackage(
             @field:JsonProperty("value") @param:JsonProperty("value") val value: Value
         ) {
 
-            @JsonPropertyOrder("endDate")
+            @JsonPropertyOrder("startDate", "endDate")
             data class Period(
+                @JsonDeserialize(using = JsonDateTimeDeserializer::class)
+                @JsonSerialize(using = JsonDateTimeSerializer::class)
+                @field:JsonProperty("startDate") @param:JsonProperty("startDate") val startDate: LocalDateTime,
+
                 @JsonDeserialize(using = JsonDateTimeDeserializer::class)
                 @JsonSerialize(using = JsonDateTimeSerializer::class)
                 @field:JsonProperty("endDate") @param:JsonProperty("endDate") val endDate: LocalDateTime
@@ -103,13 +107,14 @@ class ACReleasesPackage(
                 @JsonPropertyOrder("id", "measure")
                 data class Observation(
                     @field:JsonProperty("id") @param:JsonProperty("id") val id: String,
-                    @field:JsonProperty("measure") @param:JsonProperty("measure") val measure: Int
+                    @field:JsonProperty("measure") @param:JsonProperty("measure") val measure: String
                 )
             }
 
-            @JsonPropertyOrder("amount")
+            @JsonPropertyOrder("amount", "amountNet")
             data class Value(
-                @field:JsonProperty("amount") @param:JsonProperty("amount") val amount: BigDecimal
+                @field:JsonProperty("amount") @param:JsonProperty("amount") val amount: BigDecimal,
+                @field:JsonProperty("amountNet") @param:JsonProperty("amountNet") val amountNet: BigDecimal
             )
         }
 
@@ -172,11 +177,11 @@ class ACReleasesPackage(
             @field:JsonProperty("roles") @param:JsonProperty("roles") val roles: List<String>,
 
             @field:JsonInclude(JsonInclude.Include.NON_EMPTY)
-            @field:JsonProperty("persones") @param:JsonProperty("persones") val persones: List<Person>,
+            @field:JsonProperty("persones") @param:JsonProperty("persones") val persones: List<Person>?,
 
             //TODO for Buyer and Supplier is required
-//            @field:JsonInclude(JsonInclude.Include.NON_NULL)
-            @field:JsonProperty("details") @param:JsonProperty("details") val details: Details
+            @field:JsonInclude(JsonInclude.Include.NON_NULL)
+            @field:JsonProperty("details") @param:JsonProperty("details") val details: Details?
         ) {
 
             @JsonPropertyOrder("id", "legalName")
@@ -218,9 +223,12 @@ class ACReleasesPackage(
                 }
             }
 
-            @JsonPropertyOrder("telephone")
+            @JsonPropertyOrder("telephone", "faxNumber")
             data class ContactPoint(
-                @field:JsonProperty("telephone") @param:JsonProperty("telephone") val telephone: String
+                @field:JsonProperty("telephone") @param:JsonProperty("telephone") val telephone: String,
+
+                @field:JsonInclude(JsonInclude.Include.NON_NULL)
+                @field:JsonProperty("faxNumber") @param:JsonProperty("faxNumber") val faxNumber: String?
             )
 
             @JsonPropertyOrder("scheme", "id")
@@ -267,16 +275,35 @@ class ACReleasesPackage(
                     @field:JsonProperty("permitDetails") @param:JsonProperty("permitDetails") val permitDetails: PermitDetails
                 ) {
 
-                    @JsonPropertyOrder("validityPeriod")
+                    @JsonPropertyOrder("issuedBy", "issuedThought", "validityPeriod")
                     data class PermitDetails(
+                        @field:JsonProperty("issuedBy") @param:JsonProperty("issuedBy") val issuedBy: IssuedBy,
+                        @field:JsonProperty("issuedThought") @param:JsonProperty("issuedThought") val issuedThought: IssuedThought,
                         @field:JsonProperty("validityPeriod") @param:JsonProperty("validityPeriod") val validityPeriod: ValidityPeriod
                     ) {
 
-                        @JsonPropertyOrder("startDate")
+                        @JsonPropertyOrder("id", "name")
+                        data class IssuedBy(
+                            @field:JsonProperty("id") @param:JsonProperty("id") val id: String,
+                            @field:JsonProperty("name") @param:JsonProperty("name") val name: String
+                        )
+
+                        @JsonPropertyOrder("id", "name")
+                        data class IssuedThought(
+                            @field:JsonProperty("id") @param:JsonProperty("id") val id: String,
+                            @field:JsonProperty("name") @param:JsonProperty("name") val name: String
+                        )
+
+                        @JsonPropertyOrder("startDate", "endDate")
                         data class ValidityPeriod(
                             @JsonDeserialize(using = JsonDateTimeDeserializer::class)
                             @JsonSerialize(using = JsonDateTimeSerializer::class)
-                            @field:JsonProperty("startDate") @param:JsonProperty("startDate") val startDate: LocalDateTime
+                            @field:JsonProperty("startDate") @param:JsonProperty("startDate") val startDate: LocalDateTime,
+
+                            @JsonDeserialize(using = JsonDateTimeDeserializer::class)
+                            @JsonSerialize(using = JsonDateTimeSerializer::class)
+                            @JsonInclude(JsonInclude.Include.NON_NULL)
+                            @field:JsonProperty("endDate") @param:JsonProperty("endDate") val endDate: LocalDateTime?
                         )
                     }
                 }

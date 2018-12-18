@@ -34,6 +34,7 @@
           "id": "",
           "description": "",
           "period": {
+            "startDate": "2018-11-25T00:00:00Z",
             "endDate": "2018-11-26T00:00:00Z"
           },
           "agreedMetrics": [
@@ -42,13 +43,14 @@
               "observations": [
                 {
                   "id": "cc-general-1-1",
-                  "measure": 5
+                  "measure": "5"
                 }
               ]
             }
           ],
           "value": {
-            "amount": 0
+            "amount": 0,
+            "amountNet": 1
           }
         }
       ],
