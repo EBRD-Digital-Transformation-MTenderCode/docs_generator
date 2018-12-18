@@ -20,12 +20,14 @@ object WorksContextMapper {
             ac = WorksContext.AC(
                 date = acRelease.date.toLocalDate(),
                 contract = acRelease.contracts[0].let { contract ->
-
+                    val contractPeriod = Period.between(
+                        contract.period.startDate.toLocalDate(),
+                        contract.period.endDate.toLocalDate()
+                    )
                     WorksContext.AC.Contract(
                         id = contract.id,
                         description = contract.description,
-                        monthNumber = Period.between(contract.period.startDate.toLocalDate(),
-                                                     contract.period.endDate.toLocalDate()).months,
+                        monthNumber = (contractPeriod.years * 12) + contractPeriod.months,
                         amount = contract.value.amount.toString(),
                         amountNet = contract.value.amountNet.toString(),
                         agreedMetrics = getContractAgreedMetrics(acRelease)
