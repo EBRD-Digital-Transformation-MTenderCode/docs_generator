@@ -27,7 +27,7 @@ object WorksContextMapper {
                     WorksContext.AC.Contract(
                         id = contract.id,
                         description = contract.description,
-                        monthNumber = (contractPeriod.years * 12) + contractPeriod.months,
+                        monthNumber = (contractPeriod.years * 12) + contractPeriod.months + if(contractPeriod.days > 0) 1 else 0,
                         amount = contract.value.amount.toString(),
                         amountNet = contract.value.amountNet.toString(),
                         agreedMetrics = getContractAgreedMetrics(acRelease)
@@ -160,7 +160,8 @@ object WorksContextMapper {
                                     idSRLE = permitSRLE.id,
                                     startDateSRLE = startDate,
                                     yearsNumber = permitSRLE.permitDetails.validityPeriod.endDate?.toLocalDate().let { endDate ->
-                                        Period.between(startDate, endDate).years
+                                        val period = Period.between(startDate, endDate)
+                                        period.years + if(period.months > 0 || period.days > 0) 1 else 0
                                     },
                                     issuedBy = permitSRLE.permitDetails.issuedBy.let { issuedBy ->
                                         WorksContext.AC.Supplier.Details.Permit.IssuedBy(
