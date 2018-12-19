@@ -27,7 +27,7 @@ object WorksContextMapper {
                     WorksContext.AC.Contract(
                         id = contract.id,
                         description = contract.description,
-                        monthNumber = (contractPeriod.years * 12) + contractPeriod.months + if(contractPeriod.days > 0) 1 else 0,
+                        monthNumber = (contractPeriod.years * 12) + contractPeriod.months + if (contractPeriod.days > 0) 1 else 0,
                         amount = contract.value.amount.toString(),
                         amountNet = contract.value.amountNet.toString(),
                         agreedMetrics = getContractAgreedMetrics(acRelease)
@@ -152,28 +152,37 @@ object WorksContextMapper {
                                 it.scheme.toUpperCase() == "SRLE"
                             }
 
-                            val permit = if (permitSRL != null && permitSRLE != null) {
-                                val startDate = permitSRLE.permitDetails.validityPeriod.startDate.toLocalDate()
+                            val permit = if (permitSRL != null || permitSRLE != null) {
+                                val startDateSRLE =
+                                    permitSRLE?.let { permit -> permit.permitDetails.validityPeriod.startDate.toLocalDate() }
+                                val endDateSRLE =
+                                    permitSRLE?.let { permit -> permit.permitDetails.validityPeriod.endDate?.toLocalDate() }
+
                                 WorksContext.AC.Supplier.Details.Permit(
-                                    idSRL = permitSRL.id,
-                                    startDateSRL = permitSRL.permitDetails.validityPeriod.startDate.toLocalDate(),
-                                    idSRLE = permitSRLE.id,
-                                    startDateSRLE = startDate,
-                                    yearsNumber = permitSRLE.permitDetails.validityPeriod.endDate?.toLocalDate().let { endDate ->
-                                        val period = Period.between(startDate, endDate)
-                                        period.years + if(period.months > 0 || period.days > 0) 1 else 0
+                                    idSRL = permitSRL?.id,
+                                    startDateSRL = permitSRL?.let { permit -> permit.permitDetails.validityPeriod.startDate.toLocalDate() },
+                                    idSRLE = permitSRLE?.id,
+                                    startDateSRLE = startDateSRLE,
+                                    yearsNumber = if (startDateSRLE != null && endDateSRLE != null) {
+                                        val period = Period.between(startDateSRLE, endDateSRLE)
+                                        period.years + if (period.months > 0 || period.days > 0) 1 else 0
+                                    } else
+                                        null,
+                                    issuedBy = permitSRLE?.let { permit ->
+                                        permit.permitDetails.issuedBy.let { issuedBy ->
+                                            WorksContext.AC.Supplier.Details.Permit.IssuedBy(
+                                                id = issuedBy.id,
+                                                name = issuedBy.name
+                                            )
+                                        }
                                     },
-                                    issuedBy = permitSRLE.permitDetails.issuedBy.let { issuedBy ->
-                                        WorksContext.AC.Supplier.Details.Permit.IssuedBy(
-                                            id = issuedBy.id,
-                                            name = issuedBy.name
-                                        )
-                                    },
-                                    issuedThought = permitSRLE.permitDetails.issuedThought.let { issuedThought ->
-                                        WorksContext.AC.Supplier.Details.Permit.IssuedThought(
-                                            id = issuedThought.id,
-                                            name = issuedThought.name
-                                        )
+                                    issuedThought = permitSRLE?.let { permit ->
+                                        permit.permitDetails.issuedThought.let { issuedThought ->
+                                            WorksContext.AC.Supplier.Details.Permit.IssuedThought(
+                                                id = issuedThought.id,
+                                                name = issuedThought.name
+                                            )
+                                        }
                                     }
                                 )
                             } else
