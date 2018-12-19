@@ -205,21 +205,21 @@ data class WorksContext(
 
                 @JsonPropertyOrder("idSRL", "startDateSRL", "idSRLE", "startDateSRLE", "yearsNumber", "issuedBy", "issuedThought")
                 data class Permit(
-                    @field:JsonProperty("idSRL") @param:JsonProperty("idSRL") val idSRL: String, // AC.parties.[role=="supplier"].details.permits[scheme="SRL"][0].id
+                    @field:JsonProperty("idSRL") @param:JsonProperty("idSRL") val idSRL: String?, // AC.parties.[role=="supplier"].details.permits[scheme="SRL"][0].id
 
                     @JsonSerialize(using = JsonDateSerializer::class)
                     @JsonDeserialize(using = JsonDateDeserializer::class)
-                    @field:JsonProperty("startDateSRL") @param:JsonProperty("startDateSRL") val startDateSRL: LocalDate, // AC.parties.[role=="supplier"].details.permits[scheme="SRL"].permitDetails.validityPeriod.startDate
+                    @field:JsonProperty("startDateSRL") @param:JsonProperty("startDateSRL") val startDateSRL: LocalDate?, // AC.parties.[role=="supplier"].details.permits[scheme="SRL"].permitDetails.validityPeriod.startDate
 
-                    @field:JsonProperty("idSRLE") @param:JsonProperty("idSRLE") val idSRLE: String, // AC.parties.[role=="supplier"].details.permits[scheme="SRLE"][0].id
+                    @field:JsonProperty("idSRLE") @param:JsonProperty("idSRLE") val idSRLE: String?, // AC.parties.[role=="supplier"].details.permits[scheme="SRLE"][0].id
 
                     @JsonSerialize(using = JsonDateSerializer::class)
                     @JsonDeserialize(using = JsonDateDeserializer::class)
-                    @field:JsonProperty("startDateSRLE") @param:JsonProperty("startDateSRLE") val startDateSRLE: LocalDate, // AC.parties.[role=="supplier"].details.permits[scheme="SRLE"].permitDetails.validityPeriod.startDate
+                    @field:JsonProperty("startDateSRLE") @param:JsonProperty("startDateSRLE") val startDateSRLE: LocalDate?, // AC.parties.[role=="supplier"].details.permits[scheme="SRLE"].permitDetails.validityPeriod.startDate
                     @field:JsonProperty("yearsNumber") @param:JsonProperty("yearsNumber") val yearsNumber: Int?, // AC.parties.[role=="supplier"].details.permits[scheme="SRLE"].permitDetails.validityPeriod.endDate - AC.parties.[role=="supplier"].details.permits[scheme="SRLE"].permitDetails.validityPeriod.startDate (in years)
 
-                    @field:JsonProperty("issuedBy") @param:JsonProperty("issuedBy") val issuedBy: IssuedBy,//AC.parties.[supplier].details.permits[scheme:SRLE].permitDetails.issuedBy
-                    @field:JsonProperty("issuedThought") @param:JsonProperty("issuedThought") val issuedThought: IssuedThought//AC.parties.[supplier].details.permits[scheme:SRLE].permitDetails.issuedThought
+                    @field:JsonProperty("issuedBy") @param:JsonProperty("issuedBy") val issuedBy: IssuedBy?, //AC.parties.[supplier].details.permits[scheme:SRLE].permitDetails.issuedBy
+                    @field:JsonProperty("issuedThought") @param:JsonProperty("issuedThought") val issuedThought: IssuedThought? //AC.parties.[supplier].details.permits[scheme:SRLE].permitDetails.issuedThought
                 ) {
                     data class IssuedBy(
                         @field:JsonProperty("name") @param:JsonProperty("name") val name: String,//AC.parties.[supplier].details.permits[scheme:SRLE].permitDetails.issuedBy.name
