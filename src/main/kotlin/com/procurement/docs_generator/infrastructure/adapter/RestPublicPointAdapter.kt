@@ -14,10 +14,11 @@ import com.procurement.docs_generator.domain.model.release.MSReleasesPackage
 import com.procurement.docs_generator.infrastructure.logger.Slf4jLogger
 import org.springframework.stereotype.Service
 import org.springframework.web.util.UriComponentsBuilder
+import java.net.URI
 
 @Service
 class RestPublicPointAdapter(
-    private val endpointProperties: EndpointProperties,
+    endpointProperties: EndpointProperties,
     private val remoteClient: RemoteClient
 ) : PublicPointAdapter {
 
@@ -25,7 +26,8 @@ class RestPublicPointAdapter(
         private val log: Logger = Slf4jLogger()
     }
 
-    private val PublicPointDomain = endpointProperties.publicPoint!!
+    private val publicPointDomain: URI = endpointProperties.storage?.let { URI(it) }
+        ?: throw IllegalStateException("URI to public-point not set.")
 
     override fun getACReleasePackage(cpid: CPID, ocid: OCID): ACReleasesPackage {
         val uri = genTendersUri(cpid = cpid, ocid = ocid)
@@ -45,16 +47,15 @@ class RestPublicPointAdapter(
         return remoteClient.get(uri)
     }
 
-    private fun genTendersUri(cpid: CPID) = UriComponentsBuilder.fromHttpUrl(PublicPointDomain)
+    private fun genTendersUri(cpid: CPID) = UriComponentsBuilder.fromUri(publicPointDomain)
         .pathSegment("tenders")
         .pathSegment(cpid.value)
         .pathSegment(cpid.value)
         .build(emptyMap<String, Any>())
 
-    private fun genTendersUri(cpid: CPID, ocid: OCID) =
-        UriComponentsBuilder.fromHttpUrl(endpointProperties.publicPoint!!)
-            .pathSegment("tenders")
-            .pathSegment(cpid.value)
-            .pathSegment(ocid.value)
-            .build(emptyMap<String, Any>())
+    private fun genTendersUri(cpid: CPID, ocid: OCID) = UriComponentsBuilder.fromUri(publicPointDomain)
+        .pathSegment("tenders")
+        .pathSegment(cpid.value)
+        .pathSegment(ocid.value)
+        .build(emptyMap<String, Any>())
 }
