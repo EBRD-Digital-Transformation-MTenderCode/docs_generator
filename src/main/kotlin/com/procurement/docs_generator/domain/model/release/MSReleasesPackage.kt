@@ -18,7 +18,6 @@ class MSReleasesPackage(
         data class Tender(
             @field:JsonProperty("id") @param:JsonProperty("id") val id: String,
             @field:JsonProperty("title") @param:JsonProperty("title") val title: String,
-            @field:JsonProperty("mainProcurementCategory") @param:JsonProperty("mainProcurementCategory") val mainProcurementCategory: String,
             @field:JsonProperty("value") @param:JsonProperty("value") val value: Value
         ) {
             @JsonPropertyOrder("amount")

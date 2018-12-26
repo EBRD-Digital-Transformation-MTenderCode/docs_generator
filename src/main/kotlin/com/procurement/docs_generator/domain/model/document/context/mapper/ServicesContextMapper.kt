@@ -359,33 +359,11 @@ object ServicesContextMapper {
     }
 
     private fun getProcurementMethodDetails(msRelease: MSReleasesPackage.Release): String {
-        val mainProcurementCategory = msRelease.tender.mainProcurementCategory.toUpperCase()
-        return when (mainProcurementCategory) {
-            "GOODS" -> {
-                val amount = msRelease.tender.value.amount.toLong()
-                when {
-                    amount < 80000 -> "mv"
-                    amount in 80000..400000 -> "sv"
-                    else -> "ot"
-                }
-            }
-            "SERVICES" -> {
-                val amount = msRelease.tender.value.amount.toLong()
-                when {
-                    amount < 80000 -> "mv"
-                    amount in 80000..400000 -> "sv"
-                    else -> "ot"
-                }
-            }
-            "WORKS" -> {
-                val amount = msRelease.tender.value.amount.toLong()
-                when {
-                    amount < 100000 -> "mv"
-                    amount in 100000..1500000 -> "sv"
-                    else -> "ot"
-                }
-            }
-            else -> throw IllegalStateException("Unknown mainProcurementCategory: '$mainProcurementCategory'.")
+        val amount = msRelease.tender.value.amount.toLong()
+        return when {
+            amount < 80000 -> "mv"
+            amount in 80000..400000 -> "sv"
+            else -> "ot"
         }
     }
 
