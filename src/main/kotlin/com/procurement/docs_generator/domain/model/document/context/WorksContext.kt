@@ -42,6 +42,7 @@ data class WorksContext(
                 "ccTenderer_1_5Measure",
                 "ccTenderer_2_3Measure",
                 "ccTenderer_2_3Measure",
+                "ccTenderer_2_4Measure",
                 "ccTenderer_3_2Measure",
                 "ccTenderer_3_3Measure",
                 "ccBuyer_1_1Measure"
@@ -50,6 +51,7 @@ data class WorksContext(
                 @field:JsonProperty("ccTenderer_1_1Measure") @param:JsonProperty("ccTenderer_1_1Measure") val ccTenderer_1_1Measure: String, // AC.contracts[0].agreedMetrics[id==cc-tenderer-1].observations[id==cc-tenderer-1-1].measure
                 @field:JsonProperty("ccTenderer_1_5Measure") @param:JsonProperty("ccTenderer_1_5Measure") val ccTenderer_1_5Measure: String, // AC.contracts[0].agreedMetrics[id==cc-tenderer-1].observations[id==cc-tenderer-1-5].measure
                 @field:JsonProperty("ccTenderer_2_3Measure") @param:JsonProperty("ccTenderer_2_3Measure") val ccTenderer_2_3Measure: String, // AC.contracts[0].agreedMetrics[id==cc-tenderer-2].observations[id==cc-tenderer-2-3].measure
+                @field:JsonProperty("ccTenderer_2_4Measure") @param:JsonProperty("ccTenderer_2_4Measure") val ccTenderer_2_4Measure: String, // AC.contracts[0].agreedMetrics[id==cc-tenderer-2].observations[id==cc-tenderer-2-4].measure
                 @field:JsonProperty("ccTenderer_2_2Measure") @param:JsonProperty("ccTenderer_2_2Measure") val ccTenderer_2_2Measure: String, // AC.contracts[0].agreedMetrics[id==cc-tenderer-2].observations[id==cc-tenderer-2-2].measure
                 @field:JsonProperty("ccTenderer_3_2Measure") @param:JsonProperty("ccTenderer_3_2Measure") val ccTenderer_3_2Measure: String, // AC.contracts[0].agreedMetrics[id==cc-tenderer-3].observations[id==cc-tenderer-3-2].measure
                 @field:JsonProperty("ccTenderer_3_3Measure") @param:JsonProperty("ccTenderer_3_3Measure") val ccTenderer_3_3Measure: String, // AC.contracts[0].agreedMetrics[id==cc-tenderer-3].observations[id==cc-tenderer-3-3].measure
@@ -246,9 +248,11 @@ data class WorksContext(
             )
         }
 
-        @JsonPropertyOrder("classification")
+        @JsonPropertyOrder("classification","procurementMethodDetails")
         data class Tender(
-            @field:JsonProperty("classification") @param:JsonProperty("classification") val classification: Classification
+            @field:JsonProperty("classification") @param:JsonProperty("classification") val classification: Classification,
+            @field:JsonProperty("procurementMethodDetails") @param:JsonProperty("procurementMethodDetails") val procurementMethodDetails: String // TODO need maping
+
         ) {
 
             @JsonPropertyOrder("id", "description")
