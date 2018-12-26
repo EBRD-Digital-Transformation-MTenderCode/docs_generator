@@ -26,7 +26,7 @@ class RestPublicPointAdapter(
         private val log: Logger = Slf4jLogger()
     }
 
-    private val publicPointDomain: URI = endpointProperties.storage?.let { URI(it) }
+    private val publicPointDomain: URI = endpointProperties.publicPoint?.let { URI(it) }
         ?: throw IllegalStateException("URI to public-point not set.")
 
     override fun getACReleasePackage(cpid: CPID, ocid: OCID): ACReleasesPackage {
