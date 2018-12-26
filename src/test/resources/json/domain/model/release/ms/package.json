@@ -3,7 +3,11 @@
     {
       "tender": {
         "id": "",
-        "title": "title-1"
+        "title": "title-1",
+        "mainProcurementCategory": "GOODS",
+        "value": {
+          "amount": 90000
+        }
       }
     }
   ]
