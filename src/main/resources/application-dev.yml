@@ -21,7 +21,9 @@ kafka:
 
 external-endpoints:
   public-point: http://10.0.20.125:9111
-  storage: http://10.0.20.125:9131
+  storage:
+    registration: http://10.0.20.125:9131
+    upload: http://10.0.20.125:9131
 
 management:
   actuator-security:

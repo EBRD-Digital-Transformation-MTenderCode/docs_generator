@@ -52,23 +52,19 @@ class SimpleUploadDocumentAdapter(
         private val log: Logger = Slf4jLogger()
     }
 
-    private val registrationUri: URI
-    private val uploadUri: URI
-
-    init {
-        val storageDomain = endpointProperties.storage
-            ?: throw IllegalStateException("URI to storage not set.")
-
-        registrationUri = UriComponentsBuilder.fromHttpUrl(storageDomain)
+    private val registrationUri: URI = endpointProperties.storage?.registration?.let {
+        UriComponentsBuilder.fromHttpUrl(it)
             .pathSegment("storage")
             .pathSegment("registration")
             .build(emptyMap<String, Any>())
+    } ?: throw IllegalStateException("URI to storage-registration not set.")
 
-        uploadUri = UriComponentsBuilder.fromHttpUrl(storageDomain)
+    private val uploadUri: URI = endpointProperties.storage?.upload?.let {
+        UriComponentsBuilder.fromHttpUrl(it)
             .pathSegment("storage")
             .pathSegment("upload")
             .build(emptyMap<String, Any>())
-    }
+    } ?: throw IllegalStateException("URI to storage-upload not set.")
 
     override fun upload(pdfDocument: PDFDocument): String {
         val fileName = pdfDocument.fileName
