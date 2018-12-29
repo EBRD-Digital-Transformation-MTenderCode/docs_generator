@@ -11,6 +11,7 @@ import com.procurement.docs_generator.domain.logger.debug
 import com.procurement.docs_generator.domain.model.document.PDFDocument
 import com.procurement.docs_generator.infrastructure.logger.Slf4jLogger
 import org.springframework.stereotype.Service
+import org.springframework.web.util.UriComponentsBuilder
 import java.net.URI
 
 data class RegistrationRequest(
@@ -51,8 +52,19 @@ class SimpleUploadDocumentAdapter(
         private val log: Logger = Slf4jLogger()
     }
 
-    private val RegistrationUri = endpointProperties.storage + "/storage/registration"
-    private val UploadUri = endpointProperties.storage + "/storage/upload/"
+    private val registrationUri: URI = endpointProperties.storage?.registration?.let {
+        UriComponentsBuilder.fromHttpUrl(it)
+            .pathSegment("storage")
+            .pathSegment("registration")
+            .build(emptyMap<String, Any>())
+    } ?: throw IllegalStateException("URI to storage-registration not set.")
+
+    private val uploadUri: URI = endpointProperties.storage?.upload?.let {
+        UriComponentsBuilder.fromHttpUrl(it)
+            .pathSegment("storage")
+            .pathSegment("upload")
+            .build(emptyMap<String, Any>())
+    } ?: throw IllegalStateException("URI to storage-upload not set.")
 
     override fun upload(pdfDocument: PDFDocument): String {
         val fileName = pdfDocument.fileName
@@ -61,14 +73,17 @@ class SimpleUploadDocumentAdapter(
 
         log.debug { "Registration document (file name: '$fileName', hash: '$hash', size: '$weight')." }
         val registrationResponse = webClient.post<RegistrationRequest, RegistrationResponse>(
-            uri = URI(RegistrationUri),
+            uri = registrationUri,
             body = RegistrationRequest(fileName = fileName, hash = hash, weight = weight)
         )
         log.debug { "Document was registered (file name: '$fileName', hash: '$hash', size: '$weight')." }
 
         log.debug { "Upload document (file name: '$fileName', hash: '$hash', size: '$weight')." }
+
         val resp = webClient.sendFile<UploadResponse>(
-            uri = URI(UploadUri + registrationResponse.data.id),
+            uri = UriComponentsBuilder.fromUri(uploadUri)
+                .pathSegment(registrationResponse.data.id)
+                .build(emptyMap<String, Any>()),
             pdfDocument = pdfDocument
         )
         log.debug { "Document was upload (file name: '$fileName', hash: '$hash', size: '$weight')." }

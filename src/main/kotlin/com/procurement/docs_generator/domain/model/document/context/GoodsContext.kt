@@ -81,7 +81,7 @@ data class GoodsContext(
 
         @JsonPropertyOrder("procurementMethodDetails", "classification")
         data class Tender(
-            @field:JsonProperty("procurementMethodDetails") @param:JsonProperty("procurementMethodDetails") val procurementMethodDetails: String, // AC.tender.procurementMethodDetails
+            @field:JsonProperty("procurementMethodDetails") @param:JsonProperty("procurementMethodDetails") val procurementMethodDetails: String, // TODO need maping
             @field:JsonProperty("classification") @param:JsonProperty("classification") val classification: Classification
         ) {
 
@@ -143,8 +143,16 @@ data class GoodsContext(
 
                 @JsonPropertyOrder("jobTitle")
                 data class BusinessFunction(
-                    @field:JsonProperty("jobTitle") @param:JsonProperty("jobTitle") val jobTitle: String // AC.parties[role=="buyer"].persones[*].businessFunctions[type=="authority"].jobTitle
+                    @field:JsonProperty("jobTitle") @param:JsonProperty("jobTitle") val jobTitle: String, // AC.parties[role=="buyer"].persones[*].businessFunctions[type=="authority"].jobTitle
+                    @field:JsonProperty("documents") @param:JsonProperty("documents") val documents: List<Document>
                 )
+                {
+
+                    @JsonPropertyOrder("title")
+                    data class Document(
+                        @field:JsonProperty("title") @param:JsonProperty("title") val title: String // AC.parties[role=="buyer"].persones[*].businessFunctions[type=="authority"].documents[documentType=="regulatoryDocument"].title
+                    )
+                }
             }
 
             @JsonPropertyOrder("bankAccount", "legalForm", "permit")

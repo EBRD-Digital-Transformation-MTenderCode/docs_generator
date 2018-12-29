@@ -3,6 +3,7 @@ package com.procurement.docs_generator.domain.model.document.context.mapper
 import com.procurement.docs_generator.domain.model.document.context.WorksContext
 import com.procurement.docs_generator.domain.model.release.ACReleasesPackage
 import com.procurement.docs_generator.domain.model.release.EVReleasesPackage
+import com.procurement.docs_generator.domain.model.release.MSReleasesPackage
 import java.time.LocalDate
 import java.time.Period
 
@@ -10,7 +11,8 @@ object WorksContextMapper {
 
     fun mapToContext(publishDate: LocalDate,
                      acRelease: ACReleasesPackage.Release,
-                     evRelease: EVReleasesPackage.Release
+                     evRelease: EVReleasesPackage.Release,
+                     msRelease: MSReleasesPackage.Release
     ): Map<String, Any> {
 
         val partyBuyer = acRelease.parties.partyByRole(role = "buyer")
@@ -40,7 +42,8 @@ object WorksContextMapper {
                                 id = classification.id,
                                 description = classification.description
                             )
-                        }
+                        },
+                        procurementMethodDetails = getProcurementMethodDetails(msRelease)
                     )
                 },
                 buyer = partyBuyer.let { party ->
@@ -220,6 +223,15 @@ object WorksContextMapper {
         }
     }
 
+    private fun getProcurementMethodDetails(msRelease: MSReleasesPackage.Release): String {
+        val amount = msRelease.tender.value.amount.toLong()
+        return when {
+            amount < 100000 -> "mv"
+            amount in 100000..1500000 -> "sv"
+            else -> "ot"
+        }
+    }
+
     private fun getContractAgreedMetrics(release: ACReleasesPackage.Release): WorksContext.AC.Contract.AgreedMetrics {
         val metrics = ContractAgreedMetrics(
             mutableMapOf<String, String>().apply {
@@ -239,6 +251,7 @@ object WorksContextMapper {
                                 "cc-tenderer-1-5" -> this["ccTenderer_1_5Measure"] = it.measure
                                 "cc-tenderer-2-2" -> this["ccTenderer_2_2Measure"] = it.measure
                                 "cc-tenderer-2-3" -> this["ccTenderer_2_3Measure"] = it.measure
+                                "cc-tenderer-2-4" -> this["ccTenderer_2_4Measure"] = it.measure
                                 "cc-tenderer-3-2" -> this["ccTenderer_3_2Measure"] = it.measure
                                 "cc-tenderer-3-3" -> this["ccTenderer_3_3Measure"] = it.measure
                             }
@@ -253,6 +266,7 @@ object WorksContextMapper {
             ccTenderer_1_5Measure = metrics.ccTenderer_1_5Measure,
             ccTenderer_2_2Measure = metrics.ccTenderer_2_2Measure,
             ccTenderer_2_3Measure = metrics.ccTenderer_2_3Measure,
+            ccTenderer_2_4Measure = metrics.ccTenderer_2_4Measure,
             ccTenderer_3_2Measure = metrics.ccTenderer_3_2Measure,
             ccTenderer_3_3Measure = metrics.ccTenderer_3_3Measure,
 
@@ -265,6 +279,7 @@ object WorksContextMapper {
         val ccTenderer_1_5Measure: String by props
         val ccTenderer_2_2Measure: String by props
         val ccTenderer_2_3Measure: String by props
+        val ccTenderer_2_4Measure: String by props
         val ccTenderer_3_2Measure: String by props
         val ccTenderer_3_3Measure: String by props
 
