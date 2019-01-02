@@ -151,7 +151,8 @@ data class WorksContext(
             "contactPoint",
             "persones",
             "details",
-            "additionalIdentifiers")
+            "additionalIdentifiers"
+        )
         data class Supplier(
             @field:JsonProperty("address") @param:JsonProperty("address") val address: Address,
             @field:JsonProperty("identifier") @param:JsonProperty("identifier") val identifier: Identifier,
@@ -205,7 +206,15 @@ data class WorksContext(
                     @field:JsonProperty("description") @param:JsonProperty("description") val description: String // AC.parties[role=="supplier"].legalForm.description
                 )
 
-                @JsonPropertyOrder("idSRL", "startDateSRL", "idSRLE", "startDateSRLE", "yearsNumber", "issuedBy", "issuedThought")
+                @JsonPropertyOrder(
+                    "idSRL",
+                    "startDateSRL",
+                    "idSRLE",
+                    "startDateSRLE",
+                    "yearsNumber",
+                    "issuedBy",
+                    "issuedThought"
+                )
                 data class Permit(
                     @field:JsonProperty("idSRL") @param:JsonProperty("idSRL") val idSRL: String?, // AC.parties.[role=="supplier"].details.permits[scheme="SRL"][0].id
 
@@ -248,7 +257,7 @@ data class WorksContext(
             )
         }
 
-        @JsonPropertyOrder("classification","procurementMethodDetails")
+        @JsonPropertyOrder("classification", "procurementMethodDetails")
         data class Tender(
             @field:JsonProperty("classification") @param:JsonProperty("classification") val classification: Classification,
             @field:JsonProperty("procurementMethodDetails") @param:JsonProperty("procurementMethodDetails") val procurementMethodDetails: String // TODO need maping
@@ -261,7 +270,6 @@ data class WorksContext(
                 @field:JsonProperty("description") @param:JsonProperty("description") val description: String // AC.tender.classification.description
             )
         }
-
     }
 
     @JsonPropertyOrder("publishDate", "tender")

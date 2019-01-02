@@ -8,10 +8,12 @@ import java.time.LocalDate
 
 object ServicesContextMapper {
 
-    fun mapToContext(publishDate: LocalDate,
-                     acRelease: ACReleasesPackage.Release,
-                     evRelease: EVReleasesPackage.Release,
-                     msRelease: MSReleasesPackage.Release): Map<String, Any> {
+    fun mapToContext(
+        publishDate: LocalDate,
+        acRelease: ACReleasesPackage.Release,
+        evRelease: EVReleasesPackage.Release,
+        msRelease: MSReleasesPackage.Release
+    ): Map<String, Any> {
         val partyBuyer = acRelease.parties.partyByRole(role = "buyer")
         val partySupplier = acRelease.parties.partyByRole(role = "supplier")
 
@@ -182,60 +184,76 @@ object ServicesContextMapper {
                         }
                     )
                 },
-                award = acRelease.awards.firstOrNull { award ->
-                    award.relatedLots[0] == acRelease.tender.lots[0].id
-                }?.let { award ->
-                    ServicesContext.AC.Award(
-                        date = award.date.toLocalDate(),
-                        relatedLot = ServicesContext.AC.Award.RelatedLot(id = award.relatedLots[0]),
-                        items = award.items.map { item ->
-                            ServicesContext.AC.Award.Item(
-                                classification = item.classification.let { classification ->
-                                    ServicesContext.AC.Award.Item.Classification(
-                                        id = classification.id,
-                                        description = classification.description
-                                    )
-                                },
-                                description = item.description,
-                                unit = item.unit.let { unit ->
-                                    ServicesContext.AC.Award.Item.Unit(
-                                        name = unit.name,
-                                        value = unit.value.let { value ->
-                                            ServicesContext.AC.Award.Item.Unit.Value(
-                                                amount = value.amount.toDouble(),
-                                                amountNet = value.amountNet.toDouble()
-                                            )
-                                        }
-                                    )
-                                },
-                                planning = acRelease.planning.budget.let { budget ->
-                                    ServicesContext.AC.Award.Item.Planning(
-                                        budgetAllocations = budget.budgetAllocation.asSequence()
-                                            .filter {
-                                                it.relatedItem == item.id
-                                            }
-                                            .map { budgetAllocation ->
-                                                ServicesContext.AC.Award.Item.Planning.BudgetAllocation(
-                                                    period = budgetAllocation.period.let { period ->
-                                                        ServicesContext.AC.Award.Item.Planning.BudgetAllocation.Period(
-                                                            startDate = period.startDate.toLocalDate(),
-                                                            endDate = period.endDate.toLocalDate()
-                                                        )
-                                                    },
-                                                    budgetBreakdownId = budgetAllocation.budgetBreakdownID
+                award = acRelease.awards.firstOrNull()
+                    ?.let { award ->
+
+                        ServicesContext.AC.Award(
+                            date = award.date.toLocalDate(),
+                            relatedLots = award.relatedLots.map { id ->
+                                ServicesContext.AC.Award.RelatedLot(
+                                    id = id
+                                )
+                            },
+                            items = award.items.let { items ->
+                                val lotsIds: Set<String> = award.relatedLots.toSet()
+
+                                items.asSequence()
+                                    .filter { item ->
+                                        lotsIds.contains(item.relatedLot)
+                                    }
+                                    .map { item ->
+                                        ServicesContext.AC.Award.Item(
+                                            classification = item.classification.let { classification ->
+                                                ServicesContext.AC.Award.Item.Classification(
+                                                    id = classification.id,
+                                                    description = classification.description
                                                 )
-                                            }
-                                            .toList()
-                                    )
-                                },
-                                quantity = item.quantity.toDouble(),
-                                agreedMetrics = getItemAgreedMetrics(awardId = award.id,
-                                                                     itemId = item.id,
-                                                                     release = acRelease)
-                            )
-                        }
-                    )
-                } ?: throw IllegalStateException("Award not found.")
+                                            },
+                                            description = item.description,
+                                            unit = item.unit.let { unit ->
+                                                ServicesContext.AC.Award.Item.Unit(
+                                                    name = unit.name,
+                                                    value = unit.value.let { value ->
+                                                        ServicesContext.AC.Award.Item.Unit.Value(
+                                                            amount = value.amount.toDouble(),
+                                                            amountNet = value.amountNet.toDouble()
+                                                        )
+                                                    }
+                                                )
+                                            },
+                                            planning = acRelease.planning.budget.let { budget ->
+                                                ServicesContext.AC.Award.Item.Planning(
+                                                    budgetAllocations = budget.budgetAllocation.asSequence()
+                                                        .filter {
+                                                            it.relatedItem == item.id
+                                                        }
+                                                        .map { budgetAllocation ->
+                                                            ServicesContext.AC.Award.Item.Planning.BudgetAllocation(
+                                                                period = budgetAllocation.period.let { period ->
+                                                                    ServicesContext.AC.Award.Item.Planning.BudgetAllocation.Period(
+                                                                        startDate = period.startDate.toLocalDate(),
+                                                                        endDate = period.endDate.toLocalDate()
+                                                                    )
+                                                                },
+                                                                budgetBreakdownId = budgetAllocation.budgetBreakdownID
+                                                            )
+                                                        }
+                                                        .toList()
+                                                )
+                                            },
+                                            quantity = item.quantity.toDouble(),
+                                            agreedMetrics = getItemAgreedMetrics(
+                                                awardId = award.id,
+                                                itemId = item.id,
+                                                release = acRelease
+                                            )
+                                        )
+                                    }
+                                    .toList()
+
+                            }
+                        )
+                    } ?: throw IllegalStateException("Award not found.")
             ),
             ev = ServicesContext.EV(
                 publishDate = publishDate,
@@ -324,9 +342,11 @@ object ServicesContextMapper {
         )
     }
 
-    private fun getItemAgreedMetrics(awardId: String,
-                                     itemId: String,
-                                     release: ACReleasesPackage.Release): ServicesContext.AC.Award.Item.AgreedMetrics {
+    private fun getItemAgreedMetrics(
+        awardId: String,
+        itemId: String,
+        release: ACReleasesPackage.Release
+    ): ServicesContext.AC.Award.Item.AgreedMetrics {
         val ccSubject = "cc-subject-$awardId-$itemId"
         for (metric in release.contracts[0].agreedMetrics) {
 

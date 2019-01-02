@@ -130,9 +130,10 @@ class ACReleasesPackage(
             @field:JsonProperty("items") @param:JsonProperty("items") val items: List<Item>
         ) {
 
-            @JsonPropertyOrder("id", "classification", "quantity", "unit", "description")
+            @JsonPropertyOrder("id", "relatedLot", "classification", "quantity", "unit", "description")
             data class Item(
                 @field:JsonProperty("id") @param:JsonProperty("id") val id: String,
+                @field:JsonProperty("relatedLot") @param:JsonProperty("relatedLot") val relatedLot: String,
                 @field:JsonProperty("classification") @param:JsonProperty("classification") val classification: Classification,
                 @field:JsonProperty("quantity") @param:JsonProperty("quantity") val quantity: BigDecimal,
                 @field:JsonProperty("unit") @param:JsonProperty("unit") val unit: Unit,
@@ -160,13 +161,15 @@ class ACReleasesPackage(
             }
         }
 
-        @JsonPropertyOrder("identifier",
-                           "address",
-                           "contactPoint",
-                           "additionalIdentifiers",
-                           "roles",
-                           "persones",
-                           "details")
+        @JsonPropertyOrder(
+            "identifier",
+            "address",
+            "contactPoint",
+            "additionalIdentifiers",
+            "roles",
+            "persones",
+            "details"
+        )
         data class Party(
             @field:JsonProperty("identifier") @param:JsonProperty("identifier") val identifier: Identifier,
             @field:JsonProperty("address") @param:JsonProperty("address") val address: Address,
