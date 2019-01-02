@@ -29,7 +29,7 @@ object ServicesContextMapper {
                 },
                 tender = acRelease.tender.let { tender ->
                     ServicesContext.AC.Tender(
-                        procurementMethodDetails = tender.procurementMethodDetails,
+                        procurementMethodDetails = getProcurementMethodDetails(msRelease), //tender.procurementMethodDetails,
                         classification = tender.classification.let { classification ->
                             ServicesContext.AC.Tender.Classification(
                                 id = classification.id,
@@ -66,9 +66,14 @@ object ServicesContextMapper {
                             ServicesContext.AC.Buyer.Person(
                                 title = person.title,
                                 name = person.name,
-                                businessFunctions = person.businessFunctions.mapBusinessFunctionByType(type = "authority") {
+                                businessFunctions = person.businessFunctions.mapBusinessFunctionByType(type = "authority") { businessFunction ->
                                     ServicesContext.AC.Buyer.Person.BusinessFunction(
-                                        jobTitle = it.jobTitle
+                                        jobTitle = businessFunction.jobTitle,
+                                        documents = businessFunction.documents.mapDocumentsByDocumentType(documentType = "regulatoryDocument") { document ->
+                                            ServicesContext.AC.Buyer.Person.BusinessFunction.Document(
+                                                title = document.title
+                                            )
+                                        }
                                     )
                                 }
                             )
@@ -95,7 +100,7 @@ object ServicesContextMapper {
                                 legalForm = ServicesContext.AC.Buyer.Details.LegalForm(
                                     detail.legalForm.description
                                 ),
-                                permit = detail.permits.firstOrNullPermitByScheme(scheme = "MD-SRLE") { permit ->
+                                permit = detail.permits.firstOrNullPermitByScheme(scheme = "SRLE") { permit ->
                                     ServicesContext.AC.Buyer.Details.Permit(
                                         id = permit.id,
                                         startDate = permit.permitDetails.validityPeriod.startDate.toLocalDate()
@@ -167,7 +172,7 @@ object ServicesContextMapper {
                                 legalForm = ServicesContext.AC.Supplier.Details.LegalForm(
                                     description = detail.legalForm.description
                                 ),
-                                permit = detail.permits.firstOrNullPermitByScheme(scheme = "MD-SRLE") { permit ->
+                                permit = detail.permits.firstOrNullPermitByScheme(scheme = "SRLE") { permit ->
                                     ServicesContext.AC.Supplier.Details.Permit(
                                         id = permit.id,
                                         startDate = permit.permitDetails.validityPeriod.startDate.toLocalDate()
@@ -217,7 +222,7 @@ object ServicesContextMapper {
                                                             endDate = period.endDate.toLocalDate()
                                                         )
                                                     },
-                                                    budgetBreakdownID = budgetAllocation.budgetBreakdownID
+                                                    budgetBreakdownId = budgetAllocation.budgetBreakdownID
                                                 )
                                             }
                                             .toList()
@@ -351,6 +356,15 @@ object ServicesContextMapper {
         }
 
         throw IllegalStateException("Contract not contains '$ccSubject'")
+    }
+
+    private fun getProcurementMethodDetails(msRelease: MSReleasesPackage.Release): String {
+        val amount = msRelease.tender.value.amount.toLong()
+        return when {
+            amount < 80000 -> "mv"
+            amount in 80000..400000 -> "sv"
+            else -> "ot"
+        }
     }
 
     private class ContractAgreedMetrics(props: Map<String, String>) {

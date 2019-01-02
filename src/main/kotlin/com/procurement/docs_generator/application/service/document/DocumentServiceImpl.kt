@@ -125,24 +125,18 @@ class DocumentServiceImpl(
 
         val evReleasesPackage = publicPointAdapter.getEVReleasePackage(cpid = cpid, ocid = evOCID)
         val publishDate: LocalDate = JsonDateTimeDeserializer.deserialize(evReleasesPackage.publishedDate).toLocalDate()
-
-        val msReleasesPackage = publicPointAdapter.getMSReleasePackage(cpid = cpid)
+        val evReleases = evReleasesPackage.releases[0]
+        val msReleases = publicPointAdapter.getMSReleasePackage(cpid = cpid).releases[0]
 
         val context = when (kind) {
-            Document.Kind.GOODS -> GoodsContextMapper.mapToContext(publishDate,
-                                                                   acReleases,
-                                                                   evReleasesPackage.releases[0],
-                                                                   msReleasesPackage.releases[0])
+            Document.Kind.GOODS ->
+                GoodsContextMapper.mapToContext(publishDate, acReleases, evReleases, msReleases)
 
-            Document.Kind.SERVICES -> ServicesContextMapper.mapToContext(publishDate,
-                                                                         acReleases,
-                                                                         evReleasesPackage.releases[0],
-                                                                         msReleasesPackage.releases[0])
+            Document.Kind.SERVICES ->
+                ServicesContextMapper.mapToContext(publishDate, acReleases, evReleases, msReleases)
 
-            Document.Kind.WORKS -> WorksContextMapper.mapToContext(publishDate,
-                                                                   acReleases,
-                                                                   evReleasesPackage.releases[0],
-                                                                   msReleasesPackage.releases[0])
+            Document.Kind.WORKS ->
+                WorksContextMapper.mapToContext(publishDate, acReleases, evReleases, msReleases)
         }
 
         return AwardContract(

@@ -29,7 +29,7 @@ object GoodsContextMapper {
                 },
                 tender = acRelease.tender.let { tender ->
                     GoodsContext.AC.Tender(
-                        procurementMethodDetails = tender.procurementMethodDetails,
+                        procurementMethodDetails = getProcurementMethodDetails(msRelease),
                         classification = tender.classification.let { classification ->
                             GoodsContext.AC.Tender.Classification(
                                 id = classification.id,
@@ -66,9 +66,14 @@ object GoodsContextMapper {
                             GoodsContext.AC.Buyer.Person(
                                 title = person.title,
                                 name = person.name,
-                                businessFunctions = person.businessFunctions.mapBusinessFunctionByType(type = "authority") {
+                                businessFunctions = person.businessFunctions.mapBusinessFunctionByType(type = "authority") { businessFunction ->
                                     GoodsContext.AC.Buyer.Person.BusinessFunction(
-                                        jobTitle = it.jobTitle
+                                        jobTitle = businessFunction.jobTitle,
+                                        documents = businessFunction.documents.mapDocumentsByDocumentType(documentType = "regulatoryDocument") {
+                                            GoodsContext.AC.Buyer.Person.BusinessFunction.Document(
+                                                title = it.title
+                                            )
+                                        }
                                     )
                                 }
                             )
@@ -217,7 +222,7 @@ object GoodsContextMapper {
                                                             endDate = period.endDate.toLocalDate()
                                                         )
                                                     },
-                                                    budgetBreakdownID = budgetAllocation.budgetBreakdownID
+                                                    budgetBreakdownId = budgetAllocation.budgetBreakdownID
                                                 )
                                             }
                                             .toList()
@@ -351,6 +356,15 @@ object GoodsContextMapper {
         }
 
         throw IllegalStateException("Contract not contains '$ccSubject'")
+    }
+
+    private fun getProcurementMethodDetails(msRelease: MSReleasesPackage.Release): String {
+        val amount = msRelease.tender.value.amount.toLong()
+        return when {
+            amount < 80000 -> "mv"
+            amount in 80000..400000 -> "sv"
+            else -> "ot"
+        }
     }
 
     private class ContractAgreedMetrics(props: Map<String, String>) {

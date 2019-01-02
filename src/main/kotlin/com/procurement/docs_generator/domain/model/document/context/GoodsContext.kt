@@ -68,7 +68,6 @@ data class GoodsContext(
                 @field:JsonProperty("ccBuyer_2_2Measure") @param:JsonProperty("ccBuyer_2_2Measure") val ccBuyer_2_2Measure: String, // AC.contracts[0].agreedMetrics[id==cc-buyer-1].observations[id==cc-buyer-2-2].measure
 
                 @field:JsonProperty("ccTenderer_1_1Measure") @param:JsonProperty("ccTenderer_1_1Measure") val ccTenderer_1_1Measure: String, // AC.contracts[0].agreedMetrics[id==cc-tenderer-1].observations[id==cc-tenderer-1-1].measure
-                /* TODO ccTenderer_1_6Measure */
                 @field:JsonProperty("ccTenderer_1_2Measure") @param:JsonProperty("ccTenderer_1_2Measure") val ccTenderer_1_2Measure: String, // AC.contracts[0].agreedMetrics[id==cc-tenderer-1].observations[id==cc-tenderer-1-2].measure
                 @field:JsonProperty("ccTenderer_2_1Measure") @param:JsonProperty("ccTenderer_2_1Measure") val ccTenderer_2_1Measure: String, // AC.contracts[0].agreedMetrics[id==cc-tenderer-1].observations[id==cc-tenderer-2-1].measure
                 @field:JsonProperty("ccTenderer_2_2Measure") @param:JsonProperty("ccTenderer_2_2Measure") val ccTenderer_2_2Measure: String, // AC.contracts[0].agreedMetrics[id==cc-tenderer-1].observations[id==cc-tenderer-2-2].measure
@@ -82,7 +81,7 @@ data class GoodsContext(
 
         @JsonPropertyOrder("procurementMethodDetails", "classification")
         data class Tender(
-            @field:JsonProperty("procurementMethodDetails") @param:JsonProperty("procurementMethodDetails") val procurementMethodDetails: String, // AC.tender.procurementMethodDetails
+            @field:JsonProperty("procurementMethodDetails") @param:JsonProperty("procurementMethodDetails") val procurementMethodDetails: String, // TODO need maping
             @field:JsonProperty("classification") @param:JsonProperty("classification") val classification: Classification
         ) {
 
@@ -144,8 +143,16 @@ data class GoodsContext(
 
                 @JsonPropertyOrder("jobTitle")
                 data class BusinessFunction(
-                    @field:JsonProperty("jobTitle") @param:JsonProperty("jobTitle") val jobTitle: String // AC.parties[role=="buyer"].persones[*].businessFunctions[type=="authority"].jobTitle
+                    @field:JsonProperty("jobTitle") @param:JsonProperty("jobTitle") val jobTitle: String, // AC.parties[role=="buyer"].persones[*].businessFunctions[type=="authority"].jobTitle
+                    @field:JsonProperty("documents") @param:JsonProperty("documents") val documents: List<Document>
                 )
+                {
+
+                    @JsonPropertyOrder("title")
+                    data class Document(
+                        @field:JsonProperty("title") @param:JsonProperty("title") val title: String // AC.parties[role=="buyer"].persones[*].businessFunctions[type=="authority"].documents[documentType=="regulatoryDocument"].title
+                    )
+                }
             }
 
             @JsonPropertyOrder("bankAccount", "legalForm", "permit")

@@ -68,7 +68,6 @@ data class ServicesContext(
                 @field:JsonProperty("ccBuyer_2_2Measure") @param:JsonProperty("ccBuyer_2_2Measure") val ccBuyer_2_2Measure: String, // AC.contracts[0].agreedMetrics[id==cc-buyer-1].observations[id==cc-buyer-2-2].measure
 
                 @field:JsonProperty("ccTenderer_1_1Measure") @param:JsonProperty("ccTenderer_1_1Measure") val ccTenderer_1_1Measure: String, // AC.contracts[0].agreedMetrics[id==cc-tenderer-1].observations[id==cc-tenderer-1-1].measure
-                /* TODO ccTenderer_1_6Measure */
                 @field:JsonProperty("ccTenderer_1_2Measure") @param:JsonProperty("ccTenderer_1_2Measure") val ccTenderer_1_2Measure: String, // AC.contracts[0].agreedMetrics[id==cc-tenderer-1].observations[id==cc-tenderer-1-2].measure
                 @field:JsonProperty("ccTenderer_2_1Measure") @param:JsonProperty("ccTenderer_2_1Measure") val ccTenderer_2_1Measure: String, // AC.contracts[0].agreedMetrics[id==cc-tenderer-1].observations[id==cc-tenderer-2-1].measure
                 @field:JsonProperty("ccTenderer_2_2Measure") @param:JsonProperty("ccTenderer_2_2Measure") val ccTenderer_2_2Measure: String, // AC.contracts[0].agreedMetrics[id==cc-tenderer-1].observations[id==cc-tenderer-2-2].measure
@@ -82,7 +81,7 @@ data class ServicesContext(
 
         @JsonPropertyOrder("procurementMethodDetails", "classification")
         data class Tender(
-            @field:JsonProperty("procurementMethodDetails") @param:JsonProperty("procurementMethodDetails") val procurementMethodDetails: String, // AC.tender.procurementMethodDetails
+            @field:JsonProperty("procurementMethodDetails") @param:JsonProperty("procurementMethodDetails") val procurementMethodDetails: String, // TODO need maping
             @field:JsonProperty("classification") @param:JsonProperty("classification") val classification: Classification
         ) {
 
@@ -142,10 +141,17 @@ data class ServicesContext(
                 @field:JsonProperty("businessFunctions") @param:JsonProperty("businessFunctions") val businessFunctions: List<BusinessFunction>
             ) {
 
-                @JsonPropertyOrder("jobTitle")
+                @JsonPropertyOrder("jobTitle", "documents")
                 data class BusinessFunction(
-                    @field:JsonProperty("jobTitle") @param:JsonProperty("jobTitle") val jobTitle: String // AC.parties[role=="buyer"].persones[*].businessFunctions[type=="authority"].jobTitle
-                )
+                    @field:JsonProperty("jobTitle") @param:JsonProperty("jobTitle") val jobTitle: String, // AC.parties[role=="buyer"].persones[*].businessFunctions[type=="authority"].jobTitle
+                    @field:JsonProperty("documents") @param:JsonProperty("documents") val documents: List<Document>
+                ){
+
+                    @JsonPropertyOrder("title")
+                    data class Document(
+                        @field:JsonProperty("title") @param:JsonProperty("title") val title: String // AC.parties[role=="buyer"].persones[*].businessFunctions[type=="authority"].documents[documentType=="regulatoryDocument"].title
+                    )
+                }
             }
 
             @JsonPropertyOrder("bankAccount", "legalForm", "permit")
@@ -181,11 +187,11 @@ data class ServicesContext(
 
                 @JsonPropertyOrder("id", "startDate")
                 data class Permit(
-                    @field:JsonProperty("id") @param:JsonProperty("id") val id: String, // AC.parties.[role=="buyer"].details.permits[scheme="MD-SRLE"][0].id
+                    @field:JsonProperty("id") @param:JsonProperty("id") val id: String, // AC.parties.[role=="buyer"].details.permits[scheme="SRLE"][0].id
 
                     @JsonSerialize(using = JsonDateSerializer::class)
                     @JsonDeserialize(using = JsonDateDeserializer::class)
-                    @field:JsonProperty("startDate") @param:JsonProperty("startDate") val startDate: LocalDate // AC.parties.[role=="buyer"].details.permits[scheme="MD-SRLE"].permit.validityPeriod.startDate
+                    @field:JsonProperty("startDate") @param:JsonProperty("startDate") val startDate: LocalDate // AC.parties.[role=="buyer"].details.permits[scheme="SRLE"].permit.validityPeriod.startDate
                 )
             }
         }
@@ -283,11 +289,11 @@ data class ServicesContext(
 
                 @JsonPropertyOrder("id", "startDate")
                 data class Permit(
-                    @field:JsonProperty("id") @param:JsonProperty("id") val id: String, // AC.parties.[role=="supplier"].details.permits[scheme="MD-SRLE"][0].id
+                    @field:JsonProperty("id") @param:JsonProperty("id") val id: String, // AC.parties.[role=="supplier"].details.permits[scheme="SRLE"][0].id
 
                     @JsonSerialize(using = JsonDateSerializer::class)
                     @JsonDeserialize(using = JsonDateDeserializer::class)
-                    @field:JsonProperty("startDate") @param:JsonProperty("startDate") val startDate: LocalDate // AC.parties.[role=="supplier"].details.permits[scheme="MD-SRLE"].permit.validityPeriod.startDate
+                    @field:JsonProperty("startDate") @param:JsonProperty("startDate") val startDate: LocalDate // AC.parties.[role=="supplier"].details.permits[scheme="SRLE"].permit.validityPeriod.startDate
                 )
             }
         }
