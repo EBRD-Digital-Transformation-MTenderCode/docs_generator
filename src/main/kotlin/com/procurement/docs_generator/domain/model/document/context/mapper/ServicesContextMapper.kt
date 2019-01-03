@@ -203,6 +203,7 @@ object ServicesContextMapper {
                                     }
                                     .map { item ->
                                         ServicesContext.AC.Award.Item(
+                                            relatedLot = item.relatedLot,
                                             classification = item.classification.let { classification ->
                                                 ServicesContext.AC.Award.Item.Classification(
                                                     id = classification.id,

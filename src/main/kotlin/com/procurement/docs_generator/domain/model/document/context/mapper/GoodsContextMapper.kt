@@ -200,6 +200,7 @@ object GoodsContextMapper {
                                     }
                                     .map { item ->
                                         GoodsContext.AC.Award.Item(
+                                            relatedLot = item.relatedLot,
                                             classification = item.classification.let { classification ->
                                                 GoodsContext.AC.Award.Item.Classification(
                                                     id = classification.id,

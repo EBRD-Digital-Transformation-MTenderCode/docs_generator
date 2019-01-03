@@ -324,7 +324,8 @@ data class GoodsContext(
                 @field:JsonProperty("unit") @param:JsonProperty("unit") val unit: Unit,
                 @field:JsonProperty("planning") @param:JsonProperty("planning") val planning: Planning,
                 @field:JsonProperty("quantity") @param:JsonProperty("quantity") val quantity: Double, //AC.award.items[AC.awards.relatedLots[*].id == AC,awards.items[*].relatedLot].quantity
-                @field:JsonProperty("agreedMetrics") @param:JsonProperty("agreedMetrics") val agreedMetrics: AgreedMetrics
+                @field:JsonProperty("agreedMetrics") @param:JsonProperty("agreedMetrics") val agreedMetrics: AgreedMetrics,
+                @field:JsonProperty("relatedLot") @param:JsonProperty("relatedLot") val relatedLot: String//AC,awards.items[*].relatedLot
             ) {
 
                 @JsonPropertyOrder("id", "description")
