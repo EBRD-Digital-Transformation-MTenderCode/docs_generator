@@ -64,6 +64,7 @@
           "items": [
             {
               "id": "",
+              "relatedLot": "",
               "classification": {
                 "description": "",
                 "id": ""

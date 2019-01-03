@@ -42,21 +42,22 @@ data class GoodsContext(
             @field:JsonProperty("agreedMetrics") @param:JsonProperty("agreedMetrics") val agreedMetrics: AgreedMetrics
         ) {
 
-            @JsonPropertyOrder("ccGenerel_1_1Measure",
-                               "ccGenerel_1_2Measure",
-                               "ccGenerel_1_3Measure",
-                               "ccBuyer_1_1Measure",
-                               "ccBuyer_2_1Measure",
-                               "ccBuyer_2_2Measure",
-                               "ccTenderer_1_1Measure",
-                               "ccTenderer_1_2Measure",
-                               "ccTenderer_2_1Measure",
-                               "ccTenderer_2_2Measure",
-                               "ccTenderer_2_3Measure",
-                               "ccTenderer_2_4Measure",
-                               "ccTenderer_3_1Measure",
-                               "ccTenderer_3_2Measure",
-                               "ccTenderer_3_3Measure"
+            @JsonPropertyOrder(
+                "ccGenerel_1_1Measure",
+                "ccGenerel_1_2Measure",
+                "ccGenerel_1_3Measure",
+                "ccBuyer_1_1Measure",
+                "ccBuyer_2_1Measure",
+                "ccBuyer_2_2Measure",
+                "ccTenderer_1_1Measure",
+                "ccTenderer_1_2Measure",
+                "ccTenderer_2_1Measure",
+                "ccTenderer_2_2Measure",
+                "ccTenderer_2_3Measure",
+                "ccTenderer_2_4Measure",
+                "ccTenderer_3_1Measure",
+                "ccTenderer_3_2Measure",
+                "ccTenderer_3_3Measure"
             )
             data class AgreedMetrics(
                 @field:JsonProperty("ccGenerel_1_1Measure") @param:JsonProperty("ccGenerel_1_1Measure") val ccGenerel_1_1Measure: String, // AC.contracts[0].agreedMetrics[id==cc-general].observations[id==cc-general-1-1].measure
@@ -92,12 +93,13 @@ data class GoodsContext(
             )
         }
 
-        @JsonPropertyOrder("address",
-                           "identifier",
-                           "additionalIdentifiers",
-                           "contactPoint",
-                           "persones",
-                           "details"
+        @JsonPropertyOrder(
+            "address",
+            "identifier",
+            "additionalIdentifiers",
+            "contactPoint",
+            "persones",
+            "details"
         )
         data class Buyer(
             @field:JsonProperty("address") @param:JsonProperty("address") val address: Address,
@@ -141,12 +143,11 @@ data class GoodsContext(
                 @field:JsonProperty("businessFunctions") @param:JsonProperty("businessFunctions") val businessFunctions: List<BusinessFunction>
             ) {
 
-                @JsonPropertyOrder("jobTitle")
+                @JsonPropertyOrder("jobTitle", "documents")
                 data class BusinessFunction(
                     @field:JsonProperty("jobTitle") @param:JsonProperty("jobTitle") val jobTitle: String, // AC.parties[role=="buyer"].persones[*].businessFunctions[type=="authority"].jobTitle
                     @field:JsonProperty("documents") @param:JsonProperty("documents") val documents: List<Document>
-                )
-                {
+                ) {
 
                     @JsonPropertyOrder("title")
                     data class Document(
@@ -188,21 +189,23 @@ data class GoodsContext(
 
                 @JsonPropertyOrder("id", "startDate")
                 data class Permit(
-                    @field:JsonProperty("id") @param:JsonProperty("id") val id: String, // AC.parties.[role=="buyer"].details.permits[scheme="MD-SRLE"][0].id
+                    @field:JsonProperty("id") @param:JsonProperty("id") val id: String, // AC.parties.[role=="buyer"].details.permits[scheme="SRLE"][0].id
 
                     @JsonSerialize(using = JsonDateSerializer::class)
                     @JsonDeserialize(using = JsonDateDeserializer::class)
-                    @field:JsonProperty("startDate") @param:JsonProperty("startDate") val startDate: LocalDate // AC.parties.[role=="buyer"].details.permits[scheme="MD-SRLE"].permit.validityPeriod.startDate
+                    @field:JsonProperty("startDate") @param:JsonProperty("startDate") val startDate: LocalDate // AC.parties.[role=="buyer"].details.permits[scheme="SRLE"].permit.validityPeriod.startDate
                 )
             }
         }
 
-        @JsonPropertyOrder("address",
-                           "identifier",
-                           "additionalIdentifiers",
-                           "contactPoint",
-                           "persones",
-                           "details")
+        @JsonPropertyOrder(
+            "address",
+            "identifier",
+            "additionalIdentifiers",
+            "contactPoint",
+            "persones",
+            "details"
+        )
         data class Supplier(
             @field:JsonProperty("address") @param:JsonProperty("address") val address: Address,
             @field:JsonProperty("identifier") @param:JsonProperty("identifier") val identifier: Identifier,
@@ -290,56 +293,57 @@ data class GoodsContext(
 
                 @JsonPropertyOrder("id", "startDate")
                 data class Permit(
-                    @field:JsonProperty("id") @param:JsonProperty("id") val id: String, // AC.parties.[role=="supplier"].details.permits[scheme="MD-SRLE"][0].id
+                    @field:JsonProperty("id") @param:JsonProperty("id") val id: String, // AC.parties.[role=="supplier"].details.permits[scheme="SRLE"][0].id
 
                     @JsonSerialize(using = JsonDateSerializer::class)
                     @JsonDeserialize(using = JsonDateDeserializer::class)
-                    @field:JsonProperty("startDate") @param:JsonProperty("startDate") val startDate: LocalDate // AC.parties.[role=="supplier"].details.permits[scheme="MD-SRLE"].permit.validityPeriod.startDate
+                    @field:JsonProperty("startDate") @param:JsonProperty("startDate") val startDate: LocalDate // AC.parties.[role=="supplier"].details.permits[scheme="SRLE"].permit.validityPeriod.startDate
                 )
             }
         }
 
-        @JsonPropertyOrder("date", "relatedLot", "items")
+        @JsonPropertyOrder("date", "relatedLots", "items")
         data class Award(
             @JsonSerialize(using = JsonDateSerializer::class)
             @JsonDeserialize(using = JsonDateDeserializer::class)
-            @field:JsonProperty("date") @param:JsonProperty("date") val date: LocalDate, //AC.awards[relatedLots[0]==AC.tender.lots[0].id].date (DD.MM.YYYY)
+            @field:JsonProperty("date") @param:JsonProperty("date") val date: LocalDate, //AC.awards[0].date (DD.MM.YYYY)
 
-            @field:JsonProperty("relatedLot") @param:JsonProperty("relatedLot") val relatedLot: RelatedLot,
-            @field:JsonProperty("items") @param:JsonProperty("items") val items: List<Item>
+            @field:JsonProperty("relatedLots") @param:JsonProperty("relatedLots") val relatedLots: List<RelatedLot>,
+            @field:JsonProperty("items") @param:JsonProperty("items") val items: List<Item>//AC.award.items[AC.awards.relatedLots[*].id == AC.awards.items[*].relatedLot]
         ) {
 
             @JsonPropertyOrder("id")
             data class RelatedLot(
-                @field:JsonProperty("id") @param:JsonProperty("id") val id: String //AC.awards.relatedLots[0]
+                @field:JsonProperty("id") @param:JsonProperty("id") val id: String //AC.awards.relatedLots[*].id
             )
 
             @JsonPropertyOrder("classification", "description", "unit", "planning", "quantity", "agreedMetrics")
             data class Item(
                 @field:JsonProperty("classification") @param:JsonProperty("classification") val classification: Classification,
-                @field:JsonProperty("description") @param:JsonProperty("description") val description: String,//AC.award.items[*].description
+                @field:JsonProperty("description") @param:JsonProperty("description") val description: String,//AC.award.items[AC.awards.relatedLots[*].id == AC,awards.items[*].relatedLot].description
                 @field:JsonProperty("unit") @param:JsonProperty("unit") val unit: Unit,
                 @field:JsonProperty("planning") @param:JsonProperty("planning") val planning: Planning,
-                @field:JsonProperty("quantity") @param:JsonProperty("quantity") val quantity: Double, //AC.award.items[*].quantity
-                @field:JsonProperty("agreedMetrics") @param:JsonProperty("agreedMetrics") val agreedMetrics: AgreedMetrics
+                @field:JsonProperty("quantity") @param:JsonProperty("quantity") val quantity: Double, //AC.award.items[AC.awards.relatedLots[*].id == AC,awards.items[*].relatedLot].quantity
+                @field:JsonProperty("agreedMetrics") @param:JsonProperty("agreedMetrics") val agreedMetrics: AgreedMetrics,
+                @field:JsonProperty("relatedLot") @param:JsonProperty("relatedLot") val relatedLot: String//AC,awards.items[*].relatedLot
             ) {
 
                 @JsonPropertyOrder("id", "description")
                 data class Classification(
-                    @field:JsonProperty("id") @param:JsonProperty("id") val id: String,// AC.award.items[*].classification.id
-                    @field:JsonProperty("description") @param:JsonProperty("description") val description: String// AC.award.items[*].classification.description
+                    @field:JsonProperty("id") @param:JsonProperty("id") val id: String,// AC.award.items[[AC.awards.relatedLots[*].id == AC,awards.items[*].relatedLot].classification.id
+                    @field:JsonProperty("description") @param:JsonProperty("description") val description: String// AC.award.items[AC.awards.relatedLots[*].id == AC,awards.items[*].relatedLot].classification.description
                 )
 
                 @JsonPropertyOrder("name", "value")
                 data class Unit(
-                    @field:JsonProperty("name") @param:JsonProperty("name") val name: String,//AC.award.items[*].unit.name
+                    @field:JsonProperty("name") @param:JsonProperty("name") val name: String,//AC.award.items[AC.awards.relatedLots[*].id == AC,awards.items[*].relatedLot].unit.name
                     @field:JsonProperty("value") @param:JsonProperty("value") val value: Value
                 ) {
 
                     @JsonPropertyOrder("amountNet", "amount")
                     data class Value(
-                        @field:JsonProperty("amountNet") @param:JsonProperty("amountNet") val amountNet: Double,//AC.award.items[*].unit.value.amountNet
-                        @field:JsonProperty("amount") @param:JsonProperty("amount") val amount: Double//AC.award.items[*].unit.value.amount
+                        @field:JsonProperty("amountNet") @param:JsonProperty("amountNet") val amountNet: Double,//AC.award.item[AC.awards.relatedLots[*].id == AC,awards.items[*].relatedLot].unit.value.amountNet
+                        @field:JsonProperty("amount") @param:JsonProperty("amount") val amount: Double//AC.award.items[AC.awards.relatedLots[*].id == AC,awards.items[*].relatedLot].unit.value.amount
                     )
                 }
 
@@ -368,11 +372,13 @@ data class GoodsContext(
                     }
                 }
 
-                @JsonPropertyOrder("ccSubject_1Measure",
-                                   "ccSubject_2Measure",
-                                   "ccSubject_3Measure",
-                                   "ccSubject_4Measure",
-                                   "ccSubject_5Measure")
+                @JsonPropertyOrder(
+                    "ccSubject_1Measure",
+                    "ccSubject_2Measure",
+                    "ccSubject_3Measure",
+                    "ccSubject_4Measure",
+                    "ccSubject_5Measure"
+                )
                 data class AgreedMetrics(
                     @field:JsonProperty("ccSubject_1Measure") @param:JsonProperty("ccSubject_1Measure") val ccSubject_1Measure: String, // AC.contracts[0].agreedMetrics[id==cc-subject-["item.id"]-*].observations[id==cc-subject-1].measure
                     @field:JsonProperty("ccSubject_2Measure") @param:JsonProperty("ccSubject_2Measure") val ccSubject_2Measure: String, // AC.contracts[0].agreedMetrics[id==cc-subject-["item.id"]-*].observations[id==cc-subject-2].measure
