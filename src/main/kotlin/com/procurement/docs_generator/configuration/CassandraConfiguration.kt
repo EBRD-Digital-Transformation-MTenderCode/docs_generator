@@ -3,6 +3,8 @@ package com.procurement.docs_generator.configuration
 import com.datastax.driver.core.Session
 import com.procurement.docs_generator.configuration.properties.CassandraProperties
 import com.procurement.docs_generator.infrastructure.cassandra.CassandraClusterBuilder
+import com.procurement.docs_generator.infrastructure.metric.CassandraHealthIndicator
+import org.springframework.boot.actuate.health.HealthIndicator
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
@@ -31,5 +33,10 @@ class CassandraConfiguration(
             cluster.connect(cassandraProperties.keyspaceName)
         else
             cluster.connect()
+    }
+
+    @Bean
+    fun cassandraHealthIndicator(): HealthIndicator {
+        return CassandraHealthIndicator(session = session())
     }
 }
