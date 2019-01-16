@@ -9,11 +9,10 @@ import org.springframework.context.annotation.Import
 @Import(
     value = [
         ServiceConfiguration::class,
-        ActuatorSecurity::class,
         KafkaConfiguration::class,
         CassandraConfiguration::class,
         ThymeleafConfiguration::class,
-        WebConfiguration:: class
+        WebConfiguration::class
     ]
 )
 @EnableAutoConfiguration(
