@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.procurement.docs_generator.domain.date.JsonDateDeserializer
 import com.procurement.docs_generator.domain.date.JsonDateSerializer
+import java.math.BigDecimal
 import java.time.LocalDate
 
 @JsonPropertyOrder("ac", "ev", "ms")
@@ -33,7 +34,7 @@ data class ServicesContext(
         data class Contract(
             @field:JsonProperty("id") @param:JsonProperty("id") val id: String, // AC.contracts[0].id
             @field:JsonProperty("description") @param:JsonProperty("description") val description: String, // AC.contracts[0].description,
-            @field:JsonProperty("value") @param:JsonProperty("value") val value: Double, // AC.contracts[0].value.amount
+            @field:JsonProperty("value") @param:JsonProperty("value") val value: BigDecimal, // AC.contracts[0].value.amount
 
             @JsonSerialize(using = JsonDateSerializer::class)
             @JsonDeserialize(using = JsonDateDeserializer::class)
@@ -323,7 +324,7 @@ data class ServicesContext(
                 @field:JsonProperty("description") @param:JsonProperty("description") val description: String,//AC.award.items[AC.awards.relatedLots[*].id == AC,awards.items[*].relatedLot].description
                 @field:JsonProperty("unit") @param:JsonProperty("unit") val unit: Unit,
                 @field:JsonProperty("planning") @param:JsonProperty("planning") val planning: Planning,
-                @field:JsonProperty("quantity") @param:JsonProperty("quantity") val quantity: Double, //AC.award.items[AC.awards.relatedLots[*].id == AC,awards.items[*].relatedLot].quantity
+                @field:JsonProperty("quantity") @param:JsonProperty("quantity") val quantity: BigDecimal, //AC.award.items[AC.awards.relatedLots[*].id == AC,awards.items[*].relatedLot].quantity
                 @field:JsonProperty("agreedMetrics") @param:JsonProperty("agreedMetrics") val agreedMetrics: AgreedMetrics,
                 @field:JsonProperty("relatedLot") @param:JsonProperty("relatedLot") val relatedLot: String//AC,awards.items[*].relatedLot
             ) {
@@ -342,8 +343,8 @@ data class ServicesContext(
 
                     @JsonPropertyOrder("amountNet", "amount")
                     data class Value(
-                        @field:JsonProperty("amountNet") @param:JsonProperty("amountNet") val amountNet: Double,//AC.award.item[AC.awards.relatedLots[*].id == AC,awards.items[*].relatedLot].unit.value.amountNet
-                        @field:JsonProperty("amount") @param:JsonProperty("amount") val amount: Double//AC.award.items[AC.awards.relatedLots[*].id == AC,awards.items[*].relatedLot].unit.value.amount
+                        @field:JsonProperty("amountNet") @param:JsonProperty("amountNet") val amountNet: BigDecimal,//AC.award.item[AC.awards.relatedLots[*].id == AC,awards.items[*].relatedLot].unit.value.amountNet
+                        @field:JsonProperty("amount") @param:JsonProperty("amount") val amount: BigDecimal//AC.award.items[AC.awards.relatedLots[*].id == AC,awards.items[*].relatedLot].unit.value.amount
                     )
                 }
 

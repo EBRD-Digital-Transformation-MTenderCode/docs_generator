@@ -24,7 +24,7 @@ object ServicesContextMapper {
                     ServicesContext.AC.Contract(
                         id = contract.id,
                         description = contract.description,
-                        value = contract.value.amount.toDouble(),
+                        value = contract.value.amount,
                         endDate = contract.period.endDate.toLocalDate(),
                         agreedMetrics = getContractAgreedMetrics(acRelease)
                     )
@@ -216,8 +216,8 @@ object ServicesContextMapper {
                                                     name = unit.name,
                                                     value = unit.value.let { value ->
                                                         ServicesContext.AC.Award.Item.Unit.Value(
-                                                            amount = value.amount.toDouble(),
-                                                            amountNet = value.amountNet.toDouble()
+                                                            amount = value.amount,
+                                                            amountNet = value.amountNet
                                                         )
                                                     }
                                                 )
@@ -242,7 +242,7 @@ object ServicesContextMapper {
                                                         .toList()
                                                 )
                                             },
-                                            quantity = item.quantity.toDouble(),
+                                            quantity = item.quantity,
                                             agreedMetrics = getItemAgreedMetrics(
                                                 awardId = award.id,
                                                 itemId = item.id,
