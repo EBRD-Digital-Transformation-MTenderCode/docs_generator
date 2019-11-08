@@ -61,17 +61,21 @@ class DocumentServiceImpl(
         log.info { "Processing command with id: '${command.id}'." }
         val view = documentDescriptorRepository.load(command.id)
             ?.let {
-                toDataOfContractFinalizationCommand(ocid = command.data.ocid,
-                                                    cpid = command.data.cpid,
-                                                    documentDescriptor = it)
+                toDataOfContractFinalizationCommand(
+                    ocid = command.data.ocid,
+                    cpid = command.data.cpid,
+                    documentDescriptor = it
+                )
             }
         if (view != null) return view
 
         val document = getDocument(command)
-        val template = templateService.getAvailableTemplate(id = document.id,
-                                                            kind = document.kind,
-                                                            lang = document.lang,
-                                                            date = document.date)
+        val template = templateService.getAvailableTemplate(
+            id = document.id,
+            kind = document.kind,
+            lang = document.lang,
+            date = document.date
+        )
 
         val uploadDescriptor = getDocumentGenerator(template)
             .generate(template = template, context = document.context)
@@ -98,9 +102,11 @@ class DocumentServiceImpl(
                 log.info { "Descriptor of the document by id: '${document.id}', kind: '${document.kind}', lang: '${document.lang}', date: '${document.date}' was saved in database (descriptor: '$descriptor')." }
             }
             .let {
-                toDataOfContractFinalizationCommand(ocid = command.data.ocid,
-                                                    cpid = command.data.cpid,
-                                                    documentDescriptor = it)
+                toDataOfContractFinalizationCommand(
+                    ocid = command.data.ocid,
+                    cpid = command.data.cpid,
+                    documentDescriptor = it
+                )
             }.also {
                 log.info { "Command with id: '${command.id}' was processed." }
             }
@@ -150,7 +156,7 @@ class DocumentServiceImpl(
     private fun getACRecord(releasesPackage: ACReleasesPackage): EvaluationACRecord {
         for (release in releasesPackage.releases) {
             val evRelatedProcess = release.relatedProcesses.firstOrNull {
-                it.relationship.contains("x_evaluation")
+                it.relationship.contains("x_evaluation") || it.relationship.contains("x_negotiation")
             }
 
             if (evRelatedProcess != null) {
@@ -161,12 +167,14 @@ class DocumentServiceImpl(
             }
         }
 
-        throw IllegalStateException("Relationship with value 'x_evaluation' is not found.")
+        throw IllegalStateException("Relationship with value 'x_evaluation' or x_negotiation is not found.")
     }
 
-    private fun toDataOfContractFinalizationCommand(cpid: CPID,
-                                                    ocid: OCID,
-                                                    documentDescriptor: DocumentDescriptor): ContractFinalizationCommand.Data {
+    private fun toDataOfContractFinalizationCommand(
+        cpid: CPID,
+        ocid: OCID,
+        documentDescriptor: DocumentDescriptor
+    ): ContractFinalizationCommand.Data {
         return ContractFinalizationCommand.Data(
             ocid = ocid,
             cpid = cpid,
