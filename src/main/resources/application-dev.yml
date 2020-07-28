@@ -8,8 +8,6 @@ cassandra:
   contact-points: localhost
   keyspace-name: ocds
   port: 9042
-  username:
-  password:
 
 kafka:
   bootstrap-servers: localhost:9092
@@ -20,10 +18,10 @@ kafka:
     retries: 5
 
 external-endpoints:
-  public-point: http://10.0.20.125:9111
+  public-point: http://public-point:9111
   storage:
-    registration: http://10.0.20.125:9131
-    upload: http://10.0.20.125:9131
+    registration: http://storage:9131
+    upload: http://storage:9131
 
 health:
   config:
