@@ -3,6 +3,4 @@
 
 example
 -Dspring.config.location=file:/path/to/application-dev.yml
-
-
--Dspring.config.location=file:/home/maxim/dev/workspace/procuremen/docs_generator/src/main/resources/application-dev.yml -Dlogging.config=file:/home/maxim/dev/workspace/procuremen/docs_generator/src/main/resources/logback-dev.xml
+-Dlogging.config=file:file:/path/to/logback-dev.xml
