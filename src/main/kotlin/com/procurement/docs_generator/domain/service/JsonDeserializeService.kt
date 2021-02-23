@@ -5,4 +5,5 @@ inline fun <reified T> JsonDeserializeService.deserialize(json: String): T = thi
 interface JsonDeserializeService {
     fun <T> deserialize(json: String, targetClass: Class<T>): T
     fun toMap(json: String): Map<String, Any>
+    fun <T : Any> serialize(entity: T): String
 }

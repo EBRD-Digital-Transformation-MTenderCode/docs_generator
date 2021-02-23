@@ -1,5 +1,6 @@
 package com.procurement.docs_generator.application.service.json
 
+import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.procurement.docs_generator.domain.service.JsonDeserializeService
@@ -23,5 +24,12 @@ class JacksonJsonDeserializeService(private val objectMapper: ObjectMapper) : Js
         objectMapper.readValue(json, typeRefOfMap)
     } catch (exception: Exception) {
         throw JsonParseToObjectException(exception)
+    }
+
+    override fun <T : Any> serialize(entity: T): String = try {
+        objectMapper.writeValueAsString(this)
+    } catch (expected: JsonProcessingException) {
+        val className = this::class.java.canonicalName
+        throw IllegalArgumentException("Error mapping an object of type '$className' to JSON.", expected)
     }
 }
