@@ -13,9 +13,9 @@ import com.procurement.docs_generator.domain.repository.DocumentDescriptorNewRep
 import com.procurement.docs_generator.domain.service.JsonDeserializeService
 import com.procurement.docs_generator.exception.database.ReadOperationException
 import com.procurement.docs_generator.infrastructure.logger.Slf4jLogger
-import org.springframework.stereotype.Service
+import org.springframework.stereotype.Repository
 
-@Service
+@Repository
 class CassandraDocumentDescriptorNewRepository(
     private val session: Session,
     private val transform: JsonDeserializeService
