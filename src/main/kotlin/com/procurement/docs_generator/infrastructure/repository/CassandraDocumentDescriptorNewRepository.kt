@@ -32,11 +32,9 @@ class CassandraDocumentDescriptorNewRepository(
         private const val columnCountry = "country"
         private const val columnLang = "lang"
         private const val columnInitiator = "initiator"
-        private const val columnDescriptor = "descriptor"
 
         private const val loadCQL =
-            """SELECT $columnDescriptor,
-                      $columnDocuments
+            """SELECT $columnDocuments
                  FROM $KEY_SPACE.$tableName
                 WHERE $columnCpid=?
                   AND $columnOcid=?
@@ -55,10 +53,9 @@ class CassandraDocumentDescriptorNewRepository(
                 $columnPmd,
                 $columnCountry,
                 $columnLang,
-                $columnInitiator,
-                $columnDescriptor
+                $columnInitiator
                )
-               VALUES (?,?,?,?,?,?,?,?) IF NOT EXISTS
+               VALUES (?,?,?,?,?,?,?) IF NOT EXISTS
             """
     }
 
@@ -98,7 +95,6 @@ class CassandraDocumentDescriptorNewRepository(
                 country = country,
                 lang = lang,
                 documentInitiator = documentInitiator,
-                descriptor = row.getString(columnDescriptor),
                 documents = transform.deserialize(
                     row.getString(columnDocuments),
                     DocumentDescriptorNew.Documents::class.java
@@ -119,7 +115,6 @@ class CassandraDocumentDescriptorNewRepository(
             it.setString(columnCountry, documentDescriptor.country.value)
             it.setString(columnLang, documentDescriptor.lang.value)
             it.setString(columnInitiator, documentDescriptor.documentInitiator)
-            it.setString(columnDescriptor, documentDescriptor.descriptor)
         }
 
         val resultSet = query.executeWrite(session)
