@@ -5,6 +5,8 @@ import com.procurement.docs_generator.application.service.kafka.KafkaMessageHand
 import com.procurement.docs_generator.configuration.properties.GlobalProperties
 import com.procurement.docs_generator.domain.command.Command
 import com.procurement.docs_generator.domain.command.CommandError
+import com.procurement.docs_generator.domain.command.GenerateDocumentCommand
+import com.procurement.docs_generator.domain.command.GenerateDocumentResponse
 import com.procurement.docs_generator.domain.command.ac.ContractFinalizationCommand
 import com.procurement.docs_generator.domain.command.ac.GenerateACDocCommand
 import com.procurement.docs_generator.domain.logger.Logger
@@ -12,6 +14,7 @@ import com.procurement.docs_generator.domain.logger.error
 import com.procurement.docs_generator.domain.logger.info
 import com.procurement.docs_generator.domain.model.command.id.CommandId
 import com.procurement.docs_generator.domain.model.command.name.CommandName.GENERATE_AC_DOC
+import com.procurement.docs_generator.domain.model.command.name.CommandName.GENERATE_DOCUMENT
 import com.procurement.docs_generator.domain.service.JsonDeserializeService
 import com.procurement.docs_generator.domain.service.JsonSerializeService
 import com.procurement.docs_generator.domain.service.deserialize
@@ -75,6 +78,18 @@ class CommandDispatcher(
                 } catch (exception: Throwable) {
                     errorHandler(command, exception)
                 }
+            }
+            GENERATE_DOCUMENT -> try {
+                val data = deserializer.deserialize<GenerateDocumentCommand>(body)
+                    .let { documentService.processing(it) }
+                GenerateDocumentResponse(
+                    version = GlobalProperties.App.apiVersion,
+                    id = CommandId(UUID.randomUUID()),
+                    name = "documentGenerated",
+                    data = data
+                )
+            } catch (exception: Throwable) {
+                errorHandler(command, exception)
             }
         }
     }
