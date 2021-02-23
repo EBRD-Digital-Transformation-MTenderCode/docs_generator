@@ -1,7 +1,9 @@
 package com.procurement.docs_generator.domain.repository
 
+import com.procurement.docs_generator.domain.model.country.Country
 import com.procurement.docs_generator.domain.model.cpid.CPID
 import com.procurement.docs_generator.domain.model.document.DocumentDescriptorNew
+import com.procurement.docs_generator.domain.model.language.Language
 import com.procurement.docs_generator.domain.model.ocid.OCID
 import com.procurement.docs_generator.domain.model.pmd.ProcurementMethod
 
@@ -10,8 +12,8 @@ interface DocumentDescriptorNewRepository {
         cpid: CPID,
         ocid: OCID,
         pmd: ProcurementMethod,
-        country: String,
-        lang: String,
+        country: Country,
+        lang: Language,
         documentInitiator: String
     ): DocumentDescriptorNew?
 

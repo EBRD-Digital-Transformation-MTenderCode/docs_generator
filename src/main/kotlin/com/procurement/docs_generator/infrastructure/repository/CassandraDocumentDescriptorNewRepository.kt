@@ -3,18 +3,22 @@ package com.procurement.docs_generator.infrastructure.repository
 import com.datastax.driver.core.Session
 import com.procurement.docs_generator.domain.logger.Logger
 import com.procurement.docs_generator.domain.logger.debug
+import com.procurement.docs_generator.domain.model.country.Country
 import com.procurement.docs_generator.domain.model.cpid.CPID
 import com.procurement.docs_generator.domain.model.document.DocumentDescriptorNew
+import com.procurement.docs_generator.domain.model.language.Language
 import com.procurement.docs_generator.domain.model.ocid.OCID
 import com.procurement.docs_generator.domain.model.pmd.ProcurementMethod
 import com.procurement.docs_generator.domain.repository.DocumentDescriptorNewRepository
+import com.procurement.docs_generator.domain.service.JsonDeserializeService
 import com.procurement.docs_generator.exception.database.ReadOperationException
 import com.procurement.docs_generator.infrastructure.logger.Slf4jLogger
 import org.springframework.stereotype.Service
 
 @Service
 class CassandraDocumentDescriptorNewRepository(
-    private val session: Session
+    private val session: Session,
+    private val transform: JsonDeserializeService
 ) : DocumentDescriptorNewRepository {
     companion object {
         private val log: Logger = Slf4jLogger()
@@ -23,6 +27,7 @@ class CassandraDocumentDescriptorNewRepository(
         private const val tableName = "descriptors_new"
         private const val columnCpid = "cpid"
         private const val columnOcid = "ocid"
+        private const val columnDocuments = "documents"
         private const val columnPmd = "pmd"
         private const val columnCountry = "country"
         private const val columnLang = "lang"
@@ -30,7 +35,8 @@ class CassandraDocumentDescriptorNewRepository(
         private const val columnDescriptor = "descriptor"
 
         private const val loadCQL =
-            """SELECT $columnDescriptor
+            """SELECT $columnDescriptor,
+                      $columnDocuments
                  FROM $KEY_SPACE.$tableName
                 WHERE $columnCpid=?
                   AND $columnOcid=?
@@ -45,13 +51,14 @@ class CassandraDocumentDescriptorNewRepository(
                (
                 $columnCpid,
                 $columnOcid,
+                $columnDocuments
                 $columnPmd,
                 $columnCountry,
                 $columnLang,
                 $columnInitiator,
                 $columnDescriptor
                )
-               VALUES (?,?,?,?,?,?,?) IF NOT EXISTS
+               VALUES (?,?,?,?,?,?,?,?) IF NOT EXISTS
             """
     }
 
@@ -62,19 +69,19 @@ class CassandraDocumentDescriptorNewRepository(
         cpid: CPID,
         ocid: OCID,
         pmd: ProcurementMethod,
-        country: String,
-        lang: String,
+        country: Country,
+        lang: Language,
         documentInitiator: String
     ): DocumentDescriptorNew? {
-        log.debug { "Attempt to load a document descriptor by cpid '$cpid' and ocid '$ocid'." }
+        log.debug { "Attempt to load a document descriptors by cpid '$cpid' and ocid '$ocid'." }
 
         val query = preparedLoadCQL.bind().also {
             it.setString(columnCpid, cpid.value)
             it.setString(columnOcid, ocid.value)
             it.setString(columnPmd, pmd.key)
-            it.setString(columnCountry, country)
-            it.setString(columnLang, cpid.value)
-            it.setString(columnInitiator, cpid.value)
+            it.setString(columnCountry, country.value)
+            it.setString(columnLang, lang.value)
+            it.setString(columnInitiator, documentInitiator)
         }
 
         val resultSet = query.executeRead(session)
@@ -91,7 +98,11 @@ class CassandraDocumentDescriptorNewRepository(
                 country = country,
                 lang = lang,
                 documentInitiator = documentInitiator,
-                descriptor = row.getString(columnDescriptor)
+                descriptor = row.getString(columnDescriptor),
+                documents = transform.deserialize(
+                    row.getString(columnDocuments),
+                    DocumentDescriptorNew.Documents::class.java
+                )
             )
         } else {
             log.debug { "Document descriptor by cpid '$cpid' and ocid '$ocid' not found." }
@@ -103,9 +114,10 @@ class CassandraDocumentDescriptorNewRepository(
         val query = preparedInsertCQL.bind().also {
             it.setString(columnCpid, documentDescriptor.cpid.value)
             it.setString(columnOcid, documentDescriptor.ocid.value)
+            it.setString(columnDocuments, transform.serialize(documentDescriptor.documents))
             it.setString(columnPmd, documentDescriptor.pmd.key)
-            it.setString(columnCountry, documentDescriptor.lang)
-            it.setString(columnLang, documentDescriptor.lang)
+            it.setString(columnCountry, documentDescriptor.country.value)
+            it.setString(columnLang, documentDescriptor.lang.value)
             it.setString(columnInitiator, documentDescriptor.documentInitiator)
             it.setString(columnDescriptor, documentDescriptor.descriptor)
         }
