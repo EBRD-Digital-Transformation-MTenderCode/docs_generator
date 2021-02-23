@@ -11,7 +11,6 @@ import com.procurement.docs_generator.domain.model.ocid.OCID
 import com.procurement.docs_generator.domain.model.pmd.ProcurementMethod
 import com.procurement.docs_generator.domain.repository.DocumentDescriptorNewRepository
 import com.procurement.docs_generator.domain.service.JsonDeserializeService
-import com.procurement.docs_generator.exception.database.ReadOperationException
 import com.procurement.docs_generator.infrastructure.logger.Slf4jLogger
 import org.springframework.stereotype.Repository
 
@@ -82,8 +81,6 @@ class CassandraDocumentDescriptorNewRepository(
         }
 
         val resultSet = query.executeRead(session)
-        if (!resultSet.wasApplied())
-            throw ReadOperationException(message = "An error occurred when loading a record of the document descriptor by cpid '$cpid' and ocid '$ocid' from the database.")
 
         val row = resultSet.one()
         return if (row != null) {
