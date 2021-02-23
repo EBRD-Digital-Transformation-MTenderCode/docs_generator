@@ -1,15 +1,22 @@
 package com.procurement.docs_generator.domain.model.document
 
+import com.procurement.docs_generator.domain.model.country.Country
 import com.procurement.docs_generator.domain.model.cpid.CPID
+import com.procurement.docs_generator.domain.model.language.Language
 import com.procurement.docs_generator.domain.model.ocid.OCID
 import com.procurement.docs_generator.domain.model.pmd.ProcurementMethod
 
-class DocumentDescriptorNew(
+data class DocumentDescriptorNew(
     val cpid: CPID,
     val ocid: OCID,
+    val documents: Documents,
     val pmd: ProcurementMethod,
-    val country: String,
-    val lang: String,
+    val country: Country,
+    val lang: Language,
     val documentInitiator: String,
     val descriptor: String
-)
+) {
+    class Documents(values: List<Document>) : List<Documents.Document> by values {
+        data class Document(val id: String)
+    }
+}
