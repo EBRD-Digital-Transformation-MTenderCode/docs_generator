@@ -7,11 +7,11 @@ import com.procurement.docs_generator.domain.logger.debug
 import com.procurement.docs_generator.domain.model.command.id.CommandId
 import com.procurement.docs_generator.domain.model.command.id.CommandIdDeserializer
 import com.procurement.docs_generator.domain.model.command.id.CommandIdSerializer
-import com.procurement.docs_generator.domain.model.document.DocumentDescriptor
 import com.procurement.docs_generator.domain.model.document.id.DocumentIdDeserializer
 import com.procurement.docs_generator.domain.model.document.id.DocumentIdSerializer
 import com.procurement.docs_generator.domain.model.document.kind.DocumentKindDeserializer
 import com.procurement.docs_generator.domain.model.document.kind.DocumentKindSerializer
+import com.procurement.docs_generator.domain.model.entity.DocumentDescriptor
 import com.procurement.docs_generator.domain.model.language.LanguageDeserializer
 import com.procurement.docs_generator.domain.model.language.LanguageSerializer
 import com.procurement.docs_generator.domain.repository.DocumentDescriptorRepository

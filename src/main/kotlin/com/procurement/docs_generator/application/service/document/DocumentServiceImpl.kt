@@ -3,6 +3,8 @@ package com.procurement.docs_generator.application.service.document
 import com.procurement.docs_generator.adapter.PublicPointAdapter
 import com.procurement.docs_generator.adapter.UploadDocumentAdapter
 import com.procurement.docs_generator.application.service.template.TemplateService
+import com.procurement.docs_generator.domain.command.GenerateDocumentCommand
+import com.procurement.docs_generator.domain.command.GenerateDocumentResponse
 import com.procurement.docs_generator.domain.command.ac.ContractFinalizationCommand
 import com.procurement.docs_generator.domain.command.ac.GenerateACDocCommand
 import com.procurement.docs_generator.domain.logger.Logger
@@ -11,14 +13,15 @@ import com.procurement.docs_generator.domain.model.cpid.CPID
 import com.procurement.docs_generator.domain.model.date.JsonDateTimeDeserializer
 import com.procurement.docs_generator.domain.model.document.AwardContract
 import com.procurement.docs_generator.domain.model.document.Document
-import com.procurement.docs_generator.domain.model.document.DocumentDescriptor
 import com.procurement.docs_generator.domain.model.document.context.mapper.GoodsContextMapper
 import com.procurement.docs_generator.domain.model.document.context.mapper.ServicesContextMapper
 import com.procurement.docs_generator.domain.model.document.context.mapper.WorksContextMapper
+import com.procurement.docs_generator.domain.model.entity.DocumentDescriptor
 import com.procurement.docs_generator.domain.model.ocid.OCID
 import com.procurement.docs_generator.domain.model.ocid.OCIDDeserializer
 import com.procurement.docs_generator.domain.model.release.ACReleasesPackage
 import com.procurement.docs_generator.domain.model.template.Template
+import com.procurement.docs_generator.domain.repository.DocumentDescriptorNewRepository
 import com.procurement.docs_generator.domain.repository.DocumentDescriptorRepository
 import com.procurement.docs_generator.infrastructure.logger.Slf4jLogger
 import org.springframework.stereotype.Service
@@ -30,6 +33,7 @@ class DocumentServiceImpl(
     documentGenerators: List<DocumentGenerator>,
     private val templateService: TemplateService,
     private val documentDescriptorRepository: DocumentDescriptorRepository,
+    private val documentDescriptorRepositoryNew: DocumentDescriptorNewRepository,
     private val uploadDocumentAdapter: UploadDocumentAdapter
 ) : DocumentService {
     companion object {
@@ -187,4 +191,29 @@ class DocumentServiceImpl(
     }
 
     data class EvaluationACRecord(val ocid: OCID, val release: ACReleasesPackage.Release)
+
+    override fun processing(command: GenerateDocumentCommand): GenerateDocumentResponse.Data {
+        val data = command.data
+        val documentDescriptorStored = documentDescriptorRepositoryNew.load(
+            cpid = data.cpid,
+            ocid = data.ocid,
+            country = data.country,
+            lang = data.language,
+            pmd = data.pmd,
+            documentInitiator = data.documentInitiator
+        )
+
+        if (documentDescriptorStored != null)
+            return GenerateDocumentResponse.Data(
+                cpid = documentDescriptorStored.cpid,
+                ocid = documentDescriptorStored.ocid,
+                documentInitiator = documentDescriptorStored.documentInitiator,
+                documents = documentDescriptorStored.documents.map { document ->
+                    GenerateDocumentResponse.Data.Document(id = document.id)
+                }
+            )
+
+
+
+    }
 }
