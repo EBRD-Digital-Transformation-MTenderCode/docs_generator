@@ -1,4 +1,4 @@
-package com.procurement.docs_generator.domain.model.document
+package com.procurement.docs_generator.domain.model.entity
 
 import com.procurement.docs_generator.domain.model.country.Country
 import com.procurement.docs_generator.domain.model.cpid.CPID

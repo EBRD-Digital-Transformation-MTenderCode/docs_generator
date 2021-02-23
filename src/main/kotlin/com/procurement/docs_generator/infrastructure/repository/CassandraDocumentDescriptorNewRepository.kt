@@ -5,7 +5,7 @@ import com.procurement.docs_generator.domain.logger.Logger
 import com.procurement.docs_generator.domain.logger.debug
 import com.procurement.docs_generator.domain.model.country.Country
 import com.procurement.docs_generator.domain.model.cpid.CPID
-import com.procurement.docs_generator.domain.model.document.DocumentDescriptorNew
+import com.procurement.docs_generator.domain.model.entity.DocumentDescriptorNew
 import com.procurement.docs_generator.domain.model.language.Language
 import com.procurement.docs_generator.domain.model.ocid.OCID
 import com.procurement.docs_generator.domain.model.pmd.ProcurementMethod
