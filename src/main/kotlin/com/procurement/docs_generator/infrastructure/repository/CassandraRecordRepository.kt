@@ -6,7 +6,7 @@ import com.procurement.docs_generator.domain.model.country.Country
 import com.procurement.docs_generator.domain.model.entity.RecordEntity
 import com.procurement.docs_generator.domain.model.language.Language
 import com.procurement.docs_generator.domain.model.pmd.ProcurementMethod
-import com.procurement.docs_generator.domain.model.pmd.RecordReleaseType
+import com.procurement.docs_generator.domain.model.pmd.RecordName
 import com.procurement.docs_generator.domain.repository.RecordRepository
 import com.procurement.docs_generator.domain.service.JsonDeserializeService
 import com.procurement.docs_generator.infrastructure.logger.Slf4jLogger
@@ -35,7 +35,6 @@ class CassandraRecordRepository(
                  FROM $KEY_SPACE.$tableName
                 WHERE $columnPmd=?
                   AND $columnCountry=?
-                  AND $columnLang=?
                   AND $columnDocumentInitiator=?;
             """
     }
@@ -45,14 +44,12 @@ class CassandraRecordRepository(
     override fun load(
         pmd: ProcurementMethod,
         country: Country,
-        lang: Language,
         documentInitiator: String
     ): RecordEntity? {
 
         val query = preparedLoadCQL.bind().also {
             it.setString(columnPmd, pmd.key)
             it.setString(columnCountry, country.value)
-            it.setString(columnLang, lang.value)
             it.setString(columnDocumentInitiator, documentInitiator)
         }
 
@@ -65,7 +62,7 @@ class CassandraRecordRepository(
                 country = Country(row.getString(columnCountry)),
                 lang = Language(row.getString(columnLang)),
                 documentInitiator = row.getString(columnDocumentInitiator),
-                mainProcess = RecordReleaseType.creator(row.getString(columnMainProcess)),
+                mainProcess = RecordName.creator(row.getString(columnMainProcess)),
                 relationships = transform.deserialize(
                     row.getString(columnRelationships),
                     RecordEntity.Relationships::class.java
