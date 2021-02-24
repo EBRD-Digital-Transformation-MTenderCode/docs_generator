@@ -4,7 +4,6 @@ import com.datastax.driver.core.Session
 import com.procurement.docs_generator.domain.logger.Logger
 import com.procurement.docs_generator.domain.model.country.Country
 import com.procurement.docs_generator.domain.model.entity.RecordEntity
-import com.procurement.docs_generator.domain.model.language.Language
 import com.procurement.docs_generator.domain.model.pmd.ProcurementMethod
 import com.procurement.docs_generator.domain.model.pmd.RecordName
 import com.procurement.docs_generator.domain.repository.RecordRepository
@@ -58,10 +57,9 @@ class CassandraRecordRepository(
         val row = resultSet.one()
         return row?.let {
             RecordEntity(
-                pmd = ProcurementMethod.creator(row.getString(columnPmd)),
-                country = Country(row.getString(columnCountry)),
-                lang = Language(row.getString(columnLang)),
-                documentInitiator = row.getString(columnDocumentInitiator),
+                pmd = pmd,
+                country = country,
+                documentInitiator = documentInitiator,
                 mainProcess = RecordName.creator(row.getString(columnMainProcess)),
                 relationships = transform.deserialize(
                     row.getString(columnRelationships),
