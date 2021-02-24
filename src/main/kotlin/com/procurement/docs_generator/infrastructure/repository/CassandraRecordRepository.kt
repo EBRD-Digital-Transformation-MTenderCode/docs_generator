@@ -24,7 +24,6 @@ class CassandraRecordRepository(
         private const val columnPmd = "pmd"
         private const val columnCountry = "country"
         private const val columnDocumentInitiator = "documentInitiator"
-        private const val columnLang = "lang"
         private const val columnMainProcess = "mainProcess"
         private const val columnRelationships = "relationships"
 
