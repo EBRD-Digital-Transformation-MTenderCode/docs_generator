@@ -19,10 +19,14 @@ import com.procurement.docs_generator.domain.model.document.context.mapper.Works
 import com.procurement.docs_generator.domain.model.entity.DocumentDescriptor
 import com.procurement.docs_generator.domain.model.ocid.OCID
 import com.procurement.docs_generator.domain.model.ocid.OCIDDeserializer
+import com.procurement.docs_generator.domain.model.pmd.RecordName
+import com.procurement.docs_generator.domain.model.pmd.RelatedProcessType
 import com.procurement.docs_generator.domain.model.release.ACReleasesPackage
+import com.procurement.docs_generator.domain.model.release.entity.Record
 import com.procurement.docs_generator.domain.model.template.Template
 import com.procurement.docs_generator.domain.repository.DocumentDescriptorNewRepository
 import com.procurement.docs_generator.domain.repository.DocumentDescriptorRepository
+import com.procurement.docs_generator.domain.repository.RecordRepository
 import com.procurement.docs_generator.infrastructure.logger.Slf4jLogger
 import org.springframework.stereotype.Service
 import java.time.LocalDate
@@ -34,6 +38,7 @@ class DocumentServiceImpl(
     private val templateService: TemplateService,
     private val documentDescriptorRepository: DocumentDescriptorRepository,
     private val documentDescriptorRepositoryNew: DocumentDescriptorNewRepository,
+    private val recordRepository: RecordRepository,
     private val uploadDocumentAdapter: UploadDocumentAdapter
 ) : DocumentService {
     companion object {
@@ -194,14 +199,8 @@ class DocumentServiceImpl(
 
     override fun processing(command: GenerateDocumentCommand): GenerateDocumentResponse.Data {
         val data = command.data
-        val documentDescriptorStored = documentDescriptorRepositoryNew.load(
-            cpid = data.cpid,
-            ocid = data.ocid,
-            country = data.country,
-            lang = data.language,
-            pmd = data.pmd,
-            documentInitiator = data.documentInitiator
-        )
+        val documentDescriptorStored = documentDescriptorRepositoryNew
+            .load(data.cpid, data.ocid, data.pmd, data.country, data.language, data.documentInitiator)
 
         if (documentDescriptorStored != null)
             return GenerateDocumentResponse.Data(
@@ -212,8 +211,65 @@ class DocumentServiceImpl(
                     GenerateDocumentResponse.Data.Document(id = document.id)
                 }
             )
+        val mainProcessInfo = recordRepository.load(data.pmd, data.country, data.documentInitiator)
+            ?: throw IllegalStateException("Record not found.")
+        val mainProcessRelationships = mainProcessInfo.relationships.toSet()
+        val mainProcessName = mainProcessInfo.mainProcess
 
+        val mainProcessRecord = publicPointAdapter.getReleasePackage(data.cpid, data.ocid).releases[0]
+        val relatedProcessRecords =
+            getRelatedProcessesRecords(data.cpid, listOf(mainProcessRecord), mainProcessRelationships)
+                .mapKeys { (relationship, _) -> getRecordNameBy(relationship) }
 
-
+        val allRecords = relatedProcessRecords + (mainProcessName to mainProcessRecord)
     }
+
+    private fun getRelatedProcessesRecords(
+        cpid: CPID,
+        parentRecords: Collection<Record>,
+        relationships: Set<RelatedProcessType>
+    ): Map<RelatedProcessType, Record> {
+        val relatedProcesses = parentRecords
+            .flatMap { it.relatedProcesses }
+            .mapNotNull { relatedProcess ->
+                relatedProcess.relationship
+                    .firstOrNull { relationship -> relationship in relationships }
+                    ?.let { relationship -> relationship to relatedProcess }
+            }.toMap()
+
+        if (relatedProcesses.isEmpty() && relationships.isNotEmpty())
+            throw IllegalStateException("Relationship(s) '${relationships.joinToString()}' not found in any record release.")
+
+        val relatedProcessesRecords = relatedProcesses.mapValues {
+            publicPointAdapter.getReleasePackage(cpid = cpid, ocid = OCID(it.value.identifier!!)).releases[0]
+        }
+        val remainingRelationShips = relationships - relatedProcesses.keys
+
+        if (remainingRelationShips.isNotEmpty())
+            return relatedProcessesRecords + getRelatedProcessesRecords(cpid, relatedProcessesRecords.values, remainingRelationShips)
+
+        return  relatedProcessesRecords
+    }
+
+    private fun getRecordNameBy(relationship: RelatedProcessType): RecordName =
+        when (relationship) {
+            RelatedProcessType.PARENT -> RecordName.MS
+            RelatedProcessType.X_EVALUATION -> RecordName.EV
+            RelatedProcessType.FRAMEWORK,
+            RelatedProcessType.PLANNING,
+            RelatedProcessType.X_CONTRACTING,
+            RelatedProcessType.X_DEMAND,
+            RelatedProcessType.X_EXECUTION,
+            RelatedProcessType.X_EXPENDITURE_ITEM,
+            RelatedProcessType.X_FRAMEWORK,
+            RelatedProcessType.X_FUNDING_SOURCE,
+            RelatedProcessType.X_NEGOTIATION,
+            RelatedProcessType.X_PCR,
+            RelatedProcessType.X_PLANNED,
+            RelatedProcessType.X_PRESELECTION,
+            RelatedProcessType.X_PRE_AWARD_CATALOG_REQUEST,
+            RelatedProcessType.X_PRE_QUALIFICATION,
+            RelatedProcessType.X_SCOPE -> throw IllegalStateException("Relationship '$relationship' is not allowed.")
+        }
+
 }
