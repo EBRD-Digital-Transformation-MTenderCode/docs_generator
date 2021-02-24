@@ -3,13 +3,13 @@ package com.procurement.docs_generator.application.service.json
 import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.procurement.docs_generator.domain.service.JsonDeserializeService
+import com.procurement.docs_generator.domain.service.TransformService
 import com.procurement.docs_generator.exception.json.JsonParseToObjectException
 import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
-class JacksonJsonDeserializeService(private val objectMapper: ObjectMapper) : JsonDeserializeService {
+class JacksonTransformService(private val objectMapper: ObjectMapper) : TransformService {
     companion object {
         private val typeRefOfMap = object : TypeReference<HashMap<String, Any>>() {}
     }

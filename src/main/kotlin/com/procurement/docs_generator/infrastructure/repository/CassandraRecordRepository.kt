@@ -7,14 +7,14 @@ import com.procurement.docs_generator.domain.model.entity.RecordEntity
 import com.procurement.docs_generator.domain.model.pmd.ProcurementMethod
 import com.procurement.docs_generator.domain.model.pmd.RecordName
 import com.procurement.docs_generator.domain.repository.RecordRepository
-import com.procurement.docs_generator.domain.service.JsonDeserializeService
+import com.procurement.docs_generator.domain.service.TransformService
 import com.procurement.docs_generator.infrastructure.logger.Slf4jLogger
 import org.springframework.stereotype.Repository
 
 @Repository
 class CassandraRecordRepository(
     private val session: Session,
-    private val transform: JsonDeserializeService
+    private val transform: TransformService
 ) : RecordRepository {
     companion object {
         private val log: Logger = Slf4jLogger()
