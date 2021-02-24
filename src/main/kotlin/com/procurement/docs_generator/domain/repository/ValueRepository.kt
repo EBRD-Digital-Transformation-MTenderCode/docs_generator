@@ -7,5 +7,5 @@ interface ValueRepository {
     fun load(
         pmd: ProcurementMethod,
         documentInitiator: String
-    ): ValueEntity?
+    ): List<ValueEntity>
 }

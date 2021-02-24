@@ -41,7 +41,7 @@ class CassandraValueRepository(
     override fun load(
         pmd: ProcurementMethod,
         documentInitiator: String
-    ): ValueEntity? {
+    ): List<ValueEntity> {
 
         val query = preparedLoadCQL.bind().also {
             it.setString(columnPmd, pmd.key)
@@ -50,8 +50,7 @@ class CassandraValueRepository(
 
         val resultSet = query.executeRead(session)
 
-        val row = resultSet.one()
-        return row?.let {
+        return resultSet.map { row ->
             ValueEntity(
                 pmd = pmd,
                 documentInitiator = documentInitiator,
