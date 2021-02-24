@@ -9,9 +9,9 @@ import com.procurement.docs_generator.domain.model.pmd.RecordName
 import com.procurement.docs_generator.domain.repository.RecordRepository
 import com.procurement.docs_generator.domain.service.JsonDeserializeService
 import com.procurement.docs_generator.infrastructure.logger.Slf4jLogger
-import org.springframework.stereotype.Service
+import org.springframework.stereotype.Repository
 
-@Service
+@Repository
 class CassandraRecordRepository(
     private val session: Session,
     private val transform: JsonDeserializeService
