@@ -16,7 +16,6 @@ import com.procurement.docs_generator.domain.model.command.id.CommandId
 import com.procurement.docs_generator.domain.model.command.name.CommandName.GENERATE_AC_DOC
 import com.procurement.docs_generator.domain.model.command.name.CommandName.GENERATE_DOCUMENT
 import com.procurement.docs_generator.domain.service.JsonDeserializeService
-import com.procurement.docs_generator.domain.service.JsonSerializeService
 import com.procurement.docs_generator.domain.service.deserialize
 import com.procurement.docs_generator.domain.view.MessageErrorView
 import com.procurement.docs_generator.exception.app.ApplicationException
@@ -28,8 +27,7 @@ import java.util.*
 
 @Service
 class CommandDispatcher(
-    private val deserializer: JsonDeserializeService,
-    private val serialize: JsonSerializeService,
+    private val transform: JsonDeserializeService,
     private val documentService: DocumentService
 ) : KafkaMessageHandler {
 
@@ -39,7 +37,7 @@ class CommandDispatcher(
 
     override fun handle(message: String): String {
         val result = try {
-            val command: Command = deserializer.deserialize(message)
+            val command: Command = transform.deserialize(message)
             MDC.put("command-id", command.id.value.toString())
             MDC.put("command-name", command.name.code)
 
@@ -58,7 +56,7 @@ class CommandDispatcher(
             MDC.remove("command-id")
         }
 
-        return serialize.serialize(result)
+        return transform.serialize(result)
     }
 
     private fun commandDispatcher(command: Command, body: String): Any {
@@ -67,7 +65,7 @@ class CommandDispatcher(
         return when (command.name) {
             GENERATE_AC_DOC -> {
                 try {
-                    val data = deserializer.deserialize<GenerateACDocCommand>(body)
+                    val data = transform.deserialize<GenerateACDocCommand>(body)
                         .let { documentService.processing(it) }
                     ContractFinalizationCommand(
                         version = GlobalProperties.App.apiVersion,
@@ -80,7 +78,7 @@ class CommandDispatcher(
                 }
             }
             GENERATE_DOCUMENT -> try {
-                val data = deserializer.deserialize<GenerateDocumentCommand>(body)
+                val data = transform.deserialize<GenerateDocumentCommand>(body)
                     .let { documentService.processing(it) }
                 GenerateDocumentResponse(
                     version = GlobalProperties.App.apiVersion,
