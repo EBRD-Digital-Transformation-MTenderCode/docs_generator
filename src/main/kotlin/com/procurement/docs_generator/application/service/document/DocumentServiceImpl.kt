@@ -222,11 +222,11 @@ class DocumentServiceImpl(
                     GenerateDocumentResponse.Data.Document(id = document.id)
                 }
             )
-        val allRecords = getMainAndRelatedProcessesRecordsByName(data)
-        val parametersByName = getParametersByNames(data, allRecords)
+        val mainAndRelatedProcessRecords = getMainAndRelatedProcessesRecordsByName(data)
+        val parametersByName = getParametersByName(data, mainAndRelatedProcessRecords)
 
         val template = getTemplate(parametersByName, data)
-        val documentId = generateDocument(template, allRecords, data)
+        val documentId = generateDocument(template, mainAndRelatedProcessRecords, data)
 
         val descriptorEntity = DocumentDescriptorNew(
             cpid = data.cpid,
@@ -288,18 +288,17 @@ class DocumentServiceImpl(
                     "pmd '${data.pmd}', lang '{$data.language}', date '$date' and subGroup '$subGroup' is not found."
             )
 
-        val template = Template(
+        return Template(
             startDate = templateEntity.date.toLocalDate(),
             engine = templateEntity.typeOfEngine,
             format = templateEntity.format,
             body = templateEntity.template
         )
-        return template
     }
 
-    private fun getParametersByNames(
+    private fun getParametersByName(
         data: GenerateDocumentCommand.Data,
-        allRecords: Map<RecordName, Record>
+        records: Map<RecordName, Record>
     ): Map<ValueEntity.Parameter, String> {
         val valuesByRecordName = valueRepository
             .load(data.pmd, data.documentInitiator)
@@ -307,11 +306,11 @@ class DocumentServiceImpl(
 
         val parameterValueByParameterName = valuesByRecordName
             .map { (recordName, values) ->
-                val record = allRecords[recordName]
+                val record = records[recordName]
                     ?: throw IllegalStateException("Required record $recordName not found.")
                 val recordSerialized = transform.toJsonNode(record) as ObjectNode
-                val pathsByParameters = values.map { value -> value.parameter to value.path.split(".") }.toMap()
-                pathsByParameters.mapValues { (_, paths) ->
+                val pathsByParameterNames = values.map { value -> value.parameter to value.path.split(".") }.toMap()
+                pathsByParameterNames.mapValues { (_, paths) ->
                     getPathParameterValue(recordSerialized, paths, paths.joinToString("."))
                 }
             }
