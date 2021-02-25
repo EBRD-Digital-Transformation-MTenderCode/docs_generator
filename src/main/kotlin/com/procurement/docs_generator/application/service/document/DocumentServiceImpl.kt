@@ -224,10 +224,10 @@ class DocumentServiceImpl(
                 objectId = documentStored.objectId
             )
         val mainAndRelatedProcessRecords = getMainAndRelatedProcessesRecords(data)
-        val parameterValuesByName = getParameterValuesByName(data, mainAndRelatedProcessRecords)
+        val parameters = getParameters(data, mainAndRelatedProcessRecords)
 
-        val template = getTemplate(parameterValuesByName, data)
-        val documentId = generateDocument(template, mainAndRelatedProcessRecords, data)
+        val template = getTemplate(parameters, data)
+        val documentId = generateDocumentAndGetId(template, mainAndRelatedProcessRecords, data)
 
         val document = DocumentEntity(
             cpid = data.cpid,
@@ -253,7 +253,7 @@ class DocumentServiceImpl(
         }
     }
 
-    private fun generateDocument(
+    private fun generateDocumentAndGetId(
         template: Template,
         records: Map<RecordName, Record>,
         data: GenerateDocumentCommand.Data
@@ -272,11 +272,11 @@ class DocumentServiceImpl(
     }
 
     private fun getTemplate(
-        parameterValueByParameterName: Map<ParameterPathEntity.Parameter, String>,
+        parameters: Map<ParameterPathEntity.Parameter, String>,
         data: GenerateDocumentCommand.Data
     ): Template {
-        val subGroup = parameterValueByParameterName[ParameterPathEntity.Parameter.SUBGROUP]!!
-        val date = parameterValueByParameterName[ParameterPathEntity.Parameter.DATE]!!.toLocalDateTime()
+        val subGroup = parameters[ParameterPathEntity.Parameter.SUBGROUP]!!
+        val date = parameters[ParameterPathEntity.Parameter.DATE]!!.toLocalDateTime()
 
         val templateEntity = templateRepository.load(
             country = data.country,
@@ -299,15 +299,15 @@ class DocumentServiceImpl(
         )
     }
 
-    private fun getParameterValuesByName(
+    private fun getParameters(
         data: GenerateDocumentCommand.Data,
         records: Map<RecordName, Record>
     ): Map<ParameterPathEntity.Parameter, String> {
-        val valuesByRecordName = parameterPathRepository
+        val pathsByRecordName = parameterPathRepository
             .load(data.pmd, data.documentInitiator)
             .groupBy { it.record }
 
-        val parameterValuesByParameterName = valuesByRecordName
+        val parameterValuesByParameterNames = pathsByRecordName
             .map { (recordName, values) ->
                 val record = records[recordName]
                     ?: throw IllegalStateException("Required record $recordName not found.")
@@ -319,7 +319,7 @@ class DocumentServiceImpl(
             }
             .flatMap { it.entries }
             .associate { it.key to it.value }
-        return parameterValuesByParameterName
+        return parameterValuesByParameterNames
     }
 
     private fun getMainAndRelatedProcessesRecords(data: GenerateDocumentCommand.Data): Map<RecordName, Record> {
