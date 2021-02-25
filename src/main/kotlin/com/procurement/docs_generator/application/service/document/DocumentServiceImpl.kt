@@ -35,6 +35,7 @@ import com.procurement.docs_generator.domain.repository.ParameterPathRepository
 import com.procurement.docs_generator.domain.repository.RecordRepository
 import com.procurement.docs_generator.domain.repository.TemplateRepository
 import com.procurement.docs_generator.domain.service.TransformService
+import com.procurement.docs_generator.exception.app.GenerateDocumentErrors
 import com.procurement.docs_generator.infrastructure.logger.Slf4jLogger
 import org.springframework.stereotype.Service
 import java.time.LocalDate
@@ -286,10 +287,7 @@ class DocumentServiceImpl(
             date = date,
             subGroup = subGroup
         )
-            ?: throw IllegalStateException(
-                "Template by country '${data.country}', documentInitiator '${data.documentInitiator}', " +
-                    "pmd '${data.pmd}', lang '{$data.language}', date '$date' and subGroup '$subGroup' is not found."
-            )
+            ?: throw GenerateDocumentErrors.TemplateNotFound(data.pmd, data.country, data.documentInitiator, data.language, date, subGroup)
 
         return Template(
             startDate = templateEntity.date.toLocalDate(),
@@ -310,7 +308,7 @@ class DocumentServiceImpl(
         val parameterValuesByParameterNames = pathsByRecordName
             .map { (recordName, values) ->
                 val record = records[recordName]
-                    ?: throw IllegalStateException("Required record $recordName not found.")
+                    ?: throw GenerateDocumentErrors.RecordForParameterSearchNotFound(recordName)
                 val recordSerialized = transform.toJsonNode(record) as ObjectNode
                 val pathsByParameterNames = values.map { value -> value.parameter to value.path.split(".") }.toMap()
                 pathsByParameterNames.mapValues { (_, paths) ->
@@ -324,7 +322,7 @@ class DocumentServiceImpl(
 
     private fun getMainAndRelatedProcessesRecords(data: GenerateDocumentCommand.Data): Map<RecordName, Record> {
         val mainProcessInfo = recordRepository.load(data.pmd, data.country, data.documentInitiator)
-            ?: throw IllegalStateException("Record not found.")
+            ?: throw GenerateDocumentErrors.RecordNotFound(data.pmd, data.country, data.documentInitiator)
         val mainProcessRelationships = mainProcessInfo.relationships.toSet()
         val mainProcessName = mainProcessInfo.mainProcess
 
@@ -342,7 +340,7 @@ class DocumentServiceImpl(
             return recordSerialized.asText()
         val node = recordSerialized.get(paths.first())
         if (node == null || node is NullNode)
-            throw IllegalStateException("Value by path '$fullPath' not found.")
+            throw GenerateDocumentErrors.ValueByPathNotFound(fullPath)
         return getPathParameterValue(node as ObjectNode, paths.drop(1), fullPath)
     }
 
@@ -360,7 +358,7 @@ class DocumentServiceImpl(
             }.toMap()
 
         if (relatedProcesses.isEmpty() && relationships.isNotEmpty())
-            throw IllegalStateException("Relationship(s) '${relationships.joinToString()}' not found in any record release.")
+            throw GenerateDocumentErrors.RelationshipsNotFound(relationships)
 
         val relatedProcessesRecords = relatedProcesses.mapValues {
             publicPointAdapter.getReleasePackage(cpid = cpid, ocid = OCID(it.value.identifier!!)).releases[0]
@@ -391,7 +389,7 @@ class DocumentServiceImpl(
             RelatedProcessType.X_PRESELECTION,
             RelatedProcessType.X_PRE_AWARD_CATALOG_REQUEST,
             RelatedProcessType.X_PRE_QUALIFICATION,
-            RelatedProcessType.X_SCOPE -> throw IllegalStateException("Relationship '$relationship' is not allowed.")
+            RelatedProcessType.X_SCOPE -> throw GenerateDocumentErrors.RelationshipIsNotAllowed(relationship)
         }
 
 }
