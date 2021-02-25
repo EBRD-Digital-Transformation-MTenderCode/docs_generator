@@ -329,11 +329,11 @@ class DocumentServiceImpl(
         val mainProcessName = mainProcessInfo.mainProcess
 
         val mainProcessRecord = publicPointAdapter.getReleasePackage(data.cpid, data.ocid).releases[0]
-        val relatedProcessRecords =
+        val relatedProcessRecordsByName =
             getRelatedProcessesRecords(data.cpid, listOf(mainProcessRecord), mainProcessRelationships)
                 .mapKeys { (relationship, _) -> getRecordNameBy(relationship) }
 
-        val allRecords = relatedProcessRecords + (mainProcessName to mainProcessRecord)
+        val allRecords = relatedProcessRecordsByName + (mainProcessName to mainProcessRecord)
         return allRecords
     }
 
