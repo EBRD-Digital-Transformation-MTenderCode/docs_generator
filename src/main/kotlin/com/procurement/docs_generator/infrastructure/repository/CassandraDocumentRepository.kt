@@ -9,16 +9,16 @@ import com.procurement.docs_generator.domain.model.entity.DocumentEntity
 import com.procurement.docs_generator.domain.model.language.Language
 import com.procurement.docs_generator.domain.model.ocid.OCID
 import com.procurement.docs_generator.domain.model.pmd.ProcurementMethod
-import com.procurement.docs_generator.domain.repository.DocumentDescriptorNewRepository
+import com.procurement.docs_generator.domain.repository.DocumentRepository
 import com.procurement.docs_generator.domain.service.TransformService
 import com.procurement.docs_generator.infrastructure.logger.Slf4jLogger
 import org.springframework.stereotype.Repository
 
 @Repository
-class CassandraDocumentDescriptorNewRepository(
+class CassandraDocumentRepository(
     private val session: Session,
     private val transform: TransformService
-) : DocumentDescriptorNewRepository {
+) : DocumentRepository {
     companion object {
         private val log: Logger = Slf4jLogger()
 

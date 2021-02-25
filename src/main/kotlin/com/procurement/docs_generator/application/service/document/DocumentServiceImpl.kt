@@ -29,8 +29,8 @@ import com.procurement.docs_generator.domain.model.pmd.RelatedProcessType
 import com.procurement.docs_generator.domain.model.release.ACReleasesPackage
 import com.procurement.docs_generator.domain.model.release.entity.Record
 import com.procurement.docs_generator.domain.model.template.Template
-import com.procurement.docs_generator.domain.repository.DocumentDescriptorNewRepository
 import com.procurement.docs_generator.domain.repository.DocumentDescriptorRepository
+import com.procurement.docs_generator.domain.repository.DocumentRepository
 import com.procurement.docs_generator.domain.repository.RecordRepository
 import com.procurement.docs_generator.domain.repository.TemplateRepository
 import com.procurement.docs_generator.domain.repository.ValueRepository
@@ -45,7 +45,7 @@ class DocumentServiceImpl(
     documentGenerators: List<DocumentGenerator>,
     private val templateService: TemplateService,
     private val documentDescriptorRepository: DocumentDescriptorRepository,
-    private val documentDescriptorRepositoryNew: DocumentDescriptorNewRepository,
+    private val document: DocumentRepository,
     private val recordRepository: RecordRepository,
     private val valueRepository: ValueRepository,
     private val templateRepository: TemplateRepository,
@@ -210,7 +210,7 @@ class DocumentServiceImpl(
 
     override fun processing(command: GenerateDocumentCommand): GenerateDocumentResponse.Data {
         val data = command.data
-        val documentDescriptorStored = documentDescriptorRepositoryNew
+        val documentDescriptorStored = document
             .load(data.cpid, data.ocid, data.pmd, data.country, data.language, data.documentInitiator)
 
         if (documentDescriptorStored != null)
@@ -240,7 +240,7 @@ class DocumentServiceImpl(
             objectId = data.objectId
         )
 
-        documentDescriptorRepositoryNew.save(descriptorEntity)
+        document.save(descriptorEntity)
 
         return descriptorEntity.let {
             GenerateDocumentResponse.Data(
