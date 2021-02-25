@@ -10,7 +10,7 @@ class RecordEntity(
     val country: Country,
     val documentInitiator: String,
     val mainProcess: RecordName,
-    val relationships: Relationships
+    val relationships: Relationships = Relationships()
 ) {
-    class Relationships(values: List<RelatedProcessType>) : List<RelatedProcessType> by values
+    class Relationships(values: List<RelatedProcessType> = emptyList()) : List<RelatedProcessType> by values
 }
