@@ -1,5 +1,7 @@
 package com.procurement.docs_generator.application.service.document
 
+import com.fasterxml.jackson.databind.node.NullNode
+import com.fasterxml.jackson.databind.node.ObjectNode
 import com.procurement.docs_generator.adapter.PublicPointAdapter
 import com.procurement.docs_generator.adapter.UploadDocumentAdapter
 import com.procurement.docs_generator.application.service.template.TemplateService
@@ -27,6 +29,8 @@ import com.procurement.docs_generator.domain.model.template.Template
 import com.procurement.docs_generator.domain.repository.DocumentDescriptorNewRepository
 import com.procurement.docs_generator.domain.repository.DocumentDescriptorRepository
 import com.procurement.docs_generator.domain.repository.RecordRepository
+import com.procurement.docs_generator.domain.repository.ValueRepository
+import com.procurement.docs_generator.domain.service.TransformService
 import com.procurement.docs_generator.infrastructure.logger.Slf4jLogger
 import org.springframework.stereotype.Service
 import java.time.LocalDate
@@ -39,8 +43,10 @@ class DocumentServiceImpl(
     private val documentDescriptorRepository: DocumentDescriptorRepository,
     private val documentDescriptorRepositoryNew: DocumentDescriptorNewRepository,
     private val recordRepository: RecordRepository,
-    private val uploadDocumentAdapter: UploadDocumentAdapter
-) : DocumentService {
+    private val valueRepository: ValueRepository,
+    private val uploadDocumentAdapter: UploadDocumentAdapter,
+    private val transform: TransformService
+    ) : DocumentService {
     companion object {
         private val log: Logger = Slf4jLogger()
     }
@@ -211,6 +217,28 @@ class DocumentServiceImpl(
                     GenerateDocumentResponse.Data.Document(id = document.id)
                 }
             )
+        val allRecords = getMainAndRelatedProcessesRecordsByName(data)
+
+        val valuesByRecordName = valueRepository
+            .load(data.pmd, data.documentInitiator)
+            .groupBy { it.record }
+
+        val parameterValueByParameterName = valuesByRecordName.map { (recordName, values) ->
+            val record = allRecords[recordName]
+                ?:  throw IllegalStateException("Required record $recordName not found.")
+            val recordSerialized = transform.toJsonNode(record) as ObjectNode
+            val pathsByParameters = values.map { value -> value.parameter to value.path.split(".") }.toMap()
+            pathsByParameters.mapValues { (_, paths) ->
+                getPathParameterValue(recordSerialized, paths, paths.joinToString("."))
+            }
+        }
+
+
+
+
+    }
+
+    private fun getMainAndRelatedProcessesRecordsByName(data: GenerateDocumentCommand.Data): Map<RecordName, Record> {
         val mainProcessInfo = recordRepository.load(data.pmd, data.country, data.documentInitiator)
             ?: throw IllegalStateException("Record not found.")
         val mainProcessRelationships = mainProcessInfo.relationships.toSet()
@@ -222,6 +250,16 @@ class DocumentServiceImpl(
                 .mapKeys { (relationship, _) -> getRecordNameBy(relationship) }
 
         val allRecords = relatedProcessRecords + (mainProcessName to mainProcessRecord)
+        return allRecords
+    }
+
+    private fun getPathParameterValue(recordSerialized: ObjectNode, paths: List<String>, fullPath: String): String {
+        if (paths.isEmpty())
+            return recordSerialized.asText()
+        val node = recordSerialized.get(paths.first())
+        if (node == null || node is NullNode)
+            throw IllegalStateException("Value by path '$fullPath' not found.")
+        return getPathParameterValue(node as ObjectNode, paths.drop(1), fullPath)
     }
 
     private fun getRelatedProcessesRecords(
