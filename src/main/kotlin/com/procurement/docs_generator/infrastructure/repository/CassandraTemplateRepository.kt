@@ -36,15 +36,15 @@ class CassandraTemplateRepository(
 
         private const val loadCQL =
             """SELECT $columnTemplate,
+                      $columnFormat,
+                      $columnTypeOfEngine=?
                  FROM $KEY_SPACE.$tableName
                 WHERE $columnCountry=?
                   AND $columnPmd=?,
                   AND $columnDocumentInitiator=?,
                   AND $columnLang=?,
                   AND $columnSubGroup=?,
-                  AND $columnDate=?,
-                  AND $columnTypeOfEngine=?,
-                  AND $columnFormat=?;
+                  AND $columnDate=?;
             """
     }
 
@@ -56,9 +56,7 @@ class CassandraTemplateRepository(
         documentInitiator: String,
         lang: Language,
         subGroup: String,
-        date: LocalDateTime,
-        typeOfEngine: Template.Engine,
-        format: Template.Format
+        date: LocalDateTime
     ): TemplateEntity? {
         val query = preparedLoadCQL.bind().also {
             it.setString(columnCountry, country.value)
@@ -67,8 +65,6 @@ class CassandraTemplateRepository(
             it.setString(columnLang, lang.value)
             it.setString(columnSubGroup, subGroup)
             it.setTimestamp(columnDate, date.toCassandraTimestamp())
-            it.setString(columnTypeOfEngine, typeOfEngine.code)
-            it.setString(columnFormat, format.code)
         }
 
         val resultSet = query.executeRead(session)
@@ -82,8 +78,8 @@ class CassandraTemplateRepository(
                 lang = lang,
                 subGroup = subGroup,
                 date = date,
-                typeOfEngine = typeOfEngine,
-                format = format,
+                typeOfEngine = Template.Engine.valueOfCode(row.getString(columnTypeOfEngine)),
+                format = Template.Format.valueOfCode(row.getString(columnFormat)),
                 template = row.getBytes(columnTemplate)
             )
         }
