@@ -2,6 +2,7 @@ package com.procurement.docs_generator.application.service.json
 
 import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.core.type.TypeReference
+import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.procurement.docs_generator.domain.service.TransformService
 import com.procurement.docs_generator.exception.json.JsonParseToObjectException
@@ -31,5 +32,12 @@ class JacksonTransformService(private val objectMapper: ObjectMapper) : Transfor
     } catch (expected: JsonProcessingException) {
         val className = this::class.java.canonicalName
         throw IllegalArgumentException("Error mapping an object of type '$className' to JSON.", expected)
+    }
+
+    override fun <R> toJsonNode(value: R): JsonNode = try {
+        objectMapper.valueToTree(value)
+    } catch (expected: Exception) {
+        val className = this::class.java.canonicalName
+        throw IllegalArgumentException("Error mapping an object of type '$className' to Json Node.", expected)
     }
 }
