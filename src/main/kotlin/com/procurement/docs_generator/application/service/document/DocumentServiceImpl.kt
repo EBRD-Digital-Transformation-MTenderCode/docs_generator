@@ -220,7 +220,8 @@ class DocumentServiceImpl(
                 documentInitiator = documentDescriptorStored.documentInitiator,
                 documents = documentDescriptorStored.documents.map { document ->
                     GenerateDocumentResponse.Data.Document(id = document.id)
-                }
+                },
+                objectId = documentDescriptorStored.objectId
             )
         val mainAndRelatedProcessRecords = getMainAndRelatedProcessesRecordsByName(data)
         val parametersByName = getParametersByName(data, mainAndRelatedProcessRecords)
@@ -235,7 +236,8 @@ class DocumentServiceImpl(
             lang = data.language,
             pmd = data.pmd,
             documentInitiator = data.documentInitiator,
-            documents = DocumentDescriptorNew.Documents(listOf(DocumentDescriptorNew.Documents.Document(documentId)))
+            documents = DocumentDescriptorNew.Documents(listOf(DocumentDescriptorNew.Documents.Document(documentId))),
+            objectId = data.objectId
         )
 
         documentDescriptorRepositoryNew.save(descriptorEntity)
@@ -245,7 +247,8 @@ class DocumentServiceImpl(
                 cpid = descriptorEntity.cpid,
                 ocid = descriptorEntity.ocid,
                 documentInitiator = descriptorEntity.documentInitiator,
-                documents = descriptorEntity.documents.map { document -> GenerateDocumentResponse.Data.Document(document.id) }
+                documents = descriptorEntity.documents.map { document -> GenerateDocumentResponse.Data.Document(document.id) },
+                objectId = descriptorEntity.objectId
             )
         }
     }
