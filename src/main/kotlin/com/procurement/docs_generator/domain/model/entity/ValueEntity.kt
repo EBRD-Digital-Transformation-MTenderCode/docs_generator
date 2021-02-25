@@ -19,6 +19,8 @@ class ValueEntity(
     enum class Parameter(@JsonValue override val key: String) : EnumElementProvider.Key {
 
         DATE("date"),
+        FORMAT("format"),
+        TYPE_OF_ENGINE("typeOfEngine"),
         SUBGROUP("subGroup");
 
         override fun toString(): String = this.key
