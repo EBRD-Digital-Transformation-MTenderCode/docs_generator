@@ -2,7 +2,6 @@ package com.procurement.docs_generator.domain.command
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.annotation.JsonPropertyOrder
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer
@@ -32,7 +31,6 @@ import com.procurement.docs_generator.domain.model.version.ApiVersionSerializer
 import java.time.LocalDateTime
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonPropertyOrder("version", "id", "command", "data")
 data class GenerateDocumentCommand(
     @JsonDeserialize(using = ApiVersionDeserializer::class)
     @JsonSerialize(using = ApiVersionSerializer::class)
@@ -46,9 +44,8 @@ data class GenerateDocumentCommand(
     @JsonSerialize(using = CommandNameSerializer::class)
     @field:JsonProperty("command") @param:JsonProperty("command") val name: CommandName,
 
-    @field:JsonProperty("data") @param:JsonProperty("data") val data: GenerateDocumentCommand.Data
+    @field:JsonProperty("data") @param:JsonProperty("data") val data: Data
 ) {
-    @JsonPropertyOrder("country", "language", "cpid", "ocid")
     class Data(
         @JsonDeserialize(using = CountryDeserializer::class)
         @JsonSerialize(using = CountrySerializer::class)
@@ -73,7 +70,7 @@ data class GenerateDocumentCommand(
         @field:JsonProperty("startDate") @param:JsonProperty("startDate") val startDate: LocalDateTime,
 
         @field:JsonProperty("pmd") @param:JsonProperty("pmd") val pmd: ProcurementMethod,
-        @field:JsonProperty("documentInitiator") @param:JsonProperty("documentInitiator") val documentInitiator: String
-
-        )
+        @field:JsonProperty("documentInitiator") @param:JsonProperty("documentInitiator") val documentInitiator: String,
+        @field:JsonProperty("objectId") @param:JsonProperty("objectId") val objectId: String
+    )
 }

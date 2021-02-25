@@ -1,7 +1,6 @@
 package com.procurement.docs_generator.domain.command
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.annotation.JsonPropertyOrder
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.procurement.docs_generator.domain.model.command.id.CommandId
@@ -30,7 +29,6 @@ class GenerateDocumentResponse(
 
     @field:JsonProperty("data") @param:JsonProperty("data") val data: Data
 ) {
-    @JsonPropertyOrder("cpid", "ocid", "documents", "documentInitiator")
     data class Data(
         @JsonDeserialize(using = CPIDDeserializer::class)
         @JsonSerialize(using = CPIDSerializer::class)
@@ -42,10 +40,10 @@ class GenerateDocumentResponse(
 
         @field:JsonProperty("documents") @param:JsonProperty("documents") val documents: List<Document>,
 
-        @field:JsonProperty("documentInitiator") @param:JsonProperty("documentInitiator") val documentInitiator: String
-    ) {
+        @field:JsonProperty("documentInitiator") @param:JsonProperty("documentInitiator") val documentInitiator: String,
 
-        @JsonPropertyOrder("id")
+        @field:JsonProperty("objectId") @param:JsonProperty("objectId") val objectId: String
+    ) {
         data class Document(
             @field:JsonProperty("id") @param:JsonProperty("id") val id: String
         )
