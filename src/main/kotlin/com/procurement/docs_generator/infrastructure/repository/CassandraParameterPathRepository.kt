@@ -5,16 +5,16 @@ import com.procurement.docs_generator.domain.logger.Logger
 import com.procurement.docs_generator.domain.model.entity.ParameterPathEntity
 import com.procurement.docs_generator.domain.model.pmd.ProcurementMethod
 import com.procurement.docs_generator.domain.model.pmd.RecordName
-import com.procurement.docs_generator.domain.repository.ValueRepository
+import com.procurement.docs_generator.domain.repository.ParameterPathRepository
 import com.procurement.docs_generator.domain.service.TransformService
 import com.procurement.docs_generator.infrastructure.logger.Slf4jLogger
 import org.springframework.stereotype.Repository
 
 @Repository
-class CassandraValueRepository(
+class CassandraParameterPathRepository(
     private val session: Session,
     private val transform: TransformService
-) : ValueRepository {
+) : ParameterPathRepository {
     companion object {
         private val log: Logger = Slf4jLogger()
 

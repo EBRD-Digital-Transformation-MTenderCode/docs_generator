@@ -31,9 +31,9 @@ import com.procurement.docs_generator.domain.model.release.entity.Record
 import com.procurement.docs_generator.domain.model.template.Template
 import com.procurement.docs_generator.domain.repository.DocumentDescriptorRepository
 import com.procurement.docs_generator.domain.repository.DocumentRepository
+import com.procurement.docs_generator.domain.repository.ParameterPathRepository
 import com.procurement.docs_generator.domain.repository.RecordRepository
 import com.procurement.docs_generator.domain.repository.TemplateRepository
-import com.procurement.docs_generator.domain.repository.ValueRepository
 import com.procurement.docs_generator.domain.service.TransformService
 import com.procurement.docs_generator.infrastructure.logger.Slf4jLogger
 import org.springframework.stereotype.Service
@@ -47,7 +47,7 @@ class DocumentServiceImpl(
     private val documentDescriptorRepository: DocumentDescriptorRepository,
     private val documentRepository: DocumentRepository,
     private val recordRepository: RecordRepository,
-    private val valueRepository: ValueRepository,
+    private val parameterPathRepository: ParameterPathRepository,
     private val templateRepository: TemplateRepository,
     private val uploadDocumentAdapter: UploadDocumentAdapter,
     private val transform: TransformService
@@ -303,7 +303,7 @@ class DocumentServiceImpl(
         data: GenerateDocumentCommand.Data,
         records: Map<RecordName, Record>
     ): Map<ParameterPathEntity.Parameter, String> {
-        val valuesByRecordName = valueRepository
+        val valuesByRecordName = parameterPathRepository
             .load(data.pmd, data.documentInitiator)
             .groupBy { it.record }
 
