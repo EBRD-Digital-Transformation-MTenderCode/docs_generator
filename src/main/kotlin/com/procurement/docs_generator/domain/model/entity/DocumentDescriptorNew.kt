@@ -13,7 +13,8 @@ data class DocumentDescriptorNew(
     val pmd: ProcurementMethod,
     val country: Country,
     val lang: Language,
-    val documentInitiator: String
+    val documentInitiator: String,
+    val objectId: String
 ) {
     class Documents(values: List<Document>) : List<Documents.Document> by values {
         data class Document(val id: String)

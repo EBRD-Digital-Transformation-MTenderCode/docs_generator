@@ -31,6 +31,8 @@ class CassandraDocumentDescriptorNewRepository(
         private const val columnCountry = "country"
         private const val columnLang = "lang"
         private const val columnDocumentInitiator = "documentInitiator"
+        private const val columnObjectId = "objectId"
+
 
         private const val loadCQL =
             """SELECT $columnDocuments
@@ -40,7 +42,8 @@ class CassandraDocumentDescriptorNewRepository(
                   AND $columnPmd=?
                   AND $columnCountry=?
                   AND $columnLang=?
-                  AND $columnDocumentInitiator=?;
+                  AND $columnDocumentInitiator=?
+                  AND $columnObjectId=?;
             """
 
         private const val insertCQL = """
@@ -52,9 +55,10 @@ class CassandraDocumentDescriptorNewRepository(
                 $columnPmd,
                 $columnCountry,
                 $columnLang,
-                $columnDocumentInitiator
+                $columnDocumentInitiator,
+                $columnObjectId
                )
-               VALUES (?,?,?,?,?,?,?) IF NOT EXISTS
+               VALUES (?,?,?,?,?,?,?,?) IF NOT EXISTS
             """
     }
 
@@ -95,7 +99,8 @@ class CassandraDocumentDescriptorNewRepository(
                 documents = transform.deserialize(
                     row.getString(columnDocuments),
                     DocumentDescriptorNew.Documents::class.java
-                )
+                ),
+                objectId = row.getString(columnObjectId)
             )
         } else {
             log.debug { "Document descriptor by cpid '$cpid' and ocid '$ocid' not found." }
@@ -112,6 +117,7 @@ class CassandraDocumentDescriptorNewRepository(
             it.setString(columnCountry, documentDescriptor.country.value)
             it.setString(columnLang, documentDescriptor.lang.value)
             it.setString(columnDocumentInitiator, documentDescriptor.documentInitiator)
+            it.setString(columnObjectId, documentDescriptor.objectId)
         }
 
         val resultSet = query.executeWrite(session)
