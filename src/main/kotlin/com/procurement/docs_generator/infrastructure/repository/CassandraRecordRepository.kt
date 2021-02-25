@@ -6,6 +6,7 @@ import com.procurement.docs_generator.domain.model.country.Country
 import com.procurement.docs_generator.domain.model.entity.RecordEntity
 import com.procurement.docs_generator.domain.model.pmd.ProcurementMethod
 import com.procurement.docs_generator.domain.model.pmd.RecordName
+import com.procurement.docs_generator.domain.model.pmd.RelatedProcessType
 import com.procurement.docs_generator.domain.repository.RecordRepository
 import com.procurement.docs_generator.domain.service.TransformService
 import com.procurement.docs_generator.infrastructure.logger.Slf4jLogger
@@ -60,9 +61,8 @@ class CassandraRecordRepository(
                 country = country,
                 documentInitiator = documentInitiator,
                 mainProcess = RecordName.creator(row.getString(columnMainProcess)),
-                relationships = transform.deserialize(
-                    row.getString(columnRelationships),
-                    RecordEntity.Relationships::class.java
+                relationships = transform.deserializeCollection(
+                    row.getString(columnRelationships), RelatedProcessType::class.java
                 )
             )
         }
