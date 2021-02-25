@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.type.CollectionType
 import com.procurement.docs_generator.domain.service.TransformService
 import com.procurement.docs_generator.exception.json.JsonParseToObjectException
 import org.springframework.stereotype.Service
@@ -17,6 +18,14 @@ class JacksonTransformService(private val objectMapper: ObjectMapper) : Transfor
 
     override fun <T> deserialize(json: String, targetClass: Class<T>): T = try {
         objectMapper.readValue(json, targetClass)
+    } catch (exception: Exception) {
+        throw JsonParseToObjectException(exception)
+    }
+
+    override fun <T> deserializeCollection(json: String, elementClass: Class<T>): List<T> = try {
+        val javaType: CollectionType = objectMapper.typeFactory
+            .constructCollectionType(List::class.java, elementClass)
+        objectMapper.readValue(json, javaType)
     } catch (exception: Exception) {
         throw JsonParseToObjectException(exception)
     }
