@@ -7,7 +7,7 @@ import com.procurement.docs_generator.domain.model.pmd.ProcurementMethod
 import com.procurement.docs_generator.domain.model.pmd.RecordName
 import com.procurement.docs_generator.domain.model.pmd.RelatedProcessType
 
-class ValueEntity(
+class ParameterPathEntity(
     val pmd: ProcurementMethod,
     val documentInitiator: String,
     val parameter: Parameter,

@@ -2,7 +2,7 @@ package com.procurement.docs_generator.infrastructure.repository
 
 import com.datastax.driver.core.Session
 import com.procurement.docs_generator.domain.logger.Logger
-import com.procurement.docs_generator.domain.model.entity.ValueEntity
+import com.procurement.docs_generator.domain.model.entity.ParameterPathEntity
 import com.procurement.docs_generator.domain.model.pmd.ProcurementMethod
 import com.procurement.docs_generator.domain.model.pmd.RecordName
 import com.procurement.docs_generator.domain.repository.ValueRepository
@@ -41,7 +41,7 @@ class CassandraValueRepository(
     override fun load(
         pmd: ProcurementMethod,
         documentInitiator: String
-    ): List<ValueEntity> {
+    ): List<ParameterPathEntity> {
 
         val query = preparedLoadCQL.bind().also {
             it.setString(columnPmd, pmd.key)
@@ -51,10 +51,10 @@ class CassandraValueRepository(
         val resultSet = query.executeRead(session)
 
         return resultSet.map { row ->
-            ValueEntity(
+            ParameterPathEntity(
                 pmd = pmd,
                 documentInitiator = documentInitiator,
-                parameter = ValueEntity.Parameter.creator(row.getString(columnParameter)),
+                parameter = ParameterPathEntity.Parameter.creator(row.getString(columnParameter)),
                 record = RecordName.creator(row.getString(columnRecord)),
                 path = row.getString(columnPath)
             )
