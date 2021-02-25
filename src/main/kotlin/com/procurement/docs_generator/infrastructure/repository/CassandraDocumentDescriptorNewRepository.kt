@@ -5,7 +5,7 @@ import com.procurement.docs_generator.domain.logger.Logger
 import com.procurement.docs_generator.domain.logger.debug
 import com.procurement.docs_generator.domain.model.country.Country
 import com.procurement.docs_generator.domain.model.cpid.CPID
-import com.procurement.docs_generator.domain.model.entity.DocumentDescriptorNew
+import com.procurement.docs_generator.domain.model.entity.DocumentEntity
 import com.procurement.docs_generator.domain.model.language.Language
 import com.procurement.docs_generator.domain.model.ocid.OCID
 import com.procurement.docs_generator.domain.model.pmd.ProcurementMethod
@@ -72,7 +72,7 @@ class CassandraDocumentDescriptorNewRepository(
         country: Country,
         lang: Language,
         documentInitiator: String
-    ): DocumentDescriptorNew? {
+    ): DocumentEntity? {
         log.debug { "Attempt to load a document descriptors by cpid '$cpid' and ocid '$ocid'." }
 
         val query = preparedLoadCQL.bind().also {
@@ -89,7 +89,7 @@ class CassandraDocumentDescriptorNewRepository(
         val row = resultSet.one()
         return if (row != null) {
             log.debug { "Loaded a document descriptor by cpid '$cpid' and ocid '$ocid'." }
-            DocumentDescriptorNew(
+            DocumentEntity(
                 cpid = cpid,
                 ocid = ocid,
                 pmd = pmd,
@@ -98,7 +98,7 @@ class CassandraDocumentDescriptorNewRepository(
                 documentInitiator = documentInitiator,
                 documents = transform.deserialize(
                     row.getString(columnDocuments),
-                    DocumentDescriptorNew.Documents::class.java
+                    DocumentEntity.Documents::class.java
                 ),
                 objectId = row.getString(columnObjectId)
             )
@@ -108,7 +108,7 @@ class CassandraDocumentDescriptorNewRepository(
         }
     }
 
-    override fun save(documentDescriptor: DocumentDescriptorNew): Boolean {
+    override fun save(documentDescriptor: DocumentEntity): Boolean {
         val query = preparedInsertCQL.bind().also {
             it.setString(columnCpid, documentDescriptor.cpid.value)
             it.setString(columnOcid, documentDescriptor.ocid.value)

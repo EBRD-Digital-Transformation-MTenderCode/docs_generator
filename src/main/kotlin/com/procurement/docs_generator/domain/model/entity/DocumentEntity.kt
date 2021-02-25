@@ -6,7 +6,7 @@ import com.procurement.docs_generator.domain.model.language.Language
 import com.procurement.docs_generator.domain.model.ocid.OCID
 import com.procurement.docs_generator.domain.model.pmd.ProcurementMethod
 
-data class DocumentDescriptorNew(
+data class DocumentEntity(
     val cpid: CPID,
     val ocid: OCID,
     val documents: Documents,

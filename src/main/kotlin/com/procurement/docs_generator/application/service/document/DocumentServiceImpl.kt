@@ -20,7 +20,7 @@ import com.procurement.docs_generator.domain.model.document.context.mapper.Goods
 import com.procurement.docs_generator.domain.model.document.context.mapper.ServicesContextMapper
 import com.procurement.docs_generator.domain.model.document.context.mapper.WorksContextMapper
 import com.procurement.docs_generator.domain.model.entity.DocumentDescriptor
-import com.procurement.docs_generator.domain.model.entity.DocumentDescriptorNew
+import com.procurement.docs_generator.domain.model.entity.DocumentEntity
 import com.procurement.docs_generator.domain.model.entity.ValueEntity
 import com.procurement.docs_generator.domain.model.ocid.OCID
 import com.procurement.docs_generator.domain.model.ocid.OCIDDeserializer
@@ -229,14 +229,14 @@ class DocumentServiceImpl(
         val template = getTemplate(parametersByName, data)
         val documentId = generateDocument(template, mainAndRelatedProcessRecords, data)
 
-        val descriptorEntity = DocumentDescriptorNew(
+        val descriptorEntity = DocumentEntity(
             cpid = data.cpid,
             ocid = data.ocid,
             country = data.country,
             lang = data.language,
             pmd = data.pmd,
             documentInitiator = data.documentInitiator,
-            documents = DocumentDescriptorNew.Documents(listOf(DocumentDescriptorNew.Documents.Document(documentId))),
+            documents = DocumentEntity.Documents(listOf(DocumentEntity.Documents.Document(documentId))),
             objectId = data.objectId
         )
 
