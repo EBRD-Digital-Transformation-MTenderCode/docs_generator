@@ -19,7 +19,7 @@ class CassandraRecordRepository(
     companion object {
         private val log: Logger = Slf4jLogger()
 
-        private const val KEY_SPACE = "documents"
+        private const val KEY_SPACE = "document_generator"
         private const val tableName = "records"
         private const val columnPmd = "pmd"
         private const val columnCountry = "country"

@@ -22,8 +22,8 @@ class CassandraDocumentRepository(
     companion object {
         private val log: Logger = Slf4jLogger()
 
-        private const val KEY_SPACE = "documents"
-        private const val tableName = "descriptors_new"
+        private const val KEY_SPACE = "document_generator"
+        private const val tableName = "documents"
         private const val columnCpid = "cpid"
         private const val columnOcid = "ocid"
         private const val columnDocuments = "documents"
