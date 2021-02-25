@@ -9,6 +9,7 @@ import com.procurement.docs_generator.domain.command.GenerateDocumentCommand
 import com.procurement.docs_generator.domain.command.GenerateDocumentResponse
 import com.procurement.docs_generator.domain.command.ac.ContractFinalizationCommand
 import com.procurement.docs_generator.domain.command.ac.GenerateACDocCommand
+import com.procurement.docs_generator.domain.date.toLocalDateTime
 import com.procurement.docs_generator.domain.logger.Logger
 import com.procurement.docs_generator.domain.logger.info
 import com.procurement.docs_generator.domain.model.cpid.CPID
@@ -19,6 +20,8 @@ import com.procurement.docs_generator.domain.model.document.context.mapper.Goods
 import com.procurement.docs_generator.domain.model.document.context.mapper.ServicesContextMapper
 import com.procurement.docs_generator.domain.model.document.context.mapper.WorksContextMapper
 import com.procurement.docs_generator.domain.model.entity.DocumentDescriptor
+import com.procurement.docs_generator.domain.model.entity.DocumentDescriptorNew
+import com.procurement.docs_generator.domain.model.entity.ValueEntity
 import com.procurement.docs_generator.domain.model.ocid.OCID
 import com.procurement.docs_generator.domain.model.ocid.OCIDDeserializer
 import com.procurement.docs_generator.domain.model.pmd.RecordName
@@ -29,6 +32,7 @@ import com.procurement.docs_generator.domain.model.template.Template
 import com.procurement.docs_generator.domain.repository.DocumentDescriptorNewRepository
 import com.procurement.docs_generator.domain.repository.DocumentDescriptorRepository
 import com.procurement.docs_generator.domain.repository.RecordRepository
+import com.procurement.docs_generator.domain.repository.TemplateRepository
 import com.procurement.docs_generator.domain.repository.ValueRepository
 import com.procurement.docs_generator.domain.service.TransformService
 import com.procurement.docs_generator.infrastructure.logger.Slf4jLogger
@@ -44,6 +48,7 @@ class DocumentServiceImpl(
     private val documentDescriptorRepositoryNew: DocumentDescriptorNewRepository,
     private val recordRepository: RecordRepository,
     private val valueRepository: ValueRepository,
+    private val templateRepository: TemplateRepository,
     private val uploadDocumentAdapter: UploadDocumentAdapter,
     private val transform: TransformService
     ) : DocumentService {
@@ -218,24 +223,101 @@ class DocumentServiceImpl(
                 }
             )
         val allRecords = getMainAndRelatedProcessesRecordsByName(data)
+        val parametersByName = getParametersByNames(data, allRecords)
 
+        val template = getTemplate(parametersByName, data)
+        val documentId = generateDocument(template, allRecords, data)
+
+        val descriptorEntity = DocumentDescriptorNew(
+            cpid = data.cpid,
+            ocid = data.ocid,
+            country = data.country,
+            lang = data.language,
+            pmd = data.pmd,
+            documentInitiator = data.documentInitiator,
+            documents = DocumentDescriptorNew.Documents(listOf(DocumentDescriptorNew.Documents.Document(documentId)))
+        )
+
+        documentDescriptorRepositoryNew.save(descriptorEntity)
+
+        return descriptorEntity.let {
+            GenerateDocumentResponse.Data(
+                cpid = descriptorEntity.cpid,
+                ocid = descriptorEntity.ocid,
+                documentInitiator = descriptorEntity.documentInitiator,
+                documents = descriptorEntity.documents.map { document -> GenerateDocumentResponse.Data.Document(document.id) }
+            )
+        }
+    }
+
+    private fun generateDocument(
+        template: Template,
+        records: Map<RecordName, Record>,
+        data: GenerateDocumentCommand.Data
+    ): String {
+        val context = records.mapKeys { (key, _) -> key.key }
+
+        return getDocumentGenerator(template)
+            .generate(template = template, context = context)
+            .also { log.info { "The Document by cpid: '${data.cpid}' and ocid: '${data.ocid}' was generated." } }
+            .use { pdfDocument ->
+                uploadDocumentAdapter.upload(pdfDocument)
+                    .also { id ->
+                        log.info { "Document by by cpid: '${data.cpid}' and ocid: '${data.ocid}' was uploaded (file name: '${pdfDocument.fileName}', size: '${pdfDocument.size}', hash: '${pdfDocument.hash}', descriptor: '$id')." }
+                    }
+            }
+    }
+
+    private fun getTemplate(
+        parameterValueByParameterName: Map<ValueEntity.Parameter, String>,
+        data: GenerateDocumentCommand.Data
+    ): Template {
+        val subGroup = parameterValueByParameterName[ValueEntity.Parameter.SUBGROUP]!!
+        val date = parameterValueByParameterName[ValueEntity.Parameter.DATE]!!.toLocalDateTime()
+
+        val templateEntity = templateRepository.load(
+            country = data.country,
+            documentInitiator = data.documentInitiator,
+            pmd = data.pmd,
+            lang = data.language,
+            date = date,
+            subGroup = subGroup
+        )
+            ?: throw IllegalStateException(
+                "Template by country '${data.country}', documentInitiator '${data.documentInitiator}', " +
+                    "pmd '${data.pmd}', lang '{$data.language}', date '$date' and subGroup '$subGroup' is not found."
+            )
+
+        val template = Template(
+            startDate = templateEntity.date.toLocalDate(),
+            engine = templateEntity.typeOfEngine,
+            format = templateEntity.format,
+            body = templateEntity.template
+        )
+        return template
+    }
+
+    private fun getParametersByNames(
+        data: GenerateDocumentCommand.Data,
+        allRecords: Map<RecordName, Record>
+    ): Map<ValueEntity.Parameter, String> {
         val valuesByRecordName = valueRepository
             .load(data.pmd, data.documentInitiator)
             .groupBy { it.record }
 
-        val parameterValueByParameterName = valuesByRecordName.map { (recordName, values) ->
-            val record = allRecords[recordName]
-                ?:  throw IllegalStateException("Required record $recordName not found.")
-            val recordSerialized = transform.toJsonNode(record) as ObjectNode
-            val pathsByParameters = values.map { value -> value.parameter to value.path.split(".") }.toMap()
-            pathsByParameters.mapValues { (_, paths) ->
-                getPathParameterValue(recordSerialized, paths, paths.joinToString("."))
+        val parameterValueByParameterName = valuesByRecordName
+            .map { (recordName, values) ->
+                val record = allRecords[recordName]
+                    ?: throw IllegalStateException("Required record $recordName not found.")
+                val recordSerialized = transform.toJsonNode(record) as ObjectNode
+                val pathsByParameters = values.map { value -> value.parameter to value.path.split(".") }.toMap()
+                pathsByParameters.mapValues { (_, paths) ->
+                    getPathParameterValue(recordSerialized, paths, paths.joinToString("."))
+                }
             }
-        }
-
-
-
-
+            .flatMap { it.entries }
+            .associate { it.key to it.value }
+        return parameterValueByParameterName
     }
 
     private fun getMainAndRelatedProcessesRecordsByName(data: GenerateDocumentCommand.Data): Map<RecordName, Record> {
