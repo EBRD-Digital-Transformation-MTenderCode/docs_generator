@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS document_generator.documents(
     lang text,
     documentInitiator text,
     documents text,
-    objectId text
+    objectId text,
     PRIMARY KEY (cpid, ocid, pmd, country, lang, documentInitiator)
 );
 
@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS document_generator.records(
     pmd text,
     documentInitiator text,
     mainProcess text,
-    relationships text
+    relationships text,
     PRIMARY KEY (country, pmd, documentInitiator)
 );
 
@@ -56,7 +56,7 @@ CREATE TABLE IF NOT EXISTS document_generator.parameter_paths(
     documentInitiator text,
     parameter text,
     record text,
-    path text
+    path text,
     PRIMARY KEY (pmd, documentInitiator)
 );
 
