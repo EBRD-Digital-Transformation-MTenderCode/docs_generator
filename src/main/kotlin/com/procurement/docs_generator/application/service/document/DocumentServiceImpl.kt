@@ -45,7 +45,7 @@ class DocumentServiceImpl(
     documentGenerators: List<DocumentGenerator>,
     private val templateService: TemplateService,
     private val documentDescriptorRepository: DocumentDescriptorRepository,
-    private val document: DocumentRepository,
+    private val documentRepository: DocumentRepository,
     private val recordRepository: RecordRepository,
     private val valueRepository: ValueRepository,
     private val templateRepository: TemplateRepository,
@@ -210,18 +210,18 @@ class DocumentServiceImpl(
 
     override fun processing(command: GenerateDocumentCommand): GenerateDocumentResponse.Data {
         val data = command.data
-        val documentDescriptorStored = document
+        val documentStored = documentRepository
             .load(data.cpid, data.ocid, data.pmd, data.country, data.language, data.documentInitiator)
 
-        if (documentDescriptorStored != null)
+        if (documentStored != null)
             return GenerateDocumentResponse.Data(
-                cpid = documentDescriptorStored.cpid,
-                ocid = documentDescriptorStored.ocid,
-                documentInitiator = documentDescriptorStored.documentInitiator,
-                documents = documentDescriptorStored.documents.map { document ->
+                cpid = documentStored.cpid,
+                ocid = documentStored.ocid,
+                documentInitiator = documentStored.documentInitiator,
+                documents = documentStored.documents.map { document ->
                     GenerateDocumentResponse.Data.Document(id = document.id)
                 },
-                objectId = documentDescriptorStored.objectId
+                objectId = documentStored.objectId
             )
         val mainAndRelatedProcessRecords = getMainAndRelatedProcessesRecordsByName(data)
         val parametersByName = getParametersByName(data, mainAndRelatedProcessRecords)
@@ -229,7 +229,7 @@ class DocumentServiceImpl(
         val template = getTemplate(parametersByName, data)
         val documentId = generateDocument(template, mainAndRelatedProcessRecords, data)
 
-        val descriptorEntity = DocumentEntity(
+        val document = DocumentEntity(
             cpid = data.cpid,
             ocid = data.ocid,
             country = data.country,
@@ -240,15 +240,15 @@ class DocumentServiceImpl(
             objectId = data.objectId
         )
 
-        document.save(descriptorEntity)
+        documentRepository.save(document)
 
-        return descriptorEntity.let {
+        return document.let {
             GenerateDocumentResponse.Data(
-                cpid = descriptorEntity.cpid,
-                ocid = descriptorEntity.ocid,
-                documentInitiator = descriptorEntity.documentInitiator,
-                documents = descriptorEntity.documents.map { document -> GenerateDocumentResponse.Data.Document(document.id) },
-                objectId = descriptorEntity.objectId
+                cpid = document.cpid,
+                ocid = document.ocid,
+                documentInitiator = document.documentInitiator,
+                documents = document.documents.map { document -> GenerateDocumentResponse.Data.Document(document.id) },
+                objectId = document.objectId
             )
         }
     }
