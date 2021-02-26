@@ -35,15 +35,15 @@ class CassandraDocumentRepository(
 
 
         private const val loadCQL =
-            """SELECT $columnDocuments
+            """SELECT $columnDocuments,
+                      $columnObjectId
                  FROM $KEY_SPACE.$tableName
                 WHERE $columnCpid=?
                   AND $columnOcid=?
                   AND $columnPmd=?
                   AND $columnCountry=?
                   AND $columnLang=?
-                  AND $columnDocumentInitiator=?
-                  AND $columnObjectId=?;
+                  AND $columnDocumentInitiator=?;
             """
 
         private const val insertCQL = """
@@ -51,7 +51,7 @@ class CassandraDocumentRepository(
                (
                 $columnCpid,
                 $columnOcid,
-                $columnDocuments
+                $columnDocuments,
                 $columnPmd,
                 $columnCountry,
                 $columnLang,
@@ -96,9 +96,9 @@ class CassandraDocumentRepository(
                 country = country,
                 lang = lang,
                 documentInitiator = documentInitiator,
-                documents = transform.deserialize(
+                documents = transform.deserializeCollection(
                     row.getString(columnDocuments),
-                    DocumentEntity.Documents::class.java
+                    DocumentEntity.Document::class.java
                 ),
                 objectId = row.getString(columnObjectId)
             )
