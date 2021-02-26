@@ -37,13 +37,13 @@ class CassandraTemplateRepository(
         private const val loadCQL =
             """SELECT $columnTemplate,
                       $columnFormat,
-                      $columnTypeOfEngine=?
+                      $columnTypeOfEngine
                  FROM $KEY_SPACE.$tableName
                 WHERE $columnCountry=?
-                  AND $columnPmd=?,
-                  AND $columnDocumentInitiator=?,
-                  AND $columnLang=?,
-                  AND $columnSubGroup=?,
+                  AND $columnPmd=?
+                  AND $columnDocumentInitiator=?
+                  AND $columnLang=?
+                  AND $columnSubGroup=?
                   AND $columnDate=?;
             """
     }
