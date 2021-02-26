@@ -276,7 +276,7 @@ class DocumentServiceImpl(
         parameters: Map<ParameterPathEntity.Parameter, String>,
         data: GenerateDocumentCommand.Data
     ): Template {
-        val subGroup = parameters[ParameterPathEntity.Parameter.SUBGROUP]!!
+        val subGroup = parameters[ParameterPathEntity.Parameter.SUBGROUP] ?: "none"
         val date = parameters[ParameterPathEntity.Parameter.DATE]!!.toLocalDateTime()
 
         val templateEntity = templateRepository.load(
