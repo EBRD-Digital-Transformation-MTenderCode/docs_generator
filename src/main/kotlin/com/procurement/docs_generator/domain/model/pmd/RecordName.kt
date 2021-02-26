@@ -7,7 +7,8 @@ enum class RecordName(override val key: String) : EnumElementProvider.Key {
     AC("AC"),
     EV("EV"),
     FE("FE"),
-    MS("MS");
+    MS("MS"),
+    NP("NP");
 
     override fun toString(): String = key
 

@@ -375,6 +375,7 @@ class DocumentServiceImpl(
         when (relationship) {
             RelatedProcessType.PARENT -> RecordName.MS
             RelatedProcessType.X_EVALUATION -> RecordName.EV
+            RelatedProcessType.X_NEGOTIATION -> RecordName.NP
             RelatedProcessType.FRAMEWORK,
             RelatedProcessType.PLANNING,
             RelatedProcessType.X_CONTRACTING,
@@ -383,7 +384,6 @@ class DocumentServiceImpl(
             RelatedProcessType.X_EXPENDITURE_ITEM,
             RelatedProcessType.X_FRAMEWORK,
             RelatedProcessType.X_FUNDING_SOURCE,
-            RelatedProcessType.X_NEGOTIATION,
             RelatedProcessType.X_PCR,
             RelatedProcessType.X_PLANNED,
             RelatedProcessType.X_PRESELECTION,
