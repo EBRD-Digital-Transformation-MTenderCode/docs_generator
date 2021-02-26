@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS documents.descriptors(
 CREATE KEYSPACE document_generator
 WITH replication = {
 	'class' : 'SimpleStrategy',
-	'replication_factor' : 3
+	'replication_factor' : 1
 };
 
 CREATE TABLE IF NOT EXISTS document_generator.documents(
