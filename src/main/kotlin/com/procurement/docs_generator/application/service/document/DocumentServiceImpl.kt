@@ -1,5 +1,6 @@
 package com.procurement.docs_generator.application.service.document
 
+import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.node.NullNode
 import com.fasterxml.jackson.databind.node.ObjectNode
 import com.procurement.docs_generator.adapter.PublicPointAdapter
@@ -310,9 +311,9 @@ class DocumentServiceImpl(
                 val record = records[recordName]
                     ?: throw GenerateDocumentErrors.RecordForParameterSearchNotFound(recordName)
                 val recordSerialized = transform.toJsonNode(record) as ObjectNode
-                val pathsByParameterNames = values.map { value -> value.parameter to value.path.split(".") }.toMap()
-                pathsByParameterNames.mapValues { (_, paths) ->
-                    getPathParameterValue(recordSerialized, paths, paths.joinToString("."))
+                val pathsByParameterNames = values.map { value -> value.parameter to value.path }.toMap()
+                pathsByParameterNames.mapValues { (_, path) ->
+                    getPathParameterValue(recordSerialized, path)
                 }
             }
             .flatMap { it.entries }
@@ -335,14 +336,23 @@ class DocumentServiceImpl(
         return allRecords
     }
 
-    private fun getPathParameterValue(recordSerialized: ObjectNode, paths: List<String>, fullPath: String): String {
-        if (paths.isEmpty())
-            return recordSerialized.asText()
-        val node = recordSerialized.get(paths.first())
-        if (node == null || node is NullNode)
-            throw GenerateDocumentErrors.ValueByPathNotFound(fullPath)
-        return getPathParameterValue(node as ObjectNode, paths.drop(1), fullPath)
-    }
+    fun getPathParameterValue(recordSerialized: JsonNode, path: String) =
+        getPathParameterValue(recordSerialized,  path.split("."), path)
+
+    private fun getPathParameterValue(recordSerialized: JsonNode, paths: List<String>, fullPath: String): String =
+        if (paths.isEmpty()) {
+            if (recordSerialized is ObjectNode)
+                throw GenerateDocumentErrors.ValueByPathNotFound(fullPath)
+            else recordSerialized.asText()
+        } else {
+            if (recordSerialized is ObjectNode) {
+                val node = recordSerialized.get(paths.first())
+                if (node == null || node is NullNode)
+                    throw GenerateDocumentErrors.ValueByPathNotFound(fullPath)
+                getPathParameterValue(node, paths.drop(1), fullPath)
+            }
+            else throw GenerateDocumentErrors.ValueByPathNotFound(fullPath)
+        }
 
     fun getRelatedProcessesRecords(
         cpid: CPID,
