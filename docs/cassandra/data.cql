@@ -30,6 +30,30 @@ WITH replication = {
 	'replication_factor' : 1
 };
 
+/*----Old tables----*/
+
+CREATE TABLE IF NOT EXISTS document_generator.templates(
+    document_id text,
+    document_kind text,
+    lang text,
+    start_date date,
+    format text,
+    engine text,
+    body blob,
+    PRIMARY KEY ((document_id, document_kind), lang, start_date)
+);
+
+CREATE TABLE IF NOT EXISTS document_generator.descriptors(
+    command_id text,
+    document_id text,
+    document_kind text,
+    lang text,
+    descriptor text,
+    PRIMARY KEY (command_id)
+);
+
+/*----New tables----*/
+
 CREATE TABLE IF NOT EXISTS document_generator.documents(
     cpid text,
     ocid text,
