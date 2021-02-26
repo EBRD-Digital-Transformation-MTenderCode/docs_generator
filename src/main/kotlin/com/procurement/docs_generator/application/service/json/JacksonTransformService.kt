@@ -36,8 +36,8 @@ class JacksonTransformService(private val objectMapper: ObjectMapper) : Transfor
         throw JsonParseToObjectException(exception)
     }
 
-    override fun <T : Any> serialize(entity: T): String = try {
-        objectMapper.writeValueAsString(this)
+    override fun <T> serialize(entity: T): String = try {
+        objectMapper.writeValueAsString(entity)
     } catch (expected: JsonProcessingException) {
         val className = this::class.java.canonicalName
         throw IllegalArgumentException("Error mapping an object of type '$className' to JSON.", expected)

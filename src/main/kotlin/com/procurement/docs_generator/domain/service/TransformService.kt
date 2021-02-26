@@ -8,6 +8,6 @@ interface TransformService {
     fun <T> deserialize(json: String, targetClass: Class<T>): T
     fun <T> deserializeCollection(json: String, elementClass: Class<T>): List<T>
     fun toMap(json: String): Map<String, Any>
-    fun <T : Any> serialize(entity: T): String
+    fun <T> serialize(entity: T): String
     fun <R> toJsonNode(value: R): JsonNode
 }
