@@ -7,7 +7,8 @@ import com.procurement.docs_generator.domain.model.release.entity.RecordIdentifi
 
 data class RecordPerson(
 
-    @field:JsonProperty("id") @param:JsonProperty("id") val id: PersonId,
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @field:JsonProperty("id") @param:JsonProperty("id") val id: PersonId?,
 
     @field:JsonProperty("title") @param:JsonProperty("title") val title: String,
 
