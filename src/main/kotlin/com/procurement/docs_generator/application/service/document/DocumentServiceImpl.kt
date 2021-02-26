@@ -237,7 +237,7 @@ class DocumentServiceImpl(
             lang = data.language,
             pmd = data.pmd,
             documentInitiator = data.documentInitiator,
-            documents = DocumentEntity.Documents(listOf(DocumentEntity.Documents.Document(documentId))),
+            documents = (listOf(DocumentEntity.Document(documentId))),
             objectId = data.objectId
         )
 
