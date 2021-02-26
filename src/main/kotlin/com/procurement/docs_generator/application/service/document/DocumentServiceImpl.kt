@@ -344,7 +344,7 @@ class DocumentServiceImpl(
         return getPathParameterValue(node as ObjectNode, paths.drop(1), fullPath)
     }
 
-    private fun getRelatedProcessesRecords(
+    fun getRelatedProcessesRecords(
         cpid: CPID,
         parentRecords: Collection<Record>,
         relationships: Set<RelatedProcessType>
