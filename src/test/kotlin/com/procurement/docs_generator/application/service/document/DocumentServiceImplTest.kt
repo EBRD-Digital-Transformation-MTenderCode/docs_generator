@@ -12,6 +12,7 @@ import com.procurement.docs_generator.domain.model.release.entity.Record
 import com.procurement.docs_generator.domain.model.release.entity.RecordPackage
 import com.procurement.docs_generator.domain.model.release.entity.RecordRelatedProcess
 import com.procurement.docs_generator.domain.model.release.entity.RelatedProcessScheme
+import com.procurement.docs_generator.domain.model.release.toNode
 import com.procurement.docs_generator.domain.repository.DocumentDescriptorRepository
 import com.procurement.docs_generator.domain.repository.DocumentRepository
 import com.procurement.docs_generator.domain.repository.ParameterPathRepository
@@ -26,7 +27,7 @@ import org.junit.jupiter.api.assertThrows
 
 internal class DocumentServiceImplTest {
 
-    companion object{
+    companion object {
         private val CP_ID = CPID("cpid")
     }
 
@@ -73,7 +74,7 @@ internal class DocumentServiceImplTest {
     fun getRelatedProcessesRecords_success() {
         val mainProcessRecord = getRecord()
         val evRecord = mainProcessRecord.copy(
-            relatedProcesses =  mutableListOf(
+            relatedProcesses = mutableListOf(
                 RecordRelatedProcess(
                     id = "",
                     scheme = RelatedProcessScheme.OCID,
@@ -102,7 +103,11 @@ internal class DocumentServiceImplTest {
         whenever(publicPointAdapter.getReleasePackage(cpid = CP_ID, ocid = OCID("ocid-NP")))
             .thenReturn(RecordPackage(listOf(npRecord)))
 
-        val allowedRelationships = setOf(RelatedProcessType.X_EVALUATION, RelatedProcessType.X_NEGOTIATION, RelatedProcessType.PARENT)
+        val allowedRelationships = setOf(
+            RelatedProcessType.X_EVALUATION,
+            RelatedProcessType.X_NEGOTIATION,
+            RelatedProcessType.PARENT
+        )
 
         val expected: Map<RelatedProcessType, Record> = mapOf(
             RelatedProcessType.X_EVALUATION to evRecord,
@@ -110,7 +115,11 @@ internal class DocumentServiceImplTest {
             RelatedProcessType.PARENT to msRecord
         )
 
-        val actual = documentService.getRelatedProcessesRecords(cpid = CP_ID, parentRecords = listOf(mainProcessRecord), relationships = allowedRelationships )
+        val actual = documentService.getRelatedProcessesRecords(
+            cpid = CP_ID,
+            parentRecords = listOf(mainProcessRecord),
+            relationships = allowedRelationships
+        )
 
         assertEquals(expected, actual)
     }
@@ -119,7 +128,7 @@ internal class DocumentServiceImplTest {
     fun getRelatedProcessesRecords_X_PCRNotFoundInAnyRelatedProcess_fail() {
         val mainProcessRecord = getRecord()
         val evRecord = mainProcessRecord.copy(
-            relatedProcesses =  mutableListOf(
+            relatedProcesses = mutableListOf(
                 RecordRelatedProcess(
                     id = "",
                     scheme = RelatedProcessScheme.OCID,
@@ -148,10 +157,19 @@ internal class DocumentServiceImplTest {
         whenever(publicPointAdapter.getReleasePackage(cpid = CP_ID, ocid = OCID("ocid-NP")))
             .thenReturn(RecordPackage(listOf(npRecord)))
 
-        val allowedRelationships = setOf(RelatedProcessType.X_EVALUATION, RelatedProcessType.X_NEGOTIATION, RelatedProcessType.PARENT, RelatedProcessType.X_PCR)
+        val allowedRelationships = setOf(
+            RelatedProcessType.X_EVALUATION,
+            RelatedProcessType.X_NEGOTIATION,
+            RelatedProcessType.PARENT,
+            RelatedProcessType.X_PCR
+        )
 
         val error = assertThrows<GenerateDocumentErrors.RelationshipsNotFound> {
-            documentService.getRelatedProcessesRecords(cpid = CP_ID, parentRecords = listOf(mainProcessRecord), relationships = allowedRelationships )
+            documentService.getRelatedProcessesRecords(
+                cpid = CP_ID,
+                parentRecords = listOf(mainProcessRecord),
+                relationships = allowedRelationships
+            )
         }
         assertEquals("500.17.00.VR.COM-19.1.1", error.codeError.code)
     }
@@ -160,16 +178,24 @@ internal class DocumentServiceImplTest {
     fun getRelatedProcessesRecords_mainProcessContainsNoRelatedProcesses_fail() {
         val mainProcessRecord = getRecord().copy(relatedProcesses = mutableListOf())
 
-        val allowedRelationships = setOf(RelatedProcessType.X_EVALUATION, RelatedProcessType.X_NEGOTIATION, RelatedProcessType.PARENT)
+        val allowedRelationships = setOf(
+            RelatedProcessType.X_EVALUATION,
+            RelatedProcessType.X_NEGOTIATION,
+            RelatedProcessType.PARENT
+        )
 
         val error = assertThrows<GenerateDocumentErrors.RelationshipsNotFound> {
-            documentService.getRelatedProcessesRecords(cpid = CP_ID, parentRecords = listOf(mainProcessRecord), relationships = allowedRelationships )
+            documentService.getRelatedProcessesRecords(
+                cpid = CP_ID,
+                parentRecords = listOf(mainProcessRecord),
+                relationships = allowedRelationships
+            )
         }
         assertEquals("500.17.00.VR.COM-19.1.1", error.codeError.code)
     }
 
     private fun getRecord() = Record(
-        ocid = "ocid",
+        ocid = "record-ocid",
         date = null,
         contracts = emptyList(),
         tender = mock(),
@@ -211,4 +237,52 @@ internal class DocumentServiceImplTest {
         submissions = null,
         tag = emptyList()
     )
+
+    @Test
+    fun getPathParameterValue_success() {
+        val nodeSerialized = "{\"number\": 5}".toNode()
+        val fullPath = "number"
+        val actual = documentService.getPathParameterValue(nodeSerialized, fullPath)
+        val expected = "5"
+
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun getPathParameterValue_deepPath_success() {
+        val nodeSerialized = "{\"object\": {\"id\": \"someId\"}}".toNode()
+        val fullPath = "object.id"
+        val actual = documentService.getPathParameterValue(nodeSerialized, fullPath)
+        val expected = "someId"
+
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun getPathParameterValue_onNullValue_fail() {
+        val nodeSerialized = "{\"number\": null}".toNode()
+        val fullPath = "number"
+        assertThrows<GenerateDocumentErrors.ValueByPathNotFound> {
+            documentService.getPathParameterValue(nodeSerialized, fullPath)
+        }
+    }
+
+    @Test
+    fun getPathParameterValue_onUnknownPath_fail() {
+        val nodeSerialized = "{\"number\": 5}".toNode()
+        val fullPath = "unknown"
+        assertThrows<GenerateDocumentErrors.ValueByPathNotFound> {
+            documentService.getPathParameterValue(nodeSerialized, fullPath)
+        }
+    }
+
+    @Test
+    fun getPathParameterValue_halfPathKnown_fail() {
+        val nodeSerialized = "{\"object\": {\"id\": \"someId\"}}".toNode()
+        val fullPath = "object.someId.innerId"
+
+        assertThrows<GenerateDocumentErrors.ValueByPathNotFound> {
+            documentService.getPathParameterValue(nodeSerialized, fullPath)
+        }
+    }
 }
