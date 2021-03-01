@@ -13,7 +13,8 @@ import org.springframework.context.annotation.Import
         CassandraConfiguration::class,
         ThymeleafConfiguration::class,
         WebConfiguration::class,
-        ObjectMapperConfiguration::class
+        ObjectMapperConfiguration::class,
+        TransformConfiguration::class
     ]
 )
 @EnableAutoConfiguration(
