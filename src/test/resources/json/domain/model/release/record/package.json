@@ -1,0 +1,699 @@
+{
+  "releases": [
+    {
+      "ocid": "ocds-t1s2t3-MD-1612283437901-FE-1612283573672",
+      "id": "ocds-t1s2t3-MD-1612283437901-FE-1612283573672-1612284045661",
+      "date": "2021-02-02T16:40:45Z",
+      "tag": [
+        "tender"
+      ],
+      "initiationType": "tender",
+      "parties": [
+        {
+          "id": "MD-IDNO-2",
+          "name": "candidat 7",
+          "identifier": {
+            "scheme": "MD-IDNO",
+            "id": "2",
+            "legalName": "Nano",
+            "uri": "cand.uri"
+          },
+          "address": {
+            "streetAddress": "Gonchara",
+            "postalCode": "100400",
+            "addressDetails": {
+              "country": {
+                "scheme": "ISO-ALPHA2",
+                "id": "MD",
+                "description": "Moldova, Republica",
+                "uri": "http://reference.iatistandard.org"
+              },
+              "region": {
+                "scheme": "CUATM",
+                "id": "4800000",
+                "description": "Glodeni",
+                "uri": "http://statistica.md"
+              },
+              "locality": {
+                "scheme": "CUATM",
+                "id": "4824000",
+                "description": "s.Petrunea",
+                "uri": "http://statistica.md"
+              }
+            }
+          },
+          "additionalIdentifiers": [
+            {
+              "scheme": "MD-IDNO",
+              "id": "1-2",
+              "legalName": "Markova",
+              "uri": "mark.uri"
+            }
+          ],
+          "contactPoint": {
+            "name": "irina",
+            "email": "i@gmail.com",
+            "telephone": "0635330195",
+            "faxNumber": "0676308755",
+            "url": "i.url"
+          },
+          "details": {
+            "typeOfSupplier": "company",
+            "mainEconomicActivities": [
+              {
+                "scheme": "MD-CAEM",
+                "id": "11-111",
+                "description": "company 1",
+                "uri": "comp.uri"
+              }
+            ],
+            "bankAccounts": [
+              {
+                "description": "bank",
+                "bankName": "privat",
+                "address": {
+                  "streetAddress": "Gorkogo",
+                  "postalCode": "111222",
+                  "addressDetails": {
+                    "country": {
+                      "scheme": "iso-alpha2",
+                      "id": "MD",
+                      "description": "mold"
+                    },
+                    "region": {
+                      "scheme": "CUATM",
+                      "id": "4100000",
+                      "description": "reg1"
+                    },
+                    "locality": {
+                      "scheme": "CUATM",
+                      "id": "4102000",
+                      "description": "loc1"
+                    }
+                  }
+                },
+                "identifier": {
+                  "id": "125",
+                  "scheme": "UA-MFO"
+                },
+                "accountIdentification": {
+                  "id": "UA12345678910111213141516",
+                  "scheme": "IBAN"
+                },
+                "additionalAccountIdentifiers": [
+                  {
+                    "id": "64566",
+                    "scheme": "fiscal"
+                  }
+                ]
+              }
+            ],
+            "legalForm": {
+              "id": "11",
+              "scheme": "MD-CFOJ",
+              "description": "leg form 11",
+              "uri": "legal.uri"
+            },
+            "scale": "micro"
+          },
+          "persones": [
+            {
+              "id": "MD-IDNO-123-123",
+              "title": "Mr.",
+              "name": "persona 1",
+              "identifier": {
+                "scheme": "MD-IDNO",
+                "id": "123-123",
+                "uri": "persona.uri"
+              },
+              "businessFunctions": [
+                {
+                  "id": "554d585c-9323-431d-8484-febd2a7ec174",
+                  "type": "authority",
+                  "jobTitle": "boss",
+                  "period": {
+                    "startDate": "2021-01-21T10:43:03Z"
+                  },
+                  "documents": [
+                    {
+                      "id": "d6adf093-a939-4e98-8be7-8416c1839ae7-1612254688865",
+                      "documentType": "regulatoryDocument",
+                      "title": "regDoc1",
+                      "description": "RD1",
+                      "url": "http://dev.bpe.eprocurement.systems/api/v1/storage/get/d6adf093-a939-4e98-8be7-8416c1839ae7-1612254688865",
+                      "datePublished": "2021-02-02T08:41:00Z"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "roles": [
+            "candidate",
+            "invitedCandidate"
+          ]
+        },
+        {
+          "id": "MD-IDNO-1",
+          "name": "candidat 7",
+          "identifier": {
+            "scheme": "MD-IDNO",
+            "id": "1",
+            "legalName": "Nano",
+            "uri": "cand.uri"
+          },
+          "address": {
+            "streetAddress": "Gonchara",
+            "postalCode": "100400",
+            "addressDetails": {
+              "country": {
+                "scheme": "ISO-ALPHA2",
+                "id": "MD",
+                "description": "Moldova, Republica",
+                "uri": "http://reference.iatistandard.org"
+              },
+              "region": {
+                "scheme": "CUATM",
+                "id": "4800000",
+                "description": "Glodeni",
+                "uri": "http://statistica.md"
+              },
+              "locality": {
+                "scheme": "CUATM",
+                "id": "4824000",
+                "description": "s.Petrunea",
+                "uri": "http://statistica.md"
+              }
+            }
+          },
+          "additionalIdentifiers": [
+            {
+              "scheme": "MD-IDNO",
+              "id": "1-2",
+              "legalName": "Markova",
+              "uri": "mark.uri"
+            }
+          ],
+          "contactPoint": {
+            "name": "irina",
+            "email": "i@gmail.com",
+            "telephone": "0635330195",
+            "faxNumber": "0676308755",
+            "url": "i.url"
+          },
+          "details": {
+            "typeOfSupplier": "company",
+            "mainEconomicActivities": [
+              {
+                "scheme": "MD-CAEM",
+                "id": "11-111",
+                "description": "company 1",
+                "uri": "comp.uri"
+              }
+            ],
+            "bankAccounts": [
+              {
+                "description": "bank",
+                "bankName": "privat",
+                "address": {
+                  "streetAddress": "Gorkogo",
+                  "postalCode": "111222",
+                  "addressDetails": {
+                    "country": {
+                      "scheme": "iso-alpha2",
+                      "id": "MD",
+                      "description": "mold"
+                    },
+                    "region": {
+                      "scheme": "CUATM",
+                      "id": "4100000",
+                      "description": "reg1"
+                    },
+                    "locality": {
+                      "scheme": "CUATM",
+                      "id": "4102000",
+                      "description": "loc1"
+                    }
+                  }
+                },
+                "identifier": {
+                  "id": "125",
+                  "scheme": "UA-MFO"
+                },
+                "accountIdentification": {
+                  "id": "UA12345678910111213141516",
+                  "scheme": "IBAN"
+                },
+                "additionalAccountIdentifiers": [
+                  {
+                    "id": "64566",
+                    "scheme": "fiscal"
+                  }
+                ]
+              }
+            ],
+            "legalForm": {
+              "id": "11",
+              "scheme": "MD-CFOJ",
+              "description": "leg form 11",
+              "uri": "legal.uri"
+            },
+            "scale": "micro"
+          },
+          "persones": [
+            {
+              "id": "MD-IDNO-123-123",
+              "title": "Mr.",
+              "name": "persona 1",
+              "identifier": {
+                "scheme": "MD-IDNO",
+                "id": "123-123",
+                "uri": "persona.uri"
+              },
+              "businessFunctions": [
+                {
+                  "id": "7627a299-0e6b-45b8-bd56-feda1c8d736c",
+                  "type": "authority",
+                  "jobTitle": "boss",
+                  "period": {
+                    "startDate": "2021-01-21T10:43:03Z"
+                  },
+                  "documents": [
+                    {
+                      "id": "d6adf093-a939-4e98-8be7-8416c1839ae7-1612254688865",
+                      "documentType": "regulatoryDocument",
+                      "title": "regDoc1",
+                      "description": "RD1",
+                      "url": "http://dev.bpe.eprocurement.systems/api/v1/storage/get/d6adf093-a939-4e98-8be7-8416c1839ae7-1612254688865",
+                      "datePublished": "2021-02-02T08:41:00Z"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "roles": [
+            "candidate",
+            "invitedCandidate"
+          ]
+        }
+      ],
+      "tender": {
+        "id": "df1b31ad-9d5b-4850-9463-c233de8fe9ba",
+        "title": "Create Fe criteria",
+        "description": "fe with criria",
+        "status": "active",
+        "statusDetails": "evaluation",
+        "criteria": [
+          {
+            "id": "32631ca1-c0bb-41aa-b9c9-f3ac2da785d2",
+            "title": "Criteria 1",
+            "source": "tenderer",
+            "description": "first criteria",
+            "requirementGroups": [
+              {
+                "id": "83490931-60bc-4037-bdd1-6df59811c1d6",
+                "description": "group 1",
+                "requirements": [
+                  {
+                    "id": "92a614d2-1f19-4c05-b414-7bd6c0eb225d",
+                    "title": "requirement 1",
+                    "dataType": "number",
+                    "status": "active",
+                    "datePublished": "2021-02-02T16:32:53Z",
+                    "description": "first req",
+                    "period": {
+                      "startDate": "2021-01-29T10:58:32Z",
+                      "endDate": "2021-01-29T10:58:33Z"
+                    },
+                    "eligibleEvidences": [
+                      {
+                        "id": "1",
+                        "title": "evidence 1",
+                        "type": "document",
+                        "description": "first evidence",
+                        "relatedDocument": {
+                          "id": "339e73d4-1ee9-4897-b85b-4b2febf18f82-1611918485527"
+                        }
+                      }
+                    ],
+                    "minValue": 1.000,
+                    "maxValue": 5.000
+                  }
+                ]
+              }
+            ],
+            "relatesTo": "tenderer",
+            "classification": {
+              "scheme": "ESPD",
+              "id": "CRITERION.EXCLUSION.CONVICTIONS.PARTICIPATION_IN_CRIMINAL_ORGANISATION"
+            }
+          },
+          {
+            "id": "0e6d9ebf-0cc7-4f5b-a09e-087faf587c55",
+            "title": "Criteria 2",
+            "source": "tenderer",
+            "description": "first criteria",
+            "requirementGroups": [
+              {
+                "id": "56398cd4-dc8e-46e5-9bd8-db9b6c9f8d20",
+                "description": "group 1",
+                "requirements": [
+                  {
+                    "id": "6803e8ee-a98f-4296-be6d-29ab3d7b94aa",
+                    "title": "requirement 1",
+                    "dataType": "number",
+                    "status": "active",
+                    "datePublished": "2021-02-02T16:32:53Z",
+                    "description": "first req",
+                    "period": {
+                      "startDate": "2021-01-29T10:58:32Z",
+                      "endDate": "2021-01-29T10:58:33Z"
+                    },
+                    "eligibleEvidences": [
+                      {
+                        "id": "2",
+                        "title": "evidence 1",
+                        "type": "document",
+                        "description": "first evidence",
+                        "relatedDocument": {
+                          "id": "339e73d4-1ee9-4897-b85b-4b2febf18f82-1611918485527"
+                        }
+                      }
+                    ],
+                    "minValue": 6.000,
+                    "maxValue": 9.000
+                  }
+                ]
+              }
+            ],
+            "relatesTo": "tenderer",
+            "classification": {
+              "scheme": "ESPD",
+              "id": "CRITERION.EXCLUSION.NATIONAL.OTHER"
+            }
+          },
+          {
+            "id": "25d7c2fa-aa6a-40d0-98f2-5ea3110cbf57",
+            "title": "Criteria 5",
+            "source": "tenderer",
+            "description": "first criteria",
+            "requirementGroups": [
+              {
+                "id": "7829211a-72c5-4cff-b9fb-99f9a383a348",
+                "description": "group 1",
+                "requirements": [
+                  {
+                    "id": "fdae3a34-d7ac-482d-ad73-cbfe97150a2e",
+                    "title": "requirement 1",
+                    "dataType": "number",
+                    "status": "active",
+                    "datePublished": "2021-02-02T16:32:53Z",
+                    "description": "first req",
+                    "period": {
+                      "startDate": "2021-01-29T10:58:32Z",
+                      "endDate": "2021-01-29T10:58:33Z"
+                    },
+                    "eligibleEvidences": [
+                      {
+                        "id": "5",
+                        "title": "evidence 1",
+                        "type": "document",
+                        "description": "first evidence",
+                        "relatedDocument": {
+                          "id": "339e73d4-1ee9-4897-b85b-4b2febf18f82-1611918485527"
+                        }
+                      }
+                    ],
+                    "minValue": 21.000,
+                    "maxValue": 25.000
+                  }
+                ]
+              }
+            ],
+            "relatesTo": "tenderer",
+            "classification": {
+              "scheme": "ESPD",
+              "id": "CRITERION.SELECTION.ECONOMIC_FINANCIAL_STANDING.TURNOVER.GENERAL_YEARLY"
+            }
+          },
+          {
+            "id": "7",
+            "title": "Title TEST_OF",
+            "source": "procuringEntity",
+            "description": "Description TEST_OF",
+            "requirementGroups": [
+              {
+                "id": "7-7",
+                "description": "test description OF",
+                "requirements": [
+                  {
+                    "id": "7-7-7",
+                    "title": "TEST TITLE",
+                    "dataType": "boolean",
+                    "status": "active",
+                    "datePublished": "2021-02-02T16:35:00Z",
+                    "description": "TEST DESCRIPTION"
+                  }
+                ]
+              }
+            ],
+            "relatesTo": "qualification",
+            "classification": {
+              "scheme": "ESPD",
+              "id": "CRITERION.EXCLUSION.CONFLICT_OF_INTEREST.PROCEDURE_PREPARATION"
+            }
+          }
+        ],
+        "otherCriteria": {
+          "reductionCriteria": "scoring",
+          "qualificationSystemMethods": [
+            "automated"
+          ]
+        },
+        "enquiryPeriod": {
+          "startDate": "2021-02-02T16:32:53Z",
+          "endDate": "2021-02-02T16:34:00Z"
+        },
+        "hasEnquiries": false,
+        "documents": [
+          {
+            "id": "bbd2909d-2c65-43f8-a602-1d5d42910edf-1602245251128",
+            "documentType": "evaluationCriteria",
+            "title": "doc 2",
+            "description": "doc 2-2",
+            "url": "http://dev.bpe.eprocurement.systems/api/v1/storage/get/bbd2909d-2c65-43f8-a602-1d5d42910edf-1602245251128",
+            "datePublished": "2020-10-09T12:32:30Z"
+          },
+          {
+            "id": "9c61bdff-6a3a-4f61-8af5-554dea6a588f-1602151053774",
+            "documentType": "tenderNotice",
+            "title": "doc 1",
+            "description": "TN doc 1",
+            "url": "http://dev.bpe.eprocurement.systems/api/v1/storage/get/9c61bdff-6a3a-4f61-8af5-554dea6a588f-1602151053774",
+            "datePublished": "2020-10-08T10:08:31Z"
+          },
+          {
+            "id": "339e73d4-1ee9-4897-b85b-4b2febf18f82-1611918485527",
+            "documentType": "tenderNotice",
+            "title": "doc 1",
+            "description": "TN doc 1",
+            "url": "http://dev.bpe.eprocurement.systems/api/v1/storage/get/339e73d4-1ee9-4897-b85b-4b2febf18f82-1611918485527",
+            "datePublished": "2021-02-01T09:25:31Z"
+          }
+        ],
+        "submissionMethod": [
+          "electronicSubmission"
+        ],
+        "submissionMethodDetails": "Lista platformelor: achizitii, ebs, licitatie, yptender",
+        "submissionMethodRationale": [
+          "Ofertele vor fi primite prin intermediul unei platforme electronice de achiziții publice"
+        ],
+        "requiresElectronicCatalogue": false,
+        "value": {
+          "amount": 10000.00,
+          "currency": "MDL"
+        },
+        "procurementMethodRationale": "PMR",
+        "classification": {
+          "scheme": "CPV",
+          "id": "03100000-2",
+          "description": "Produse agricole şi horticole"
+        },
+        "secondStage": {
+          "minimumCandidates": 1,
+          "maximumCandidates": 10
+        }
+      },
+      "contracts": [
+        {
+          "id": "58498374-76eb-44f5-88b5-4c9458ab1bdc",
+          "date": "2021-02-02T16:40:41Z",
+          "status": "pending",
+          "statusDetails": "contractProject",
+          "isFrameworkOrDynamic": false
+        }
+      ],
+      "submissions": {
+        "details": [
+          {
+            "id": "c87a85e6-e490-40b1-8a2a-13ae35bb485f",
+            "date": "2021-02-02T16:33:36Z",
+            "status": "valid",
+            "requirementResponses": [
+              {
+                "id": "7963ba24-fde2-40e7-b5ea-cb2f7a698409",
+                "value": 3.000,
+                "requirement": {
+                  "id": "92a614d2-1f19-4c05-b414-7bd6c0eb225d"
+                },
+                "evidences": [
+                  {
+                    "id": "71f7199f-d584-40ae-8372-032d427a6425",
+                    "title": "evidence",
+                    "description": "1-1",
+                    "relatedDocument": {
+                      "id": "d6adf093-a939-4e98-8be7-8416c1839ae7-1612254688865"
+                    }
+                  }
+                ]
+              }
+            ],
+            "candidates": [
+              {
+                "id": "MD-IDNO-2",
+                "name": "candidat 7"
+              }
+            ],
+            "documents": [
+              {
+                "id": "d6adf093-a939-4e98-8be7-8416c1839ae7-1612254688865",
+                "documentType": "illustration",
+                "title": "doc 1",
+                "description": "1",
+                "url": "http://dev.bpe.eprocurement.systems/api/v1/storage/get/d6adf093-a939-4e98-8be7-8416c1839ae7-1612254688865",
+                "datePublished": "2021-02-02T08:41:00Z"
+              }
+            ]
+          },
+          {
+            "id": "df7bc4ad-cd12-4f50-817c-255f09512da6",
+            "date": "2021-02-02T16:33:46Z",
+            "status": "valid",
+            "requirementResponses": [
+              {
+                "id": "53b38978-f77f-439d-a669-6ffa2fce2b08",
+                "value": 2.000,
+                "requirement": {
+                  "id": "92a614d2-1f19-4c05-b414-7bd6c0eb225d"
+                },
+                "evidences": [
+                  {
+                    "id": "8be94280-35be-44e7-9f52-1239c05238ff",
+                    "title": "evidence",
+                    "description": "1-1",
+                    "relatedDocument": {
+                      "id": "d6adf093-a939-4e98-8be7-8416c1839ae7-1612254688865"
+                    }
+                  }
+                ]
+              }
+            ],
+            "candidates": [
+              {
+                "id": "MD-IDNO-1",
+                "name": "candidat 7"
+              }
+            ],
+            "documents": [
+              {
+                "id": "d6adf093-a939-4e98-8be7-8416c1839ae7-1612254688865",
+                "documentType": "illustration",
+                "title": "doc 1",
+                "description": "1",
+                "url": "http://dev.bpe.eprocurement.systems/api/v1/storage/get/d6adf093-a939-4e98-8be7-8416c1839ae7-1612254688865",
+                "datePublished": "2021-02-02T08:41:00Z"
+              }
+            ]
+          }
+        ]
+      },
+      "qualifications": [
+        {
+          "id": "3830a07b-3aa6-4b3e-8b8d-1f08bcf75039",
+          "date": "2021-02-02T16:40:12Z",
+          "status": "active",
+          "statusDetails": "basedOnHumanDecision",
+          "relatedSubmission": "c87a85e6-e490-40b1-8a2a-13ae35bb485f",
+          "scoring": 1.00,
+          "internalId": "1-2",
+          "description": "qualification 5",
+          "documents": [
+            {
+              "id": "f60a32ff-24a0-419a-a793-91abc8a6a3ba-1601623167679",
+              "documentType": "notice",
+              "title": "document18877",
+              "description": "description of docccccccc",
+              "url": "http://dev.bpe.eprocurement.systems/api/v1/storage/get/f60a32ff-24a0-419a-a793-91abc8a6a3ba-1601623167679",
+              "datePublished": "2020-10-02T07:21:18Z"
+            }
+          ]
+        },
+        {
+          "id": "381eda75-2ddb-43d3-b2ef-039c68039c71",
+          "date": "2021-02-02T16:40:38Z",
+          "status": "active",
+          "statusDetails": "basedOnHumanDecision",
+          "relatedSubmission": "df7bc4ad-cd12-4f50-817c-255f09512da6",
+          "scoring": 1.00,
+          "internalId": "1-2",
+          "description": "qualification 5",
+          "documents": [
+            {
+              "id": "f60a32ff-24a0-419a-a793-91abc8a6a3ba-1601623167679",
+              "documentType": "notice",
+              "title": "document18877",
+              "description": "description of docccccccc",
+              "url": "http://dev.bpe.eprocurement.systems/api/v1/storage/get/f60a32ff-24a0-419a-a793-91abc8a6a3ba-1601623167679",
+              "datePublished": "2020-10-02T07:21:18Z"
+            }
+          ]
+        }
+      ],
+      "hasPreviousNotice": true,
+      "purposeOfNotice": {
+        "isACallForCompetition": true
+      },
+      "relatedProcesses": [
+        {
+          "id": "4c8ddf70-6574-11eb-a7fb-17d17e082fe4",
+          "relationship": [
+            "parent"
+          ],
+          "scheme": "ocid",
+          "identifier": "ocds-t1s2t3-MD-1612283437901",
+          "uri": "http://dev.public.eprocurement.systems/tenders/ocds-t1s2t3-MD-1612283437901/ocds-t1s2t3-MD-1612283437901"
+        },
+        {
+          "id": "4c8ddf71-6574-11eb-a7fb-17d17e082fe4",
+          "relationship": [
+            "planning"
+          ],
+          "scheme": "ocid",
+          "identifier": "ocds-t1s2t3-MD-1612283437901-AP-1612283437934",
+          "uri": "http://dev.public.eprocurement.systems/tenders/ocds-t1s2t3-MD-1612283437901/ocds-t1s2t3-MD-1612283437901-AP-1612283437934"
+        }
+      ],
+      "preQualification": {
+        "period": {
+          "startDate": "2021-02-02T16:32:53Z",
+          "endDate": "2021-02-02T16:35:00Z"
+        },
+        "qualificationPeriod": {
+          "startDate": "2021-02-02T16:35:00Z",
+          "endDate": "2021-02-02T16:40:45Z"
+        }
+      }
+    }
+  ]
+}

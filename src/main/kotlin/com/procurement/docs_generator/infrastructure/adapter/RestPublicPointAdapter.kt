@@ -11,6 +11,7 @@ import com.procurement.docs_generator.domain.model.ocid.OCID
 import com.procurement.docs_generator.domain.model.release.ACReleasesPackage
 import com.procurement.docs_generator.domain.model.release.EVReleasesPackage
 import com.procurement.docs_generator.domain.model.release.MSReleasesPackage
+import com.procurement.docs_generator.domain.model.release.entity.RecordPackage
 import com.procurement.docs_generator.infrastructure.logger.Slf4jLogger
 import org.springframework.stereotype.Service
 import org.springframework.web.util.UriComponentsBuilder
@@ -44,6 +45,12 @@ class RestPublicPointAdapter(
     override fun getMSReleasePackage(cpid: CPID): MSReleasesPackage {
         val uri = genTendersUri(cpid = cpid)
         log.debug { "The request to Public-Point (MS release package): '${uri.toURL()}'" }
+        return remoteClient.get(uri)
+    }
+
+    override fun getReleasePackage(cpid: CPID, ocid: OCID): RecordPackage {
+        val uri = genTendersUri(cpid = cpid, ocid = ocid)
+        log.debug { "The request to Public-Point (Release package): '${uri.toURL()}'" }
         return remoteClient.get(uri)
     }
 

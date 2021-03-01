@@ -12,7 +12,8 @@ import org.springframework.context.annotation.Import
         KafkaConfiguration::class,
         CassandraConfiguration::class,
         ThymeleafConfiguration::class,
-        WebConfiguration::class
+        WebConfiguration::class,
+        ObjectMapperConfiguration::class
     ]
 )
 @EnableAutoConfiguration(
