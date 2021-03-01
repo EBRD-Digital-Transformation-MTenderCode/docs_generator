@@ -4,6 +4,7 @@ import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
 import com.procurement.docs_generator.adapter.PublicPointAdapter
 import com.procurement.docs_generator.adapter.UploadDocumentAdapter
+import com.procurement.docs_generator.application.service.json.TransformService
 import com.procurement.docs_generator.application.service.template.TemplateService
 import com.procurement.docs_generator.domain.model.cpid.CPID
 import com.procurement.docs_generator.domain.model.ocid.OCID
@@ -18,7 +19,6 @@ import com.procurement.docs_generator.domain.repository.DocumentRepository
 import com.procurement.docs_generator.domain.repository.ParameterPathRepository
 import com.procurement.docs_generator.domain.repository.RecordRepository
 import com.procurement.docs_generator.domain.repository.TemplateRepository
-import com.procurement.docs_generator.domain.service.TransformService
 import com.procurement.docs_generator.exception.app.GenerateDocumentErrors
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach

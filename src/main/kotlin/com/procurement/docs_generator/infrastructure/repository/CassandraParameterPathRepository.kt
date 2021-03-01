@@ -1,12 +1,12 @@
 package com.procurement.docs_generator.infrastructure.repository
 
 import com.datastax.driver.core.Session
+import com.procurement.docs_generator.application.service.json.TransformService
 import com.procurement.docs_generator.domain.logger.Logger
 import com.procurement.docs_generator.domain.model.entity.ParameterPathEntity
 import com.procurement.docs_generator.domain.model.pmd.ProcurementMethod
 import com.procurement.docs_generator.domain.model.pmd.RecordName
 import com.procurement.docs_generator.domain.repository.ParameterPathRepository
-import com.procurement.docs_generator.domain.service.TransformService
 import com.procurement.docs_generator.infrastructure.logger.Slf4jLogger
 import org.springframework.stereotype.Repository
 

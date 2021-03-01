@@ -1,4 +1,4 @@
-package com.procurement.docs_generator.domain.service
+package com.procurement.docs_generator.application.service.json
 
 import com.fasterxml.jackson.databind.JsonNode
 

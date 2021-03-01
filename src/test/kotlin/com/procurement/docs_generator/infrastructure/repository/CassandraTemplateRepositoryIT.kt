@@ -9,7 +9,6 @@ import com.datastax.driver.core.querybuilder.QueryBuilder
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.nhaarman.mockito_kotlin.clearInvocations
 import com.nhaarman.mockito_kotlin.spy
-import com.procurement.docs_generator.application.service.json.JacksonTransformService
 import com.procurement.docs_generator.domain.model.country.Country
 import com.procurement.docs_generator.domain.model.entity.TemplateEntity
 import com.procurement.docs_generator.domain.model.language.Language
@@ -17,6 +16,7 @@ import com.procurement.docs_generator.domain.model.pmd.ProcurementMethod
 import com.procurement.docs_generator.domain.model.template.Template
 import com.procurement.docs_generator.domain.repository.TemplateRepository
 import com.procurement.docs_generator.infrastructure.cassandra.toCassandraTimestamp
+import com.procurement.docs_generator.infrastructure.jackson.transform.JacksonTransformService
 import com.procurement.notice.infrastructure.bind.jackson.configuration
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals

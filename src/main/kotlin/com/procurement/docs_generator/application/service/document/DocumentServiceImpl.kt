@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.node.NullNode
 import com.fasterxml.jackson.databind.node.ObjectNode
 import com.procurement.docs_generator.adapter.PublicPointAdapter
 import com.procurement.docs_generator.adapter.UploadDocumentAdapter
+import com.procurement.docs_generator.application.service.json.TransformService
 import com.procurement.docs_generator.application.service.template.TemplateService
 import com.procurement.docs_generator.domain.command.GenerateDocumentCommand
 import com.procurement.docs_generator.domain.command.GenerateDocumentResponse
@@ -35,7 +36,6 @@ import com.procurement.docs_generator.domain.repository.DocumentRepository
 import com.procurement.docs_generator.domain.repository.ParameterPathRepository
 import com.procurement.docs_generator.domain.repository.RecordRepository
 import com.procurement.docs_generator.domain.repository.TemplateRepository
-import com.procurement.docs_generator.domain.service.TransformService
 import com.procurement.docs_generator.exception.app.GenerateDocumentErrors
 import com.procurement.docs_generator.infrastructure.logger.Slf4jLogger
 import org.springframework.stereotype.Service

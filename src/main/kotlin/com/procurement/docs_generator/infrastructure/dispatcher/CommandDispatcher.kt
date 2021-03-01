@@ -1,6 +1,8 @@
 package com.procurement.docs_generator.infrastructure.dispatcher
 
 import com.procurement.docs_generator.application.service.document.DocumentService
+import com.procurement.docs_generator.application.service.json.TransformService
+import com.procurement.docs_generator.application.service.json.deserialize
 import com.procurement.docs_generator.application.service.kafka.KafkaMessageHandler
 import com.procurement.docs_generator.configuration.properties.GlobalProperties
 import com.procurement.docs_generator.domain.command.Command
@@ -15,8 +17,6 @@ import com.procurement.docs_generator.domain.logger.info
 import com.procurement.docs_generator.domain.model.command.id.CommandId
 import com.procurement.docs_generator.domain.model.command.name.CommandName.GENERATE_AC_DOC
 import com.procurement.docs_generator.domain.model.command.name.CommandName.GENERATE_DOCUMENT
-import com.procurement.docs_generator.domain.service.TransformService
-import com.procurement.docs_generator.domain.service.deserialize
 import com.procurement.docs_generator.domain.view.MessageErrorView
 import com.procurement.docs_generator.exception.app.ApplicationException
 import com.procurement.docs_generator.exception.json.JsonParseToObjectException

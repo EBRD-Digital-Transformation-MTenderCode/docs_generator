@@ -9,11 +9,11 @@ import com.datastax.driver.core.querybuilder.QueryBuilder
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.nhaarman.mockito_kotlin.clearInvocations
 import com.nhaarman.mockito_kotlin.spy
-import com.procurement.docs_generator.application.service.json.JacksonTransformService
 import com.procurement.docs_generator.domain.model.entity.ParameterPathEntity
 import com.procurement.docs_generator.domain.model.pmd.ProcurementMethod
 import com.procurement.docs_generator.domain.model.pmd.RecordName
 import com.procurement.docs_generator.domain.repository.ParameterPathRepository
+import com.procurement.docs_generator.infrastructure.jackson.transform.JacksonTransformService
 import com.procurement.notice.infrastructure.bind.jackson.configuration
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals

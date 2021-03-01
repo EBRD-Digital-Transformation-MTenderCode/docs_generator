@@ -1,6 +1,7 @@
 package com.procurement.docs_generator.infrastructure.repository
 
 import com.datastax.driver.core.Session
+import com.procurement.docs_generator.application.service.json.TransformService
 import com.procurement.docs_generator.domain.logger.Logger
 import com.procurement.docs_generator.domain.logger.debug
 import com.procurement.docs_generator.domain.model.country.Country
@@ -10,7 +11,6 @@ import com.procurement.docs_generator.domain.model.language.Language
 import com.procurement.docs_generator.domain.model.ocid.OCID
 import com.procurement.docs_generator.domain.model.pmd.ProcurementMethod
 import com.procurement.docs_generator.domain.repository.DocumentRepository
-import com.procurement.docs_generator.domain.service.TransformService
 import com.procurement.docs_generator.infrastructure.logger.Slf4jLogger
 import org.springframework.stereotype.Repository
 

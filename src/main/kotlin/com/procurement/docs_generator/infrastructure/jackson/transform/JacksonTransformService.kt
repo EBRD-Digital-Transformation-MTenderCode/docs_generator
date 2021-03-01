@@ -1,11 +1,11 @@
-package com.procurement.docs_generator.application.service.json
+package com.procurement.docs_generator.infrastructure.jackson.transform
 
 import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.type.CollectionType
-import com.procurement.docs_generator.domain.service.TransformService
+import com.procurement.docs_generator.application.service.json.TransformService
 import com.procurement.docs_generator.exception.json.JsonParseToObjectException
 import org.springframework.stereotype.Service
 import java.util.*
