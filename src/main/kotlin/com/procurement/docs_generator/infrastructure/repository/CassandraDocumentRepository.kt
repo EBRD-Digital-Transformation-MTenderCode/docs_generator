@@ -51,12 +51,12 @@ class CassandraDocumentRepository(
                (
                 $columnCpid,
                 $columnOcid,
-                $columnDocuments,
+                $columnDocumentInitiator,
+                $columnObjectId,
                 $columnPmd,
                 $columnCountry,
                 $columnLang,
-                $columnDocumentInitiator,
-                $columnObjectId
+                $columnDocuments                
                )
                VALUES (?,?,?,?,?,?,?,?) IF NOT EXISTS
             """
@@ -101,15 +101,15 @@ class CassandraDocumentRepository(
     }
 
     override fun save(documentDescriptor: DocumentEntity): Boolean {
-        val query = preparedInsertCQL.bind().also {
-            it.setString(columnCpid, documentDescriptor.cpid.value)
-            it.setString(columnOcid, documentDescriptor.ocid.value)
-            it.setString(columnDocuments, transform.serialize(documentDescriptor.documents))
-            it.setString(columnPmd, documentDescriptor.pmd.key)
-            it.setString(columnCountry, documentDescriptor.country.value)
-            it.setString(columnLang, documentDescriptor.lang.value)
-            it.setString(columnDocumentInitiator, documentDescriptor.documentInitiator)
-            it.setString(columnObjectId, documentDescriptor.objectId)
+        val query = preparedInsertCQL.bind().apply {
+            setString(columnCpid, documentDescriptor.cpid.value)
+            setString(columnOcid, documentDescriptor.ocid.value)
+            setString(columnDocumentInitiator, documentDescriptor.documentInitiator)
+            setString(columnObjectId, documentDescriptor.objectId)
+            setString(columnPmd, documentDescriptor.pmd.key)
+            setString(columnCountry, documentDescriptor.country.value)
+            setString(columnLang, documentDescriptor.lang.value)
+            setString(columnDocuments, transform.serialize(documentDescriptor.documents))
         }
 
         val resultSet = query.executeWrite(session)
