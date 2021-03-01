@@ -66,12 +66,10 @@ class CassandraDocumentRepositoryIT {
     fun load() {
         insert()
         val actual = documentRepository.load(
-            pmd = PMD,
             documentInitiator = DOCUMENT_INITIATOR,
-            country = COUNTRY,
             cpid = CP_ID,
             ocid = OC_ID,
-            lang = LANG
+            objectId = OBJECT_ID
         )
         val expected = expected()
 
@@ -84,12 +82,10 @@ class CassandraDocumentRepositoryIT {
         documentRepository.save(expected)
 
         val actual = documentRepository.load(
-            pmd = expected.pmd,
             documentInitiator = expected.documentInitiator,
-            country = expected.country,
             cpid = expected.cpid,
             ocid = expected.ocid,
-            lang = expected.lang
+            objectId = OBJECT_ID
         )
 
         assertEquals(expected, actual)

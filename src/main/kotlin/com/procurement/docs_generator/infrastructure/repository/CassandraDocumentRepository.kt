@@ -36,14 +36,14 @@ class CassandraDocumentRepository(
 
         private const val loadCQL =
             """SELECT $columnDocuments,
-                      $columnObjectId
+                      $columnPmd,
+                      $columnCountry,
+                      $columnLang
                  FROM $KEY_SPACE.$tableName
                 WHERE $columnCpid=?
                   AND $columnOcid=?
-                  AND $columnPmd=?
-                  AND $columnCountry=?
-                  AND $columnLang=?
-                  AND $columnDocumentInitiator=?;
+                  AND $columnDocumentInitiator=?
+                  AND $columnObjectId=?;
             """
 
         private const val insertCQL = """
@@ -65,23 +65,15 @@ class CassandraDocumentRepository(
     private val preparedLoadCQL = session.prepare(loadCQL)
     private val preparedInsertCQL = session.prepare(insertCQL)
 
-    override fun load(
-        cpid: CPID,
-        ocid: OCID,
-        pmd: ProcurementMethod,
-        country: Country,
-        lang: Language,
-        documentInitiator: String
-    ): DocumentEntity? {
+
+    override fun load(cpid: CPID, ocid: OCID, documentInitiator: String, objectId: String): DocumentEntity? {
         log.debug { "Attempt to load a document descriptors by cpid '$cpid' and ocid '$ocid'." }
 
         val query = preparedLoadCQL.bind().also {
             it.setString(columnCpid, cpid.value)
             it.setString(columnOcid, ocid.value)
-            it.setString(columnPmd, pmd.key)
-            it.setString(columnCountry, country.value)
-            it.setString(columnLang, lang.value)
             it.setString(columnDocumentInitiator, documentInitiator)
+            it.setString(columnObjectId, objectId)
         }
 
         val resultSet = query.executeRead(session)
@@ -92,15 +84,15 @@ class CassandraDocumentRepository(
             DocumentEntity(
                 cpid = cpid,
                 ocid = ocid,
-                pmd = pmd,
-                country = country,
-                lang = lang,
+                pmd = ProcurementMethod.creator(row.getString(columnPmd)),
+                country = Country(row.getString(columnCountry)),
+                lang = Language(row.getString(columnLang)),
                 documentInitiator = documentInitiator,
                 documents = transform.deserializeCollection(
                     row.getString(columnDocuments),
                     DocumentEntity.Document::class.java
                 ),
-                objectId = row.getString(columnObjectId)
+                objectId = objectId
             )
         } else {
             log.debug { "Document descriptor by cpid '$cpid' and ocid '$ocid' not found." }

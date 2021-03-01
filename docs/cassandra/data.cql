@@ -57,13 +57,13 @@ CREATE TABLE IF NOT EXISTS document_generator.descriptors(
 CREATE TABLE IF NOT EXISTS document_generator.documents(
     cpid text,
     ocid text,
+    documentInitiator text,
+    objectId text,
     pmd text,
     country text,
     lang text,
-    documentInitiator text,
     documents text,
-    objectId text,
-    PRIMARY KEY (cpid, ocid, pmd, country, lang, documentInitiator)
+    PRIMARY KEY (cpid, ocid, documentInitiator, objectId)
 );
 
 CREATE TABLE IF NOT EXISTS document_generator.records(

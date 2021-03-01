@@ -213,7 +213,7 @@ class DocumentServiceImpl(
     override fun processing(command: GenerateDocumentCommand): GenerateDocumentResponse.Data {
         val data = command.data
         val documentStored = documentRepository
-            .load(data.cpid, data.ocid, data.pmd, data.country, data.language, data.documentInitiator)
+            .load(data.cpid, data.ocid, data.documentInitiator, data.objectId)
 
         if (documentStored != null)
             return GenerateDocumentResponse.Data(
