@@ -32,7 +32,7 @@ WITH replication = {
 
 /*----Old tables----*/
 
-CREATE TABLE IF NOT EXISTS document_generator.templates(
+CREATE TABLE IF NOT EXISTS document_generator.templates_old(
     document_id text,
     document_kind text,
     lang text,
