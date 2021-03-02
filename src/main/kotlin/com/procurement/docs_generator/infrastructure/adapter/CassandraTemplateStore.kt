@@ -35,7 +35,7 @@ class CassandraTemplateStore(
         private val log: Logger = Slf4jLogger()
 
         private const val KEY_SPACE = "document_generator"
-        private const val tableName = "templates"
+        private const val tableName = "templates_old"
         private const val columnDocumentId = "document_id"
         private const val columnDocumentKind = "document_kind"
         private const val columnLang = "lang"
