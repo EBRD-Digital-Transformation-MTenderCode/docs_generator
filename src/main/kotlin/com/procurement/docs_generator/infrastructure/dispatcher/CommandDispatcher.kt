@@ -1,10 +1,14 @@
 package com.procurement.docs_generator.infrastructure.dispatcher
 
 import com.procurement.docs_generator.application.service.document.DocumentService
+import com.procurement.docs_generator.application.service.json.TransformService
+import com.procurement.docs_generator.application.service.json.deserialize
 import com.procurement.docs_generator.application.service.kafka.KafkaMessageHandler
 import com.procurement.docs_generator.configuration.properties.GlobalProperties
 import com.procurement.docs_generator.domain.command.Command
 import com.procurement.docs_generator.domain.command.CommandError
+import com.procurement.docs_generator.domain.command.GenerateDocumentCommand
+import com.procurement.docs_generator.domain.command.GenerateDocumentResponse
 import com.procurement.docs_generator.domain.command.ac.ContractFinalizationCommand
 import com.procurement.docs_generator.domain.command.ac.GenerateACDocCommand
 import com.procurement.docs_generator.domain.logger.Logger
@@ -12,9 +16,7 @@ import com.procurement.docs_generator.domain.logger.error
 import com.procurement.docs_generator.domain.logger.info
 import com.procurement.docs_generator.domain.model.command.id.CommandId
 import com.procurement.docs_generator.domain.model.command.name.CommandName.GENERATE_AC_DOC
-import com.procurement.docs_generator.domain.service.JsonDeserializeService
-import com.procurement.docs_generator.domain.service.JsonSerializeService
-import com.procurement.docs_generator.domain.service.deserialize
+import com.procurement.docs_generator.domain.model.command.name.CommandName.GENERATE_DOCUMENT
 import com.procurement.docs_generator.domain.view.MessageErrorView
 import com.procurement.docs_generator.exception.app.ApplicationException
 import com.procurement.docs_generator.exception.json.JsonParseToObjectException
@@ -25,8 +27,7 @@ import java.util.*
 
 @Service
 class CommandDispatcher(
-    private val deserializer: JsonDeserializeService,
-    private val serialize: JsonSerializeService,
+    private val transform: TransformService,
     private val documentService: DocumentService
 ) : KafkaMessageHandler {
 
@@ -36,7 +37,7 @@ class CommandDispatcher(
 
     override fun handle(message: String): String {
         val result = try {
-            val command: Command = deserializer.deserialize(message)
+            val command: Command = transform.deserialize(message)
             MDC.put("command-id", command.id.value.toString())
             MDC.put("command-name", command.name.code)
 
@@ -55,7 +56,7 @@ class CommandDispatcher(
             MDC.remove("command-id")
         }
 
-        return serialize.serialize(result)
+        return transform.serialize(result)
     }
 
     private fun commandDispatcher(command: Command, body: String): Any {
@@ -64,7 +65,7 @@ class CommandDispatcher(
         return when (command.name) {
             GENERATE_AC_DOC -> {
                 try {
-                    val data = deserializer.deserialize<GenerateACDocCommand>(body)
+                    val data = transform.deserialize<GenerateACDocCommand>(body)
                         .let { documentService.processing(it) }
                     ContractFinalizationCommand(
                         version = GlobalProperties.App.apiVersion,
@@ -75,6 +76,18 @@ class CommandDispatcher(
                 } catch (exception: Throwable) {
                     errorHandler(command, exception)
                 }
+            }
+            GENERATE_DOCUMENT -> try {
+                val data = transform.deserialize<GenerateDocumentCommand>(body)
+                    .let { documentService.processing(it) }
+                GenerateDocumentResponse(
+                    version = GlobalProperties.App.apiVersion,
+                    id = CommandId(UUID.randomUUID()),
+                    name = "documentGenerated",
+                    data = data
+                )
+            } catch (exception: Throwable) {
+                errorHandler(command, exception)
             }
         }
     }

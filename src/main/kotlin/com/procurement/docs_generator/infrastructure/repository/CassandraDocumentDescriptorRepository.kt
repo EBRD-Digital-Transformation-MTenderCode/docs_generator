@@ -1,7 +1,5 @@
 package com.procurement.docs_generator.infrastructure.repository
 
-import com.datastax.driver.core.BoundStatement
-import com.datastax.driver.core.ResultSet
 import com.datastax.driver.core.Row
 import com.datastax.driver.core.Session
 import com.procurement.docs_generator.domain.logger.Logger
@@ -9,16 +7,15 @@ import com.procurement.docs_generator.domain.logger.debug
 import com.procurement.docs_generator.domain.model.command.id.CommandId
 import com.procurement.docs_generator.domain.model.command.id.CommandIdDeserializer
 import com.procurement.docs_generator.domain.model.command.id.CommandIdSerializer
-import com.procurement.docs_generator.domain.model.document.DocumentDescriptor
 import com.procurement.docs_generator.domain.model.document.id.DocumentIdDeserializer
 import com.procurement.docs_generator.domain.model.document.id.DocumentIdSerializer
 import com.procurement.docs_generator.domain.model.document.kind.DocumentKindDeserializer
 import com.procurement.docs_generator.domain.model.document.kind.DocumentKindSerializer
+import com.procurement.docs_generator.domain.model.entity.DocumentDescriptor
 import com.procurement.docs_generator.domain.model.language.LanguageDeserializer
 import com.procurement.docs_generator.domain.model.language.LanguageSerializer
 import com.procurement.docs_generator.domain.repository.DocumentDescriptorRepository
 import com.procurement.docs_generator.exception.database.ReadOperationException
-import com.procurement.docs_generator.exception.database.SaveOperationException
 import com.procurement.docs_generator.infrastructure.logger.Slf4jLogger
 import org.springframework.stereotype.Service
 
@@ -29,7 +26,7 @@ class CassandraDocumentDescriptorRepository(
     companion object {
         private val log: Logger = Slf4jLogger()
 
-        private const val KEY_SPACE = "documents"
+        private const val KEY_SPACE = "document_generator"
         private const val tableName = "descriptors"
         private const val columnCommandId = "command_id"
         private const val columnDocumentId = "document_id"
@@ -71,7 +68,7 @@ class CassandraDocumentDescriptorRepository(
             it.setString(columnCommandId, id)
         }
 
-        val resultSet = load(query)
+        val resultSet = query.executeRead(session)
         if (!resultSet.wasApplied())
             throw ReadOperationException(message = "An error occurred when loading a record of the document descriptor by command id: '$id' from the database.")
 
@@ -96,7 +93,7 @@ class CassandraDocumentDescriptorRepository(
             it.setString(columnDescriptor, documentDescriptor.descriptor)
         }
 
-        val resultSet = save(query)
+        val resultSet = query.executeWrite(session)
         return if (resultSet.wasApplied()) {
             log.debug { "Document descriptor by command id: '${documentDescriptor.commandId}' was saved." }
             documentDescriptor
@@ -104,27 +101,6 @@ class CassandraDocumentDescriptorRepository(
             log.debug { "Document descriptor by command id: '${documentDescriptor.commandId}' was not saved." }
             toDocumentDescriptor(resultSet.one())
         }
-    }
-
-    protected fun load(statement: BoundStatement): ResultSet = try {
-        session.execute(statement)
-    } catch (ex: Exception) {
-        val message = if (ex.message != null)
-            "Error read from the database. ${ex.message}"
-        else
-            "Error read from the database."
-        throw ReadOperationException(message = message, cause = ex)
-    }
-
-    private fun save(statement: BoundStatement) = try {
-        session.execute(statement)
-    } catch (ex: Exception) {
-        val message = if (ex.message != null)
-            "Error writing to the database. ${ex.message}"
-        else
-            "Error writing to the database."
-
-        throw SaveOperationException(message = message, cause = ex)
     }
 
     private fun toDocumentDescriptor(row: Row): DocumentDescriptor {

@@ -8,7 +8,7 @@ interface CodeError {
     val code: String
 }
 
-enum class CodesOfErrors(final override val httpStatus: HttpStatus, group: String, id: String) : CodeError {
+enum class CodesOfErrors(override val httpStatus: HttpStatus, group: String, id: String) : CodeError {
     INVALID_VALUE_OF_PARAM(     httpStatus = HttpStatus.BAD_REQUEST,            group = "01", id = "01"),
     FILE_ERROR(                 httpStatus = HttpStatus.BAD_REQUEST,            group = "01", id = "02"),
 
@@ -21,7 +21,13 @@ enum class CodesOfErrors(final override val httpStatus: HttpStatus, group: Strin
     TEMPLATE_INVALID_FORMAT(    httpStatus = HttpStatus.BAD_REQUEST,            group = "03", id = "04"),
 
     //Common
-    SERVER_ERROR(               httpStatus = HttpStatus.INTERNAL_SERVER_ERROR,  group = "00", id = "00");
+    SERVER_ERROR(               httpStatus = HttpStatus.INTERNAL_SERVER_ERROR,  group = "00", id = "00"),
+
+    RELATIONSHIPS_NOT_FOUND(httpStatus = HttpStatus.INTERNAL_SERVER_ERROR, group = "00", id = "VR.COM-19.1.1"),
+    VALUE_BY_PATH_NOT_FOUND(httpStatus = HttpStatus.INTERNAL_SERVER_ERROR, group = "00", id = "VR.COM-19.1.2"),
+    RECORD_NOT_FOUND(httpStatus = HttpStatus.INTERNAL_SERVER_ERROR, group = "00", id = "01"),
+    TEMPLATE_NOT_FOUND(httpStatus = HttpStatus.INTERNAL_SERVER_ERROR, group = "00", id = "02"),
+    RELATIONSHIP_IS_NOT_ALLOWED(httpStatus = HttpStatus.INTERNAL_SERVER_ERROR, group = "00", id = "03");
 
     override val code: String = "${httpStatus.value()}.${GlobalProperties.serviceId}.$group.$id"
 
