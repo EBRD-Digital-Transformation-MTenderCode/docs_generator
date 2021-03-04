@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer
 import com.procurement.docs_generator.domain.model.command.id.CommandId
 import com.procurement.docs_generator.domain.model.command.id.CommandIdDeserializer
 import com.procurement.docs_generator.domain.model.command.id.CommandIdSerializer
@@ -65,8 +63,6 @@ data class GenerateDocumentCommand(
 
         @field:JsonProperty("operationId") @param:JsonProperty("operationId") val operationId: String,
 
-        @JsonDeserialize(using = LocalDateDeserializer::class)
-        @JsonSerialize(using = LocalDateTimeSerializer::class)
         @field:JsonProperty("startDate") @param:JsonProperty("startDate") val startDate: LocalDateTime,
 
         @field:JsonProperty("pmd") @param:JsonProperty("pmd") val pmd: ProcurementMethod,
