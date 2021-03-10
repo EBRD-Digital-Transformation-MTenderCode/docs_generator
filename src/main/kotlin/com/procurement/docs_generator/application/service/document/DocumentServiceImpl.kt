@@ -40,6 +40,7 @@ import com.procurement.docs_generator.exception.app.GenerateDocumentErrors
 import com.procurement.docs_generator.infrastructure.logger.Slf4jLogger
 import org.springframework.stereotype.Service
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 @Service
 class DocumentServiceImpl(
@@ -280,21 +281,51 @@ class DocumentServiceImpl(
         val subGroup = parameters[ParameterPathEntity.Parameter.SUBGROUP] ?: "none"
         val date = parameters[ParameterPathEntity.Parameter.DATE]!!.toLocalDateTime()
 
+        val templateDate = getClosestTemplateDate(date, data, subGroup)
+
         val templateEntity = templateRepository.load(
             country = data.country,
             documentInitiator = data.documentInitiator,
             pmd = data.pmd,
             lang = data.language,
-            date = date,
+            date = templateDate,
             subGroup = subGroup
-        )
-            ?: throw GenerateDocumentErrors.TemplateNotFound(data.pmd, data.country, data.documentInitiator, data.language, date, subGroup)
+        )!!
 
         return Template(
             startDate = templateEntity.date.toLocalDate(),
             engine = templateEntity.typeOfEngine,
             format = templateEntity.format,
             body = templateEntity.template
+        )
+    }
+
+    private fun getClosestTemplateDate(
+        date: LocalDateTime,
+        data: GenerateDocumentCommand.Data,
+        subGroup: String
+    ): LocalDateTime {
+        val templateDates = templateRepository.loadDates(
+            country = data.country,
+            documentInitiator = data.documentInitiator,
+            pmd = data.pmd,
+            lang = data.language,
+            subGroup = subGroup
+        )
+
+        if (templateDates.isEmpty())
+            throw GenerateDocumentErrors.NoTemplateFound(
+                data.pmd, data.country, data.documentInitiator, data.language, subGroup
+            )
+        val sortedTemplateDates = templateDates.sortedDescending()
+
+        for (templateDate in sortedTemplateDates) {
+            if (templateDate.isBefore(date) || templateDate.isEqual(date))
+                return templateDate
+        }
+
+        throw GenerateDocumentErrors.NoTemplateEqualsOrPrecedesSpecifiedDate(
+            data.pmd, data.country, data.documentInitiator, data.language, subGroup, date
         )
     }
 
