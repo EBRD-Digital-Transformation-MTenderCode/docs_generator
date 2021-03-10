@@ -60,6 +60,7 @@ class CassandraTemplateRepository(
     }
 
     private val preparedLoadCQL = session.prepare(loadCQL)
+    private val preparedLoadDatesCQL = session.prepare(loadDatesCQL)
 
     override fun load(
         country: Country,
@@ -103,7 +104,7 @@ class CassandraTemplateRepository(
         lang: Language,
         subGroup: String
     ): List<LocalDateTime> {
-        val query = preparedLoadCQL.bind().also {
+        val query = preparedLoadDatesCQL.bind().also {
             it.setString(columnCountry, country.value)
             it.setString(columnPmd, pmd.key)
             it.setString(columnDocumentInitiator, documentInitiator)
