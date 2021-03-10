@@ -305,28 +305,23 @@ class DocumentServiceImpl(
         data: GenerateDocumentCommand.Data,
         subGroup: String
     ): LocalDateTime {
-        val templateDates = templateRepository.loadDates(
-            country = data.country,
-            documentInitiator = data.documentInitiator,
-            pmd = data.pmd,
-            lang = data.language,
-            subGroup = subGroup
-        )
+        val templateDates = templateRepository
+            .loadDates(data.country,  data.pmd, data.documentInitiator, data.language, subGroup)
+            .sortedDescending()
 
         if (templateDates.isEmpty())
             throw GenerateDocumentErrors.NoTemplateFound(
                 data.pmd, data.country, data.documentInitiator, data.language, subGroup
             )
-        val sortedTemplateDates = templateDates.sortedDescending()
 
-        for (templateDate in sortedTemplateDates) {
-            if (templateDate.isBefore(date) || templateDate.isEqual(date))
-                return templateDate
+        val closestTemplateDate = templateDates.firstOrNull { templateDate ->
+            templateDate.isBefore(date) || templateDate.isEqual(date)
         }
 
-        throw GenerateDocumentErrors.NoTemplateEqualsOrPrecedesSpecifiedDate(
-            data.pmd, data.country, data.documentInitiator, data.language, subGroup, date
-        )
+        return closestTemplateDate
+            ?: throw GenerateDocumentErrors.NoTemplateEqualsOrPrecedesSpecifiedDate(
+                data.pmd, data.country, data.documentInitiator, data.language, subGroup, date
+            )
     }
 
     private fun getParameters(
