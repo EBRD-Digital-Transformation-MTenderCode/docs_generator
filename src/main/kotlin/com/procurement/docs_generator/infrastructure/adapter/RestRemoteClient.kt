@@ -2,9 +2,9 @@ package com.procurement.docs_generator.infrastructure.adapter
 
 import com.fasterxml.jackson.databind.JsonMappingException
 import com.procurement.docs_generator.adapter.RemoteClient
+import com.procurement.docs_generator.application.service.json.TransformService
 import com.procurement.docs_generator.domain.model.document.PDFDocument
 import com.procurement.docs_generator.exception.remote.RemoteServiceException
-import com.procurement.docs_generator.infrastructure.jackson.transform.JacksonTransformService
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
@@ -19,7 +19,7 @@ import java.net.URI
 @Service
 class RestRemoteClient(
     private val webClient: RestTemplate,
-    private val transformService: JacksonTransformService
+    private val transformService: TransformService
 ) : RemoteClient {
 
     override fun <T> get(uri: URI, headers: HttpHeaders, targetType: Class<T>): T {
