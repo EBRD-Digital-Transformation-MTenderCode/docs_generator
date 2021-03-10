@@ -1,12 +1,15 @@
 package com.procurement.docs_generator.infrastructure.adapter
 
+import com.fasterxml.jackson.databind.JsonMappingException
 import com.procurement.docs_generator.adapter.RemoteClient
 import com.procurement.docs_generator.domain.model.document.PDFDocument
 import com.procurement.docs_generator.exception.remote.RemoteServiceException
+import com.procurement.docs_generator.infrastructure.jackson.transform.JacksonTransformService
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
 import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.web.client.HttpClientErrorException
@@ -14,16 +17,19 @@ import org.springframework.web.client.RestTemplate
 import java.net.URI
 
 @Service
-class RestRemoteClient(private val webClient: RestTemplate) : RemoteClient {
+class RestRemoteClient(
+    private val webClient: RestTemplate,
+    private val transformService: JacksonTransformService
+) : RemoteClient {
 
     override fun <T> get(uri: URI, headers: HttpHeaders, targetType: Class<T>): T {
         val entity = HttpEntity<Unit>(headers)
-        return exchange(uri = uri, method = HttpMethod.GET, entity = entity, targetType = targetType)
+        return exchangeAndTransform(uri = uri, method = HttpMethod.GET, entity = entity, targetType = targetType)
     }
 
     override fun <V, T> post(uri: URI, headers: HttpHeaders, body: V, targetType: Class<T>): T {
         val entity = HttpEntity(body, headers)
-        return exchange(uri = uri, method = HttpMethod.POST, entity = entity, targetType = targetType)
+        return exchangeAndTransform(uri = uri, method = HttpMethod.POST, entity = entity, targetType = targetType)
     }
 
     override fun <T> sendFile(uri: URI,
@@ -56,18 +62,27 @@ class RestRemoteClient(private val webClient: RestTemplate) : RemoteClient {
             )
         }
     }
+    private fun <T, V> exchangeAndTransform(uri: URI,
+                                            method: HttpMethod,
+                                            entity: HttpEntity<V>,
+                                            targetType: Class<T>): T {
+        val response: ResponseEntity<String> = exchange(uri, method, entity)
+        val body = response.body
+        if (body == null || body.isEmpty())
+            throw RemoteServiceException(
+                message = "Error of remote service by uri: '$uri'. Received empty body.",
+                payload = response.body
+            )
+        return transform(body, targetType, uri)
+    }
 
-    private fun <T, V> exchange(uri: URI,
-                                method: HttpMethod,
-                                entity: HttpEntity<V>,
-                                targetType: Class<T>): T {
+    fun <V> exchange(uri: URI, method: HttpMethod, entity: HttpEntity<V>): ResponseEntity<String> =
         try {
-            return webClient.exchange(uri, method, entity, targetType).body!!
+            webClient.exchange(uri, method, entity, String::class.java)
         } catch (exception: HttpClientErrorException) {
             val code = exception.statusCode
             val payload = exception.responseBodyAsString
             val message = "Error [$code:$payload] of remote service by uri: '$uri'."
-
             throw RemoteServiceException(
                 code = code,
                 payload = payload,
@@ -78,6 +93,17 @@ class RestRemoteClient(private val webClient: RestTemplate) : RemoteClient {
             throw RemoteServiceException(
                 message = "Error of remote service by uri: '$uri'.",
                 exception = exception
+            )
+        }
+
+    fun<T> transform(payload: String, targetType: Class<T>, uri: URI): T {
+        return try {
+            transformService.deserialize(payload, targetType)
+        } catch (exception : JsonMappingException) {
+            throw RemoteServiceException(
+                message = "Error parsing response from remote service by uri: '$uri'.",
+                exception = exception,
+                payload = payload
             )
         }
     }
