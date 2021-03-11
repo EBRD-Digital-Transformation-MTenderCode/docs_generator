@@ -10,6 +10,7 @@ import com.procurement.docs_generator.domain.model.pmd.ProcurementMethod
 import com.procurement.docs_generator.domain.model.template.Template
 import com.procurement.docs_generator.domain.repository.TemplateRepository
 import com.procurement.docs_generator.infrastructure.cassandra.toCassandraTimestamp
+import com.procurement.docs_generator.infrastructure.cassandra.toLocalDateTime
 import com.procurement.docs_generator.infrastructure.logger.Slf4jLogger
 import org.springframework.stereotype.Repository
 import java.time.LocalDateTime
@@ -46,9 +47,20 @@ class CassandraTemplateRepository(
                   AND $columnSubGroup=?
                   AND $columnDate=?;
             """
+
+        private const val loadDatesCQL =
+            """SELECT $columnDate
+                 FROM $KEY_SPACE.$tableName
+                WHERE $columnCountry=?
+                  AND $columnPmd=?
+                  AND $columnDocumentInitiator=?
+                  AND $columnLang=?
+                  AND $columnSubGroup=?;
+            """
     }
 
     private val preparedLoadCQL = session.prepare(loadCQL)
+    private val preparedLoadDatesCQL = session.prepare(loadDatesCQL)
 
     override fun load(
         country: Country,
@@ -83,5 +95,24 @@ class CassandraTemplateRepository(
                 template = row.getBytes(columnTemplate)
             )
         }
+    }
+
+    override fun loadDates(
+        country: Country,
+        pmd: ProcurementMethod,
+        documentInitiator: String,
+        lang: Language,
+        subGroup: String
+    ): List<LocalDateTime> {
+        val query = preparedLoadDatesCQL.bind().also {
+            it.setString(columnCountry, country.value)
+            it.setString(columnPmd, pmd.key)
+            it.setString(columnDocumentInitiator, documentInitiator)
+            it.setString(columnLang, lang.value)
+            it.setString(columnSubGroup, subGroup)
+        }
+
+        return query.executeRead(session)
+            .map { row -> row.getTimestamp(columnDate).toLocalDateTime() }
     }
 }
