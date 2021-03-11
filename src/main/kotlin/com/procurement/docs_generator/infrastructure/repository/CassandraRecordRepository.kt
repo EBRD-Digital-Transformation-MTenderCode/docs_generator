@@ -56,14 +56,17 @@ class CassandraRecordRepository(
 
         val row = resultSet.one()
         return row?.let {
+            val relationships = if (row.getString(columnRelationships).isEmpty())
+                emptyList()
+            else
+                transform.deserializeCollection(row.getString(columnRelationships), RelatedProcessType::class.java)
+
             RecordEntity(
                 pmd = pmd,
                 country = country,
                 documentInitiator = documentInitiator,
                 mainProcess = RecordName.creator(row.getString(columnMainProcess)),
-                relationships = transform.deserializeCollection(
-                    row.getString(columnRelationships), RelatedProcessType::class.java
-                )
+                relationships = relationships
             )
         }
     }

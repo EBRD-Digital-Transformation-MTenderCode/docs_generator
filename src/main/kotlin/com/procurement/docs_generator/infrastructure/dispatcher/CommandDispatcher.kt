@@ -98,8 +98,8 @@ class CommandDispatcher(
                 log.error { exception.message!! }
                 errorView(
                     commandId = command.id,
-                    codeError = CodesOfErrors.BAD_PAYLOAD_COMMAND,
-                    description = "The bad data of command."
+                    codeError = CodesOfErrors.TRANSFORM_ERROR,
+                    description = exception.message!!
                 )
             }
 

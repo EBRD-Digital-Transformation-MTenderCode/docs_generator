@@ -15,4 +15,12 @@ interface TemplateRepository {
         subGroup: String,
         date: LocalDateTime
     ): TemplateEntity?
+
+    fun loadDates(
+        country: Country,
+        pmd: ProcurementMethod,
+        documentInitiator: String,
+        lang: Language,
+        subGroup: String
+    ): List<LocalDateTime>
 }

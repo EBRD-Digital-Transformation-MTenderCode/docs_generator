@@ -27,7 +27,8 @@ enum class CodesOfErrors(override val httpStatus: HttpStatus, group: String, id:
     VALUE_BY_PATH_NOT_FOUND(httpStatus = HttpStatus.INTERNAL_SERVER_ERROR, group = "00", id = "VR.COM-19.1.2"),
     RECORD_NOT_FOUND(httpStatus = HttpStatus.INTERNAL_SERVER_ERROR, group = "00", id = "01"),
     TEMPLATE_NOT_FOUND(httpStatus = HttpStatus.INTERNAL_SERVER_ERROR, group = "00", id = "02"),
-    RELATIONSHIP_IS_NOT_ALLOWED(httpStatus = HttpStatus.INTERNAL_SERVER_ERROR, group = "00", id = "03");
+    RELATIONSHIP_IS_NOT_ALLOWED(httpStatus = HttpStatus.INTERNAL_SERVER_ERROR, group = "00", id = "03"),
+    TRANSFORM_ERROR(httpStatus = HttpStatus.INTERNAL_SERVER_ERROR, group = "00", id = "04"), ;
 
     override val code: String = "${httpStatus.value()}.${GlobalProperties.serviceId}.$group.$id"
 

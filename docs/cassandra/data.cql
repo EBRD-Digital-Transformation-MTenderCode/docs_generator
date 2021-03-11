@@ -81,7 +81,7 @@ CREATE TABLE IF NOT EXISTS document_generator.parameter_paths(
     parameter text,
     record text,
     path text,
-    PRIMARY KEY (pmd, documentInitiator)
+    PRIMARY KEY (pmd, documentInitiator, parameter)
 );
 
 CREATE TABLE IF NOT EXISTS document_generator.templates(
