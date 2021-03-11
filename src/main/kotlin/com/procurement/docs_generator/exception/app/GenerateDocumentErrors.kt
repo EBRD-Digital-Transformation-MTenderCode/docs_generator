@@ -42,17 +42,29 @@ sealed class GenerateDocumentErrors(code: CodeError, message: String) : Applicat
         message = "Parameter value by path '$path' not found."
     )
 
-    class TemplateNotFound(
+    class NoTemplateFound(
         pmd: ProcurementMethod,
         country: Country,
         documentInitiator: String,
         language: Language,
-        date: LocalDateTime,
         subGroup: String
     ) : GenerateDocumentErrors(
         code = CodesOfErrors.TEMPLATE_NOT_FOUND,
-        message = "Template by country '${country}', documentInitiator '${documentInitiator}', " +
-            "pmd '${pmd}', lang '{$language}', date '${date.asString()}' and subGroup '$subGroup' is not found."
+        message = "No template found by country '${country}', documentInitiator '${documentInitiator}', " +
+            "pmd '${pmd}', lang '{$language}' and subGroup '$subGroup'."
+    )
+
+    class NoTemplateEqualsOrPrecedesSpecifiedDate(
+        pmd: ProcurementMethod,
+        country: Country,
+        documentInitiator: String,
+        language: Language,
+        subGroup: String,
+        date: LocalDateTime
+    ): GenerateDocumentErrors(
+        code = CodesOfErrors.TEMPLATE_NOT_FOUND,
+        message = "No template with country '${country}', documentInitiator '${documentInitiator}', " +
+            "pmd '${pmd}', lang '{$language}' and subGroup '$subGroup' is equal or precedes date '${date.asString()}'."
     )
 
     class RelationshipIsNotAllowed(relationship: RelatedProcessType) : GenerateDocumentErrors(
