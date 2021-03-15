@@ -3,11 +3,14 @@ package com.procurement.docs_generator.infrastructure.adapter
 import com.procurement.docs_generator.application.service.template.TemplateService
 import com.procurement.docs_generator.domain.date.JsonDateDeserializer
 import com.procurement.docs_generator.domain.logger.Logger
+import com.procurement.docs_generator.domain.model.country.Country
+import com.procurement.docs_generator.domain.model.country.CountryDeserializer
 import com.procurement.docs_generator.domain.model.document.Document
 import com.procurement.docs_generator.domain.model.document.id.DocumentIdDeserializer
 import com.procurement.docs_generator.domain.model.document.kind.DocumentKindDeserializer
 import com.procurement.docs_generator.domain.model.language.Language
 import com.procurement.docs_generator.domain.model.language.LanguageDeserializer
+import com.procurement.docs_generator.domain.model.pmd.ProcurementMethod
 import com.procurement.docs_generator.domain.model.template.Template
 import com.procurement.docs_generator.domain.model.template.engine.TemplateEngineDeserializer
 import com.procurement.docs_generator.domain.model.template.format.TemplateFormatDeserializer
@@ -41,7 +44,7 @@ class TemplateController(
 
     @PostMapping(value = ["/templates/{id}/{kind}/{lang}/{date}"],
                  consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
-    fun newTemplate(@PathVariable(name = "id") id: String?,
+    fun createTemplateOld(@PathVariable(name = "id") id: String?,
                     @PathVariable(name = "kind") kind: String?,
                     @PathVariable(name = "lang") lang: String?,
                     @PathVariable(name = "date") date: String?,
@@ -64,7 +67,7 @@ class TemplateController(
 
     @PutMapping(value = ["/templates/{id}/{kind}/{lang}/{date}"],
                 consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
-    fun updateTemplate(@PathVariable(name = "id") id: String?,
+    fun updateTemplateOld(@PathVariable(name = "id") id: String?,
                        @PathVariable(name = "kind") kind: String?,
                        @PathVariable(name = "lang") lang: String?,
                        @PathVariable(name = "date") date: String?,
@@ -81,6 +84,31 @@ class TemplateController(
             file = getFile(file),
             format = getFormat(format ?: Template.Format.HTML.code),
             engine = getEngine(engine ?: Template.Engine.Thymeleaf.code)
+        )
+
+        return AddedTemplateWebView()
+    }
+
+    @PostMapping(value = ["/upload-template"],
+                 consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
+    fun createTemplate(
+        @RequestParam(name = "country", required = false) country: String?,
+        @RequestParam(name = "pmd", required = false) pmd: String?,
+        @RequestParam(name = "documentInitiator", required = false) documentInitiator: String?,
+        @RequestParam(name = "lang", required = false) lang: String?,
+        @RequestParam(name = "subgroup", required = false) subgroup: String?,
+        @RequestParam(name = "file", required = false) file: MultipartFile?
+    ): View {
+
+        templateService.add(
+            country = getCountry(country),
+            pmd = getPmd(pmd),
+            documentInitiator = getDocumentInitiator(documentInitiator),
+            lang = getLang(lang),
+            subGroup = getSubGroup(subgroup),
+            file = getFile(file),
+            format = Template.Format.HTML,
+            engine = Template.Engine.Thymeleaf
         )
 
         return AddedTemplateWebView()
@@ -154,6 +182,42 @@ class TemplateController(
                 TemplateEngineDeserializer.deserialize(engine)
             } catch (exception: Exception) {
                 throw InvalidValueOfParamException(nameAndTypeParam = "request param: 'engine'", valueParam = engine)
+            }
+    }
+
+    private fun getCountry(country: String?): Country {
+        return if (country == null || country.isEmpty())
+            throw InvalidValueOfParamException(nameAndTypeParam = "path variable: 'country'", valueParam = "missing")
+        else
+            try {
+                CountryDeserializer.deserialize(country)
+            } catch (exception: Exception) {
+                throw InvalidValueOfParamException(nameAndTypeParam = "path variable: 'lang'", valueParam = country)
+            }
+    }
+
+    private fun getSubGroup(subgroup: String?): String {
+        return if (subgroup == null || subgroup.isBlank())
+            throw InvalidValueOfParamException(nameAndTypeParam = "path variable: 'subgroup'", valueParam = "missing")
+        else
+            subgroup
+    }
+
+    private fun getDocumentInitiator(documentInitiator: String?): String {
+        return if (documentInitiator == null || documentInitiator.isBlank())
+            throw InvalidValueOfParamException(nameAndTypeParam = "path variable: 'documentInitiator'", valueParam = "missing")
+        else
+            documentInitiator
+    }
+
+    private fun getPmd(pmd: String?): ProcurementMethod {
+        return if (pmd == null || pmd.isBlank())
+            throw InvalidValueOfParamException(nameAndTypeParam = "path variable: 'pmd'", valueParam = "missing")
+        else
+            try {
+                ProcurementMethod.orThrow(pmd)
+            } catch (exception: Exception) {
+                throw InvalidValueOfParamException(nameAndTypeParam = "path variable: 'id'", valueParam = pmd)
             }
     }
 
