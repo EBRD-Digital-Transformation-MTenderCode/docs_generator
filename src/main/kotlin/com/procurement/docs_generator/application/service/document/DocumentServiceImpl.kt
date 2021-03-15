@@ -412,6 +412,7 @@ class DocumentServiceImpl(
             RelatedProcessType.PARENT -> RecordName.MS
             RelatedProcessType.X_EVALUATION -> RecordName.EV
             RelatedProcessType.X_NEGOTIATION -> RecordName.NP
+            RelatedProcessType.AGGREGATE_PLANNING,
             RelatedProcessType.FRAMEWORK,
             RelatedProcessType.PLANNING,
             RelatedProcessType.X_CONTRACTING,
