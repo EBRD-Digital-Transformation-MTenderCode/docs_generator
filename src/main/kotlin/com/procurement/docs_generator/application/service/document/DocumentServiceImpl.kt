@@ -417,6 +417,7 @@ class DocumentServiceImpl(
             RelatedProcessType.PLANNING,
             RelatedProcessType.X_CONTRACTING,
             RelatedProcessType.X_DEMAND,
+            RelatedProcessType.X_ESTABLISHMENT,
             RelatedProcessType.X_EXECUTION,
             RelatedProcessType.X_EXPENDITURE_ITEM,
             RelatedProcessType.X_FRAMEWORK,
