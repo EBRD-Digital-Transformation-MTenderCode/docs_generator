@@ -92,6 +92,23 @@ class CassandraTemplateRepositoryIT {
         assertEquals(expected, actual)
     }
 
+    @Test
+    fun save() {
+        templateRepository.save(COUNTRY, PMD, DOCUMENT_INITIATOR, LANG, SUB_GROUP, DATE, FORMAT, TYPE_OF_ENGINE, TEMPLATE)
+        val actual = templateRepository.load(
+            country = COUNTRY,
+            pmd = PMD,
+            documentInitiator = DOCUMENT_INITIATOR,
+            lang = LANG,
+            subGroup = SUB_GROUP,
+            date = DATE
+        )!!
+
+        assertEquals(actual.format, FORMAT)
+        assertEquals(actual.typeOfEngine, TYPE_OF_ENGINE)
+        assertEquals(actual.template, TEMPLATE)
+    }
+
     private fun clearTables() {
         session.execute("TRUNCATE document_generator.templates")
     }

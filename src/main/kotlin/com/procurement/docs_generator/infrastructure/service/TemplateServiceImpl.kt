@@ -2,13 +2,17 @@ package com.procurement.docs_generator.infrastructure.service
 
 import com.procurement.docs_generator.adapter.TemplateStore
 import com.procurement.docs_generator.application.service.template.TemplateService
+import com.procurement.docs_generator.domain.date.nowDefaultUTC
 import com.procurement.docs_generator.domain.logger.Logger
 import com.procurement.docs_generator.domain.logger.debug
 import com.procurement.docs_generator.domain.logger.info
+import com.procurement.docs_generator.domain.model.country.Country
 import com.procurement.docs_generator.domain.model.dimension.Mb
 import com.procurement.docs_generator.domain.model.document.Document
 import com.procurement.docs_generator.domain.model.language.Language
+import com.procurement.docs_generator.domain.model.pmd.ProcurementMethod
 import com.procurement.docs_generator.domain.model.template.Template
+import com.procurement.docs_generator.domain.repository.TemplateRepository
 import com.procurement.docs_generator.exception.app.AvailableTemplateException
 import com.procurement.docs_generator.exception.app.MultipartFileException
 import com.procurement.docs_generator.infrastructure.common.toByteBuffer
@@ -20,7 +24,8 @@ import java.time.LocalDate
 
 @Service
 class TemplateServiceImpl(
-    private val templateStore: TemplateStore
+    private val templateStore: TemplateStore,
+    private val templateRepository: TemplateRepository
 ) : TemplateService {
     companion object {
         private val log: Logger = Slf4jLogger()
@@ -77,6 +82,23 @@ class TemplateServiceImpl(
             }.also {
                 log.debug { "Loaded available template (id: '$id', kind: '$kind', lang: '$lang', active date: '${it.startDate}')" }
             }
+    }
+
+    override fun add(
+        country: Country,
+        pmd: ProcurementMethod,
+        documentInitiator: String,
+        lang: Language,
+        subGroup: String,
+        format: Template.Format,
+        engine: Template.Engine,
+        file: MultipartFile
+    ) {
+        log.info { "Attempt add template (country: '$country', pmd: '$pmd', documentInitiator: '$documentInitiator', lang: '$lang', subGroup: '${subGroup}, format: '${format.description}', engine: '${engine.description}')" }
+        val template = getBodyTemplate(file)
+        val date = nowDefaultUTC()
+        templateRepository.save(country, pmd, documentInitiator, lang, subGroup, date, format, engine, template)
+        log.info { "Added template (country: '$country', pmd: '$pmd', documentInitiator: '$documentInitiator', lang: '$lang', subGroup: '${subGroup}, format: '${format.description}', engine: '${engine.description}')" }
     }
 
     private fun getAvailableTemplateDate(id: Document.Id,
