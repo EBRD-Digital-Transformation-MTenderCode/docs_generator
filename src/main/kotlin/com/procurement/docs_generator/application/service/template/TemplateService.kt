@@ -33,6 +33,7 @@ interface TemplateService {
         documentInitiator: String,
         lang: Language,
         subGroup: String,
+        date: LocalDate,
         format: Template.Format,
         engine: Template.Engine,
         file: MultipartFile

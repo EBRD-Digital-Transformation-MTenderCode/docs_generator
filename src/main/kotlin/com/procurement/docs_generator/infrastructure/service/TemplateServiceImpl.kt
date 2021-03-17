@@ -2,7 +2,7 @@ package com.procurement.docs_generator.infrastructure.service
 
 import com.procurement.docs_generator.adapter.TemplateStore
 import com.procurement.docs_generator.application.service.template.TemplateService
-import com.procurement.docs_generator.domain.date.nowDefaultUTC
+import com.procurement.docs_generator.domain.date.toLocalDateTime
 import com.procurement.docs_generator.domain.logger.Logger
 import com.procurement.docs_generator.domain.logger.debug
 import com.procurement.docs_generator.domain.logger.info
@@ -90,14 +90,14 @@ class TemplateServiceImpl(
         documentInitiator: String,
         lang: Language,
         subGroup: String,
+        date: LocalDate,
         format: Template.Format,
         engine: Template.Engine,
         file: MultipartFile
     ) {
         log.info { "Attempt add template (country: '$country', pmd: '$pmd', documentInitiator: '$documentInitiator', lang: '$lang', subGroup: '${subGroup}, format: '${format.description}', engine: '${engine.description}')" }
         val template = getBodyTemplate(file)
-        val date = nowDefaultUTC()
-        templateRepository.save(country, pmd, documentInitiator, lang, subGroup, date, format, engine, template)
+        templateRepository.save(country, pmd, documentInitiator, lang, subGroup, date.toLocalDateTime(), format, engine, template)
         log.info { "Added template (country: '$country', pmd: '$pmd', documentInitiator: '$documentInitiator', lang: '$lang', subGroup: '${subGroup}, format: '${format.description}', engine: '${engine.description}')" }
     }
 
