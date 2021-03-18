@@ -97,6 +97,7 @@ class TemplateController(
         @RequestParam(name = "documentInitiator", required = false) documentInitiator: String?,
         @RequestParam(name = "lang", required = false) lang: String?,
         @RequestParam(name = "subgroup", required = false) subgroup: String?,
+        @RequestParam(name = "date", required = false) date: String?,
         @RequestParam(name = "file", required = false) file: MultipartFile?
     ): View {
 
@@ -106,6 +107,7 @@ class TemplateController(
             documentInitiator = getDocumentInitiator(documentInitiator),
             lang = getLang(lang),
             subGroup = getSubGroup(subgroup),
+            date = getDate(date),
             file = getFile(file),
             format = Template.Format.HTML,
             engine = Template.Engine.Thymeleaf
