@@ -13,6 +13,7 @@ import com.procurement.docs_generator.infrastructure.cassandra.toCassandraTimest
 import com.procurement.docs_generator.infrastructure.cassandra.toLocalDateTime
 import com.procurement.docs_generator.infrastructure.logger.Slf4jLogger
 import org.springframework.stereotype.Repository
+import java.nio.ByteBuffer
 import java.time.LocalDateTime
 
 @Repository
@@ -57,10 +58,26 @@ class CassandraTemplateRepository(
                   AND $columnLang=?
                   AND $columnSubGroup=?;
             """
+
+        private const val saveCQL = """
+            INSERT INTO $KEY_SPACE.$tableName(
+                  $columnCountry,
+                  $columnPmd,
+                  $columnDocumentInitiator,
+                  $columnLang,
+                  $columnSubGroup,
+                  $columnDate,
+                  $columnTypeOfEngine,
+                  $columnFormat,
+                  $columnTemplate
+          ) 
+            VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """
     }
 
     private val preparedLoadCQL = session.prepare(loadCQL)
     private val preparedLoadDatesCQL = session.prepare(loadDatesCQL)
+    private val preparedSaveCQL = session.prepare(saveCQL)
 
     override fun load(
         country: Country,
@@ -115,4 +132,30 @@ class CassandraTemplateRepository(
         return query.executeRead(session)
             .map { row -> row.getTimestamp(columnDate).toLocalDateTime() }
     }
+
+    override fun save(
+        country: Country,
+        pmd: ProcurementMethod,
+        documentInitiator: String,
+        lang: Language,
+        subGroup: String,
+        date: LocalDateTime,
+        format: Template.Format,
+        engine: Template.Engine,
+        template: ByteBuffer
+    ) {
+        val query = preparedSaveCQL.bind().also {
+            it.setString(columnCountry, country.value)
+            it.setString(columnPmd, pmd.key)
+            it.setString(columnDocumentInitiator, documentInitiator)
+            it.setString(columnLang, lang.value)
+            it.setString(columnSubGroup, subGroup)
+            it.setTimestamp(columnDate, date.toCassandraTimestamp())
+            it.setString(columnFormat, format.code)
+            it.setString(columnTypeOfEngine, engine.code)
+            it.setBytes(columnTemplate, template)
+        }
+        query.executeWrite(session)
+    }
+
 }

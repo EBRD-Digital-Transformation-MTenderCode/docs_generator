@@ -1,5 +1,6 @@
 package com.procurement.docs_generator.domain.date
 
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
@@ -16,3 +17,6 @@ fun LocalDateTime.asString(): String = this.format(formatter)
 fun String.toLocalDateTime(): LocalDateTime = LocalDateTime.parse(this, formatter)
 
 fun LocalDateTime.toMilliseconds(): Long = this.toInstant(ZoneOffset.UTC).toEpochMilli()
+
+fun LocalDate.toLocalDateTime(): LocalDateTime = this.atStartOfDay()
+
