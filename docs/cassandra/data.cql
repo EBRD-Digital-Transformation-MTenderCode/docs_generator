@@ -57,42 +57,42 @@ CREATE TABLE IF NOT EXISTS document_generator.descriptors(
 CREATE TABLE IF NOT EXISTS document_generator.documents(
     cpid text,
     ocid text,
-    documentInitiator text,
+    processInitiator text,
     objectId text,
     pmd text,
     country text,
     lang text,
     documents text,
-    PRIMARY KEY (cpid, ocid, documentInitiator, objectId)
+    PRIMARY KEY (cpid, ocid, processInitiator, objectId)
 );
 
 CREATE TABLE IF NOT EXISTS document_generator.records(
     country text,
     pmd text,
-    documentInitiator text,
+    processInitiator text,
     mainProcess text,
     relationships text,
-    PRIMARY KEY (country, pmd, documentInitiator)
+    PRIMARY KEY (country, pmd, processInitiator)
 );
 
 CREATE TABLE IF NOT EXISTS document_generator.parameter_paths(
     pmd text,
-    documentInitiator text,
+    processInitiator text,
     parameter text,
     record text,
     path text,
-    PRIMARY KEY (pmd, documentInitiator, parameter)
+    PRIMARY KEY (pmd, processInitiator, parameter)
 );
 
 CREATE TABLE IF NOT EXISTS document_generator.templates(
     country text,
     pmd text,
-    documentInitiator text,
+    processInitiator text,
     lang text,
     subGroup text,
     date timestamp,
     typeOfEngine text,
     format text,
     template blob,
-    PRIMARY KEY (country, pmd, documentInitiator, lang, subGroup, date)
+    PRIMARY KEY (country, pmd, processInitiator, lang, subGroup, date)
 );
