@@ -66,7 +66,7 @@ class CassandraTemplateRepositoryIT {
         insert()
         val actual = templateRepository.load(
             pmd = PMD,
-            documentInitiator = DOCUMENT_INITIATOR,
+            processInitiator = DOCUMENT_INITIATOR,
             country = COUNTRY,
             lang = LANG,
             subGroup = SUB_GROUP,
@@ -82,7 +82,7 @@ class CassandraTemplateRepositoryIT {
         insert()
         val actual = templateRepository.loadDates(
             pmd = PMD,
-            documentInitiator = DOCUMENT_INITIATOR,
+            processInitiator = DOCUMENT_INITIATOR,
             country = COUNTRY,
             lang = LANG,
             subGroup = SUB_GROUP
@@ -98,7 +98,7 @@ class CassandraTemplateRepositoryIT {
         val actual = templateRepository.load(
             country = COUNTRY,
             pmd = PMD,
-            documentInitiator = DOCUMENT_INITIATOR,
+            processInitiator = DOCUMENT_INITIATOR,
             lang = LANG,
             subGroup = SUB_GROUP,
             date = DATE
@@ -116,7 +116,7 @@ class CassandraTemplateRepositoryIT {
     private fun expected() = TemplateEntity(
         pmd = PMD,
         country = COUNTRY,
-        documentInitiator = DOCUMENT_INITIATOR,
+        processInitiator = DOCUMENT_INITIATOR,
         lang = LANG,
         subGroup = SUB_GROUP,
         date = DATE,

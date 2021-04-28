@@ -55,7 +55,7 @@ class CassandraParameterPathRepositoryIT {
     @Test
     fun load() {
         insert()
-        val actual = parameterPathRepository.load(pmd = PMD, documentInitiator = DOCUMENT_INITIATOR)
+        val actual = parameterPathRepository.load(pmd = PMD, processInitiator = DOCUMENT_INITIATOR)
         val expected = listOf(expected())
 
         assertEquals(expected, actual)
@@ -68,7 +68,7 @@ class CassandraParameterPathRepositoryIT {
 
     private fun expected() = ParameterPathEntity(
         pmd = PMD,
-        documentInitiator = DOCUMENT_INITIATOR,
+        processInitiator = DOCUMENT_INITIATOR,
         parameter = PARAMETER,
         record = RECORD,
         path = PATH

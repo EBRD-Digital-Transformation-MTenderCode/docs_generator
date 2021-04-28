@@ -30,7 +30,7 @@ class CassandraDocumentRepository(
         private const val columnPmd = "pmd"
         private const val columnCountry = "country"
         private const val columnLang = "lang"
-        private const val columnDocumentInitiator = "documentInitiator"
+        private const val columnProcessInitiator = "processInitiator"
         private const val columnObjectId = "objectId"
 
 
@@ -42,7 +42,7 @@ class CassandraDocumentRepository(
                  FROM $KEY_SPACE.$tableName
                 WHERE $columnCpid=?
                   AND $columnOcid=?
-                  AND $columnDocumentInitiator=?
+                  AND $columnProcessInitiator=?
                   AND $columnObjectId=?;
             """
 
@@ -51,7 +51,7 @@ class CassandraDocumentRepository(
                (
                 $columnCpid,
                 $columnOcid,
-                $columnDocumentInitiator,
+                $columnProcessInitiator,
                 $columnObjectId,
                 $columnPmd,
                 $columnCountry,
@@ -66,13 +66,13 @@ class CassandraDocumentRepository(
     private val preparedInsertCQL = session.prepare(insertCQL)
 
 
-    override fun load(cpid: CPID, ocid: OCID, documentInitiator: String, objectId: String): DocumentEntity? {
+    override fun load(cpid: CPID, ocid: OCID, processInitiator: String, objectId: String): DocumentEntity? {
         log.debug { "Attempt to load a document descriptors by cpid '$cpid' and ocid '$ocid'." }
 
         val query = preparedLoadCQL.bind().also {
             it.setString(columnCpid, cpid.value)
             it.setString(columnOcid, ocid.value)
-            it.setString(columnDocumentInitiator, documentInitiator)
+            it.setString(columnProcessInitiator, processInitiator)
             it.setString(columnObjectId, objectId)
         }
 
@@ -87,7 +87,7 @@ class CassandraDocumentRepository(
                 pmd = ProcurementMethod.creator(row.getString(columnPmd)),
                 country = Country(row.getString(columnCountry)),
                 lang = Language(row.getString(columnLang)),
-                documentInitiator = documentInitiator,
+                processInitiator = processInitiator,
                 documents = transform.deserializeCollection(
                     row.getString(columnDocuments),
                     DocumentEntity.Document::class.java
@@ -104,7 +104,7 @@ class CassandraDocumentRepository(
         val query = preparedInsertCQL.bind().apply {
             setString(columnCpid, documentDescriptor.cpid.value)
             setString(columnOcid, documentDescriptor.ocid.value)
-            setString(columnDocumentInitiator, documentDescriptor.documentInitiator)
+            setString(columnProcessInitiator, documentDescriptor.processInitiator)
             setString(columnObjectId, documentDescriptor.objectId)
             setString(columnPmd, documentDescriptor.pmd.key)
             setString(columnCountry, documentDescriptor.country.value)

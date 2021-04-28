@@ -8,7 +8,7 @@ import com.procurement.docs_generator.domain.model.pmd.RelatedProcessType
 data class RecordEntity(
     val pmd: ProcurementMethod,
     val country: Country,
-    val documentInitiator: String,
+    val processInitiator: String,
     val mainProcess: RecordName,
     val relationships: List<RelatedProcessType> = emptyList()
 )

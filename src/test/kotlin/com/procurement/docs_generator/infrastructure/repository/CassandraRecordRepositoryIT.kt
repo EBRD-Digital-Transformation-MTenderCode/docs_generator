@@ -58,7 +58,7 @@ class CassandraRecordRepositoryIT {
     @Test
     fun load() {
         insert()
-        val actual = recordRepository.load(pmd = PMD, documentInitiator = DOCUMENT_INITIATOR, country = COUNTRY)
+        val actual = recordRepository.load(pmd = PMD, processInitiator = DOCUMENT_INITIATOR, country = COUNTRY)
         val expected = expected()
 
         assertEquals(expected, actual)
@@ -72,7 +72,7 @@ class CassandraRecordRepositoryIT {
     private fun expected() = RecordEntity(
         pmd = PMD,
         country = COUNTRY,
-        documentInitiator = DOCUMENT_INITIATOR,
+        processInitiator = DOCUMENT_INITIATOR,
         relationships = RELATIONSHIPS,
         mainProcess = MAIN_PROCESS
     )

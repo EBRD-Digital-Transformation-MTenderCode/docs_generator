@@ -10,7 +10,7 @@ import java.time.LocalDateTime
 data class TemplateEntity(
     val country: Country,
     val pmd: ProcurementMethod,
-    val documentInitiator: String,
+    val processInitiator: String,
     val lang: Language,
     val subGroup: String,
     val date: LocalDateTime,

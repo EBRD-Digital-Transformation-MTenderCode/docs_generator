@@ -66,7 +66,7 @@ class CassandraDocumentRepositoryIT {
     fun load() {
         insert()
         val actual = documentRepository.load(
-            documentInitiator = DOCUMENT_INITIATOR,
+            processInitiator = DOCUMENT_INITIATOR,
             cpid = CP_ID,
             ocid = OC_ID,
             objectId = OBJECT_ID
@@ -82,7 +82,7 @@ class CassandraDocumentRepositoryIT {
         documentRepository.save(expected)
 
         val actual = documentRepository.load(
-            documentInitiator = expected.documentInitiator,
+            processInitiator = expected.processInitiator,
             cpid = expected.cpid,
             ocid = expected.ocid,
             objectId = OBJECT_ID
@@ -98,7 +98,7 @@ class CassandraDocumentRepositoryIT {
     private fun expected() = DocumentEntity(
         pmd = PMD,
         country = COUNTRY,
-        documentInitiator = DOCUMENT_INITIATOR,
+        processInitiator = DOCUMENT_INITIATOR,
         lang = LANG,
         objectId = OBJECT_ID,
         ocid = OC_ID,
