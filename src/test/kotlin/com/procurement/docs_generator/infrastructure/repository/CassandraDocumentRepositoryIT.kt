@@ -30,7 +30,7 @@ class CassandraDocumentRepositoryIT {
         private val OC_ID = OCID("ocid")
         private val COUNTRY = Country("country")
         private val PMD = ProcurementMethod.CD
-        private val DOCUMENT_INITIATOR = "documentInitiator"
+        private val PROCESS_INITIATOR = "processInitiator"
         private val LANG = Language("lang")
         private val OBJECT_ID = UUID.randomUUID().toString()
 
@@ -66,7 +66,7 @@ class CassandraDocumentRepositoryIT {
     fun load() {
         insert()
         val actual = documentRepository.load(
-            processInitiator = DOCUMENT_INITIATOR,
+            processInitiator = PROCESS_INITIATOR,
             cpid = CP_ID,
             ocid = OC_ID,
             objectId = OBJECT_ID
@@ -98,7 +98,7 @@ class CassandraDocumentRepositoryIT {
     private fun expected() = DocumentEntity(
         pmd = PMD,
         country = COUNTRY,
-        processInitiator = DOCUMENT_INITIATOR,
+        processInitiator = PROCESS_INITIATOR,
         lang = LANG,
         objectId = OBJECT_ID,
         ocid = OC_ID,
@@ -113,7 +113,7 @@ class CassandraDocumentRepositoryIT {
             .value("pmd", PMD.key)
             .value("country", COUNTRY.value)
             .value("lang", LANG.value)
-            .value("documentInitiator", DOCUMENT_INITIATOR)
+            .value("processInitiator", PROCESS_INITIATOR)
             .value("documents", DOCUMENTS_JSON)
             .value("objectId ", OBJECT_ID)
         session.execute(rec)

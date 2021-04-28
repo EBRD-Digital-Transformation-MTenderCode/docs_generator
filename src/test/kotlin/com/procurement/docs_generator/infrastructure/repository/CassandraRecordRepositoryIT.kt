@@ -25,7 +25,7 @@ class CassandraRecordRepositoryIT {
     companion object {
         private val COUNTRY = Country("country")
         private val PMD = ProcurementMethod.CD
-        private val DOCUMENT_INITIATOR = "documentInitiator"
+        private val PROCESS_INITIATOR = "processInitiator"
         private val MAIN_PROCESS = RecordName.AC
         private val RELATIONSHIPS = listOf(RelatedProcessType.X_EVALUATION, RelatedProcessType.PARENT)
         private val RELATIONSHIPS_JSON = "[\"x_evaluation\", \"parent\"]"
@@ -58,7 +58,7 @@ class CassandraRecordRepositoryIT {
     @Test
     fun load() {
         insert()
-        val actual = recordRepository.load(pmd = PMD, processInitiator = DOCUMENT_INITIATOR, country = COUNTRY)
+        val actual = recordRepository.load(pmd = PMD, processInitiator = PROCESS_INITIATOR, country = COUNTRY)
         val expected = expected()
 
         assertEquals(expected, actual)
@@ -72,7 +72,7 @@ class CassandraRecordRepositoryIT {
     private fun expected() = RecordEntity(
         pmd = PMD,
         country = COUNTRY,
-        processInitiator = DOCUMENT_INITIATOR,
+        processInitiator = PROCESS_INITIATOR,
         relationships = RELATIONSHIPS,
         mainProcess = MAIN_PROCESS
     )
@@ -81,7 +81,7 @@ class CassandraRecordRepositoryIT {
         val rec = QueryBuilder.insertInto("document_generator", "records")
             .value("country", COUNTRY.value)
             .value("pmd", PMD.key)
-            .value("documentInitiator", DOCUMENT_INITIATOR)
+            .value("processInitiator", PROCESS_INITIATOR)
             .value("mainProcess", MAIN_PROCESS.key)
             .value("relationships ", RELATIONSHIPS_JSON)
         session.execute(rec)

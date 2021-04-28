@@ -28,7 +28,7 @@ class CassandraTemplateRepositoryIT {
     companion object {
         private val COUNTRY = Country("country")
         private val PMD = ProcurementMethod.CD
-        private val DOCUMENT_INITIATOR = "documentInitiator"
+        private val PROCESS_INITIATOR = "processInitiator"
         private val LANG = Language("en")
         private val SUB_GROUP = "work"
         private val DATE = LocalDateTime.now()
@@ -66,7 +66,7 @@ class CassandraTemplateRepositoryIT {
         insert()
         val actual = templateRepository.load(
             pmd = PMD,
-            processInitiator = DOCUMENT_INITIATOR,
+            processInitiator = PROCESS_INITIATOR,
             country = COUNTRY,
             lang = LANG,
             subGroup = SUB_GROUP,
@@ -82,7 +82,7 @@ class CassandraTemplateRepositoryIT {
         insert()
         val actual = templateRepository.loadDates(
             pmd = PMD,
-            processInitiator = DOCUMENT_INITIATOR,
+            processInitiator = PROCESS_INITIATOR,
             country = COUNTRY,
             lang = LANG,
             subGroup = SUB_GROUP
@@ -94,11 +94,11 @@ class CassandraTemplateRepositoryIT {
 
     @Test
     fun save() {
-        templateRepository.save(COUNTRY, PMD, DOCUMENT_INITIATOR, LANG, SUB_GROUP, DATE, FORMAT, TYPE_OF_ENGINE, TEMPLATE)
+        templateRepository.save(COUNTRY, PMD, PROCESS_INITIATOR, LANG, SUB_GROUP, DATE, FORMAT, TYPE_OF_ENGINE, TEMPLATE)
         val actual = templateRepository.load(
             country = COUNTRY,
             pmd = PMD,
-            processInitiator = DOCUMENT_INITIATOR,
+            processInitiator = PROCESS_INITIATOR,
             lang = LANG,
             subGroup = SUB_GROUP,
             date = DATE
@@ -116,7 +116,7 @@ class CassandraTemplateRepositoryIT {
     private fun expected() = TemplateEntity(
         pmd = PMD,
         country = COUNTRY,
-        processInitiator = DOCUMENT_INITIATOR,
+        processInitiator = PROCESS_INITIATOR,
         lang = LANG,
         subGroup = SUB_GROUP,
         date = DATE,
@@ -129,7 +129,7 @@ class CassandraTemplateRepositoryIT {
         val rec = QueryBuilder.insertInto("document_generator", "templates")
             .value("country", COUNTRY.value)
             .value("pmd", PMD.key)
-            .value("documentInitiator", DOCUMENT_INITIATOR)
+            .value("processInitiator", PROCESS_INITIATOR)
             .value("lang", LANG.value)
             .value("subGroup", SUB_GROUP)
             .value("date", DATE.toCassandraTimestamp())
