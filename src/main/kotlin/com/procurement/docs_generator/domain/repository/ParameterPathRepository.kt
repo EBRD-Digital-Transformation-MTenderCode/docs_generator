@@ -6,6 +6,6 @@ import com.procurement.docs_generator.domain.model.pmd.ProcurementMethod
 interface ParameterPathRepository {
     fun load(
         pmd: ProcurementMethod,
-        documentInitiator: String
+        processInitiator: String
     ): List<ParameterPathEntity>
 }

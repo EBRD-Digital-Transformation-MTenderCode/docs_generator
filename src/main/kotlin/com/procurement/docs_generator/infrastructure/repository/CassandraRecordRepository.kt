@@ -24,7 +24,7 @@ class CassandraRecordRepository(
         private const val tableName = "records"
         private const val columnPmd = "pmd"
         private const val columnCountry = "country"
-        private const val columnDocumentInitiator = "documentInitiator"
+        private const val columnProcessInitiator = "processInitiator"
         private const val columnMainProcess = "mainProcess"
         private const val columnRelationships = "relationships"
 
@@ -34,7 +34,7 @@ class CassandraRecordRepository(
                  FROM $KEY_SPACE.$tableName
                 WHERE $columnPmd=?
                   AND $columnCountry=?
-                  AND $columnDocumentInitiator=?;
+                  AND $columnProcessInitiator=?;
             """
     }
 
@@ -43,13 +43,13 @@ class CassandraRecordRepository(
     override fun load(
         pmd: ProcurementMethod,
         country: Country,
-        documentInitiator: String
+        processInitiator: String
     ): RecordEntity? {
 
         val query = preparedLoadCQL.bind().also {
             it.setString(columnPmd, pmd.key)
             it.setString(columnCountry, country.value)
-            it.setString(columnDocumentInitiator, documentInitiator)
+            it.setString(columnProcessInitiator, processInitiator)
         }
 
         val resultSet = query.executeRead(session)
@@ -64,7 +64,7 @@ class CassandraRecordRepository(
             RecordEntity(
                 pmd = pmd,
                 country = country,
-                documentInitiator = documentInitiator,
+                processInitiator = processInitiator,
                 mainProcess = RecordName.creator(row.getString(columnMainProcess)),
                 relationships = relationships
             )

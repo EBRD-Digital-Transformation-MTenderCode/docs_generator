@@ -28,7 +28,7 @@ class CassandraTemplateRepository(
         private const val tableName = "templates"
         private const val columnCountry = "country"
         private const val columnPmd = "pmd"
-        private const val columnDocumentInitiator = "documentInitiator"
+        private const val columnProcessInitiator = "processInitiator"
         private const val columnLang = "lang"
         private const val columnSubGroup = "subGroup"
         private const val columnDate = "date"
@@ -43,7 +43,7 @@ class CassandraTemplateRepository(
                  FROM $KEY_SPACE.$tableName
                 WHERE $columnCountry=?
                   AND $columnPmd=?
-                  AND $columnDocumentInitiator=?
+                  AND $columnProcessInitiator=?
                   AND $columnLang=?
                   AND $columnSubGroup=?
                   AND $columnDate=?;
@@ -54,7 +54,7 @@ class CassandraTemplateRepository(
                  FROM $KEY_SPACE.$tableName
                 WHERE $columnCountry=?
                   AND $columnPmd=?
-                  AND $columnDocumentInitiator=?
+                  AND $columnProcessInitiator=?
                   AND $columnLang=?
                   AND $columnSubGroup=?;
             """
@@ -63,7 +63,7 @@ class CassandraTemplateRepository(
             INSERT INTO $KEY_SPACE.$tableName(
                   $columnCountry,
                   $columnPmd,
-                  $columnDocumentInitiator,
+                  $columnProcessInitiator,
                   $columnLang,
                   $columnSubGroup,
                   $columnDate,
@@ -82,7 +82,7 @@ class CassandraTemplateRepository(
     override fun load(
         country: Country,
         pmd: ProcurementMethod,
-        documentInitiator: String,
+        processInitiator: String,
         lang: Language,
         subGroup: String,
         date: LocalDateTime
@@ -90,7 +90,7 @@ class CassandraTemplateRepository(
         val query = preparedLoadCQL.bind().also {
             it.setString(columnCountry, country.value)
             it.setString(columnPmd, pmd.key)
-            it.setString(columnDocumentInitiator, documentInitiator)
+            it.setString(columnProcessInitiator, processInitiator)
             it.setString(columnLang, lang.value)
             it.setString(columnSubGroup, subGroup)
             it.setTimestamp(columnDate, date.toCassandraTimestamp())
@@ -103,7 +103,7 @@ class CassandraTemplateRepository(
             TemplateEntity(
                 country = country,
                 pmd = pmd,
-                documentInitiator = documentInitiator,
+                processInitiator = processInitiator,
                 lang = lang,
                 subGroup = subGroup,
                 date = date,
@@ -117,14 +117,14 @@ class CassandraTemplateRepository(
     override fun loadDates(
         country: Country,
         pmd: ProcurementMethod,
-        documentInitiator: String,
+        processInitiator: String,
         lang: Language,
         subGroup: String
     ): List<LocalDateTime> {
         val query = preparedLoadDatesCQL.bind().also {
             it.setString(columnCountry, country.value)
             it.setString(columnPmd, pmd.key)
-            it.setString(columnDocumentInitiator, documentInitiator)
+            it.setString(columnProcessInitiator, processInitiator)
             it.setString(columnLang, lang.value)
             it.setString(columnSubGroup, subGroup)
         }
@@ -136,7 +136,7 @@ class CassandraTemplateRepository(
     override fun save(
         country: Country,
         pmd: ProcurementMethod,
-        documentInitiator: String,
+        processInitiator: String,
         lang: Language,
         subGroup: String,
         date: LocalDateTime,
@@ -147,7 +147,7 @@ class CassandraTemplateRepository(
         val query = preparedSaveCQL.bind().also {
             it.setString(columnCountry, country.value)
             it.setString(columnPmd, pmd.key)
-            it.setString(columnDocumentInitiator, documentInitiator)
+            it.setString(columnProcessInitiator, processInitiator)
             it.setString(columnLang, lang.value)
             it.setString(columnSubGroup, subGroup)
             it.setTimestamp(columnDate, date.toCassandraTimestamp())

@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Test
 class CassandraParameterPathRepositoryIT {
     companion object {
         private val PMD = ProcurementMethod.CD
-        private val DOCUMENT_INITIATOR = "documentInitiator"
+        private val PROCESS_INITIATOR = "processInitiator"
         private val PARAMETER = ParameterPathEntity.Parameter.SUBGROUP
         private val RECORD = RecordName.AC
         private val PATH = "tender.mainProcurementCategory"
@@ -55,7 +55,7 @@ class CassandraParameterPathRepositoryIT {
     @Test
     fun load() {
         insert()
-        val actual = parameterPathRepository.load(pmd = PMD, documentInitiator = DOCUMENT_INITIATOR)
+        val actual = parameterPathRepository.load(pmd = PMD, processInitiator = PROCESS_INITIATOR)
         val expected = listOf(expected())
 
         assertEquals(expected, actual)
@@ -68,7 +68,7 @@ class CassandraParameterPathRepositoryIT {
 
     private fun expected() = ParameterPathEntity(
         pmd = PMD,
-        documentInitiator = DOCUMENT_INITIATOR,
+        processInitiator = PROCESS_INITIATOR,
         parameter = PARAMETER,
         record = RECORD,
         path = PATH
@@ -77,7 +77,7 @@ class CassandraParameterPathRepositoryIT {
     private fun insert() {
         val rec = QueryBuilder.insertInto("document_generator", "parameter_paths")
             .value("pmd", PMD.key)
-            .value("documentInitiator", DOCUMENT_INITIATOR)
+            .value("processInitiator", PROCESS_INITIATOR)
             .value("parameter", PARAMETER.key)
             .value("record ", RECORD.key)
             .value("path ", PATH)

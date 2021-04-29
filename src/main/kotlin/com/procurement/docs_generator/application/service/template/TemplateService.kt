@@ -30,7 +30,7 @@ interface TemplateService {
     fun add(
         country: Country,
         pmd: ProcurementMethod,
-        documentInitiator: String,
+        processInitiator: String,
         lang: Language,
         subGroup: String,
         date: LocalDate,

@@ -21,7 +21,7 @@ class CassandraParameterPathRepository(
         private const val KEY_SPACE = "document_generator"
         private const val tableName = "parameter_paths"
         private const val columnPmd = "pmd"
-        private const val columnDocumentInitiator = "documentInitiator"
+        private const val columnProcessInitiator = "processInitiator"
         private const val columnParameter = "parameter"
         private const val columnRecord = "record"
         private const val columnPath = "path"
@@ -32,7 +32,7 @@ class CassandraParameterPathRepository(
                       $columnPath
                  FROM $KEY_SPACE.$tableName
                 WHERE $columnPmd=?
-                  AND $columnDocumentInitiator=?;
+                  AND $columnProcessInitiator=?;
             """
     }
 
@@ -40,12 +40,12 @@ class CassandraParameterPathRepository(
 
     override fun load(
         pmd: ProcurementMethod,
-        documentInitiator: String
+        processInitiator: String
     ): List<ParameterPathEntity> {
 
         val query = preparedLoadCQL.bind().also {
             it.setString(columnPmd, pmd.key)
-            it.setString(columnDocumentInitiator, documentInitiator)
+            it.setString(columnProcessInitiator, processInitiator)
         }
 
         val resultSet = query.executeRead(session)
@@ -53,7 +53,7 @@ class CassandraParameterPathRepository(
         return resultSet.map { row ->
             ParameterPathEntity(
                 pmd = pmd,
-                documentInitiator = documentInitiator,
+                processInitiator = processInitiator,
                 parameter = ParameterPathEntity.Parameter.creator(row.getString(columnParameter)),
                 record = RecordName.creator(row.getString(columnRecord)),
                 path = row.getString(columnPath)

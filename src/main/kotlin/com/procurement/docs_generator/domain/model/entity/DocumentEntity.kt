@@ -13,7 +13,7 @@ data class DocumentEntity(
     val pmd: ProcurementMethod,
     val country: Country,
     val lang: Language,
-    val documentInitiator: String,
+    val processInitiator: String,
     val objectId: String
 ) {
     data class Document(val id: String)

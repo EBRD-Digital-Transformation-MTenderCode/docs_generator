@@ -8,7 +8,7 @@ interface DocumentRepository {
     fun load(
         cpid: CPID,
         ocid: OCID,
-        documentInitiator: String,
+        processInitiator: String,
         objectId: String
     ): DocumentEntity?
 

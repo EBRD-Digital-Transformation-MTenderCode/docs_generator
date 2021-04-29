@@ -19,10 +19,10 @@ sealed class GenerateDocumentErrors(code: CodeError, message: String) : Applicat
     class RecordNotFound(
         pmd: ProcurementMethod,
         country: Country,
-        documentInitiator: String
+        processInitiator: String
     ) : GenerateDocumentErrors(
         code = CodesOfErrors.RECORD_NOT_FOUND,
-        message = "Record not found by pmd '$pmd', country '$country' and documentInitiator '$documentInitiator'."
+        message = "Record not found by pmd '$pmd', country '$country' and processInitiator '$processInitiator'."
     )
 
     class RecordForParameterSearchNotFound(
@@ -45,25 +45,25 @@ sealed class GenerateDocumentErrors(code: CodeError, message: String) : Applicat
     class NoTemplateFound(
         pmd: ProcurementMethod,
         country: Country,
-        documentInitiator: String,
+        processInitiator: String,
         language: Language,
         subGroup: String
     ) : GenerateDocumentErrors(
         code = CodesOfErrors.TEMPLATE_NOT_FOUND,
-        message = "No template found by country '${country}', documentInitiator '${documentInitiator}', " +
+        message = "No template found by country '${country}', processInitiator '${processInitiator}', " +
             "pmd '${pmd}', lang '{$language}' and subGroup '$subGroup'."
     )
 
     class NoTemplateEqualsOrPrecedesSpecifiedDate(
         pmd: ProcurementMethod,
         country: Country,
-        documentInitiator: String,
+        processInitiator: String,
         language: Language,
         subGroup: String,
         date: LocalDateTime
     ): GenerateDocumentErrors(
         code = CodesOfErrors.TEMPLATE_NOT_FOUND,
-        message = "No template with country '${country}', documentInitiator '${documentInitiator}', " +
+        message = "No template with country '${country}', processInitiator '${processInitiator}', " +
             "pmd '${pmd}', lang '{$language}' and subGroup '$subGroup' is equal or precedes date '${date.asString()}'."
     )
 

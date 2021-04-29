@@ -9,7 +9,7 @@
     "operationId": "888ee7e7-888e-4804-adf8-7fd8554beff3",
     "startDate": "2021-03-04T10:52:45Z",
     "pmd": "TEST_CF",
-    "documentInitiator": "issuingFrameworkContract",
+    "processInitiator": "issuingFrameworkContract",
     "objectId": "72728c47-534a-48dc-9c1e-30631af8ca68"
   },
   "version": "0.0.1"

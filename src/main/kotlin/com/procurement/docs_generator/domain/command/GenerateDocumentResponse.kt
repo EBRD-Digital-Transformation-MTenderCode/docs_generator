@@ -40,7 +40,7 @@ class GenerateDocumentResponse(
 
         @field:JsonProperty("documents") @param:JsonProperty("documents") val documents: List<Document>,
 
-        @field:JsonProperty("documentInitiator") @param:JsonProperty("documentInitiator") val documentInitiator: String,
+        @field:JsonProperty("processInitiator") @param:JsonProperty("processInitiator") val processInitiator: String,
 
         @field:JsonProperty("objectId") @param:JsonProperty("objectId") val objectId: String
     ) {
