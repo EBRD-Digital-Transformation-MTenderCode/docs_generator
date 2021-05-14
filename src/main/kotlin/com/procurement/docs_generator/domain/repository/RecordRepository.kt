@@ -8,6 +8,6 @@ interface RecordRepository {
     fun load(
         pmd: ProcurementMethod,
         country: Country,
-        documentInitiator: String
+        processInitiator: String
     ): RecordEntity?
 }

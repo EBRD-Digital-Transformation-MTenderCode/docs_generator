@@ -94,7 +94,7 @@ class TemplateController(
     fun createTemplate(
         @RequestParam(name = "country", required = false) country: String?,
         @RequestParam(name = "pmd", required = false) pmd: String?,
-        @RequestParam(name = "documentInitiator", required = false) documentInitiator: String?,
+        @RequestParam(name = "processInitiator", required = false) processInitiator: String?,
         @RequestParam(name = "lang", required = false) lang: String?,
         @RequestParam(name = "subgroup", required = false) subgroup: String?,
         @RequestParam(name = "date", required = false) date: String?,
@@ -104,7 +104,7 @@ class TemplateController(
         templateService.add(
             country = getCountry(country),
             pmd = getPmd(pmd),
-            documentInitiator = getDocumentInitiator(documentInitiator),
+            processInitiator = getProcessInitiator(processInitiator),
             lang = getLang(lang),
             subGroup = getSubGroup(subgroup),
             date = getDate(date),
@@ -205,11 +205,11 @@ class TemplateController(
             subgroup
     }
 
-    private fun getDocumentInitiator(documentInitiator: String?): String {
-        return if (documentInitiator == null || documentInitiator.isBlank())
-            throw InvalidValueOfParamException(nameAndTypeParam = "path variable: 'documentInitiator'", valueParam = "missing")
+    private fun getProcessInitiator(processInitiator: String?): String {
+        return if (processInitiator == null || processInitiator.isBlank())
+            throw InvalidValueOfParamException(nameAndTypeParam = "path variable: 'processInitiator'", valueParam = "missing")
         else
-            documentInitiator
+            processInitiator
     }
 
     private fun getPmd(pmd: String?): ProcurementMethod {

@@ -12,7 +12,7 @@ interface TemplateRepository {
     fun load(
         country: Country,
         pmd: ProcurementMethod,
-        documentInitiator: String,
+        processInitiator: String,
         lang: Language,
         subGroup: String,
         date: LocalDateTime
@@ -21,7 +21,7 @@ interface TemplateRepository {
     fun loadDates(
         country: Country,
         pmd: ProcurementMethod,
-        documentInitiator: String,
+        processInitiator: String,
         lang: Language,
         subGroup: String
     ): List<LocalDateTime>
@@ -29,7 +29,7 @@ interface TemplateRepository {
     fun save(
         country: Country,
         pmd: ProcurementMethod,
-        documentInitiator: String,
+        processInitiator: String,
         lang: Language,
         subGroup: String,
         date: LocalDateTime,

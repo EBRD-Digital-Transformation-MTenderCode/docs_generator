@@ -8,7 +8,7 @@ import com.procurement.docs_generator.domain.model.pmd.RecordName
 
 data class ParameterPathEntity(
     val pmd: ProcurementMethod,
-    val documentInitiator: String,
+    val processInitiator: String,
     val parameter: Parameter,
     val record: RecordName,
     val path: String

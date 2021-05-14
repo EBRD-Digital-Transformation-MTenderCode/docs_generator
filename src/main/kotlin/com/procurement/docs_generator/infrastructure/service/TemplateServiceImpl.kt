@@ -87,7 +87,7 @@ class TemplateServiceImpl(
     override fun add(
         country: Country,
         pmd: ProcurementMethod,
-        documentInitiator: String,
+        processInitiator: String,
         lang: Language,
         subGroup: String,
         date: LocalDate,
@@ -95,10 +95,10 @@ class TemplateServiceImpl(
         engine: Template.Engine,
         file: MultipartFile
     ) {
-        log.info { "Attempt add template (country: '$country', pmd: '$pmd', documentInitiator: '$documentInitiator', lang: '$lang', subGroup: '${subGroup}, format: '${format.description}', engine: '${engine.description}')" }
+        log.info { "Attempt add template (country: '$country', pmd: '$pmd', processInitiator: '$processInitiator', lang: '$lang', subGroup: '${subGroup}, format: '${format.description}', engine: '${engine.description}')" }
         val template = getBodyTemplate(file)
-        templateRepository.save(country, pmd, documentInitiator, lang, subGroup, date.toLocalDateTime(), format, engine, template)
-        log.info { "Added template (country: '$country', pmd: '$pmd', documentInitiator: '$documentInitiator', lang: '$lang', subGroup: '${subGroup}, format: '${format.description}', engine: '${engine.description}')" }
+        templateRepository.save(country, pmd, processInitiator, lang, subGroup, date.toLocalDateTime(), format, engine, template)
+        log.info { "Added template (country: '$country', pmd: '$pmd', processInitiator: '$processInitiator', lang: '$lang', subGroup: '${subGroup}, format: '${format.description}', engine: '${engine.description}')" }
     }
 
     private fun getAvailableTemplateDate(id: Document.Id,

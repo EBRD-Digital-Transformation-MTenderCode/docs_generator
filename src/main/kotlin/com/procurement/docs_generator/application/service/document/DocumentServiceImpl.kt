@@ -214,13 +214,13 @@ class DocumentServiceImpl(
     override fun processing(command: GenerateDocumentCommand): GenerateDocumentResponse.Data {
         val data = command.data
         val documentStored = documentRepository
-            .load(data.cpid, data.ocid, data.documentInitiator, data.objectId)
+            .load(data.cpid, data.ocid, data.processInitiator, data.objectId)
 
         if (documentStored != null)
             return GenerateDocumentResponse.Data(
                 cpid = documentStored.cpid,
                 ocid = documentStored.ocid,
-                documentInitiator = documentStored.documentInitiator,
+                processInitiator = documentStored.processInitiator,
                 documents = documentStored.documents.map { document ->
                     GenerateDocumentResponse.Data.Document(id = document.id)
                 },
@@ -238,7 +238,7 @@ class DocumentServiceImpl(
             country = data.country,
             lang = data.language,
             pmd = data.pmd,
-            documentInitiator = data.documentInitiator,
+            processInitiator = data.processInitiator,
             documents = (listOf(DocumentEntity.Document(documentId))),
             objectId = data.objectId
         )
@@ -249,7 +249,7 @@ class DocumentServiceImpl(
             GenerateDocumentResponse.Data(
                 cpid = document.cpid,
                 ocid = document.ocid,
-                documentInitiator = document.documentInitiator,
+                processInitiator = document.processInitiator,
                 documents = document.documents.map { document -> GenerateDocumentResponse.Data.Document(document.id) },
                 objectId = document.objectId
             )
@@ -285,7 +285,7 @@ class DocumentServiceImpl(
 
         val templateEntity = templateRepository.load(
             country = data.country,
-            documentInitiator = data.documentInitiator,
+            processInitiator = data.processInitiator,
             pmd = data.pmd,
             lang = data.language,
             date = templateDate,
@@ -306,12 +306,12 @@ class DocumentServiceImpl(
         subGroup: String
     ): LocalDateTime {
         val templateDates = templateRepository
-            .loadDates(data.country,  data.pmd, data.documentInitiator, data.language, subGroup)
+            .loadDates(data.country, data.pmd, data.processInitiator, data.language, subGroup)
             .sortedDescending()
 
         if (templateDates.isEmpty())
             throw GenerateDocumentErrors.NoTemplateFound(
-                data.pmd, data.country, data.documentInitiator, data.language, subGroup
+                data.pmd, data.country, data.processInitiator, data.language, subGroup
             )
 
         val closestTemplateDate = templateDates.firstOrNull { templateDate ->
@@ -320,7 +320,7 @@ class DocumentServiceImpl(
 
         return closestTemplateDate
             ?: throw GenerateDocumentErrors.NoTemplateEqualsOrPrecedesSpecifiedDate(
-                data.pmd, data.country, data.documentInitiator, data.language, subGroup, date
+                data.pmd, data.country, data.processInitiator, data.language, subGroup, date
             )
     }
 
@@ -329,7 +329,7 @@ class DocumentServiceImpl(
         records: Map<RecordName, Record>
     ): Map<ParameterPathEntity.Parameter, String> {
         val pathsByRecordName = parameterPathRepository
-            .load(data.pmd, data.documentInitiator)
+            .load(data.pmd, data.processInitiator)
             .groupBy { it.record }
 
         val parameterValuesByParameterNames = pathsByRecordName
@@ -348,8 +348,8 @@ class DocumentServiceImpl(
     }
 
     private fun getMainAndRelatedProcessesRecords(data: GenerateDocumentCommand.Data): Map<RecordName, Record> {
-        val mainProcessInfo = recordRepository.load(data.pmd, data.country, data.documentInitiator)
-            ?: throw GenerateDocumentErrors.RecordNotFound(data.pmd, data.country, data.documentInitiator)
+        val mainProcessInfo = recordRepository.load(data.pmd, data.country, data.processInitiator)
+            ?: throw GenerateDocumentErrors.RecordNotFound(data.pmd, data.country, data.processInitiator)
         val mainProcessRelationships = mainProcessInfo.relationships.toSet()
         val mainProcessName = mainProcessInfo.mainProcess
 

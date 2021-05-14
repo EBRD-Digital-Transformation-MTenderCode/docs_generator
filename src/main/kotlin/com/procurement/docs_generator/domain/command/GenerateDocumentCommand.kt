@@ -66,7 +66,7 @@ data class GenerateDocumentCommand(
         @field:JsonProperty("startDate") @param:JsonProperty("startDate") val startDate: LocalDateTime,
 
         @field:JsonProperty("pmd") @param:JsonProperty("pmd") val pmd: ProcurementMethod,
-        @field:JsonProperty("documentInitiator") @param:JsonProperty("documentInitiator") val documentInitiator: String,
+        @field:JsonProperty("processInitiator") @param:JsonProperty("processInitiator") val processInitiator: String,
         @field:JsonProperty("objectId") @param:JsonProperty("objectId") val objectId: String
     )
 }
